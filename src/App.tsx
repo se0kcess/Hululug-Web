@@ -1,14 +1,17 @@
-import { ReactElement } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import Router from '@/router';
 import { GlobalStyles } from './styles/GlobalStyles';
+import Router from '@/router';
+import { ThemeProvider } from '@emotion/react';
+import theme from '@/styles/theme';
 
-function App(): ReactElement {
+function App() {
   return (
-    <BrowserRouter>
-      <GlobalStyles />
-      <Router />
-    </BrowserRouter>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <GlobalStyles />
+        <Router />
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

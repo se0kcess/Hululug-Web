@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import theme from './\btheme';
+import theme from './theme';
 
 // Display Text
 export const DisplayText = styled.h1`
