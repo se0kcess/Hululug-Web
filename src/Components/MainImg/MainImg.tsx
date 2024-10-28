@@ -17,8 +17,7 @@ const Img = styled.img`
   width: 100%;
   height: auto;
 `;
-
-const MainImg: React.FC<MainImgProps> = ({ imgSrc, width, height }) => {
+const MainImg = ({ imgSrc, width, height }: MainImgProps) => {
   return (
     <ImgContainer width={width} height={height}>
       <Img src={imgSrc} alt="Sample Ramyun" />
