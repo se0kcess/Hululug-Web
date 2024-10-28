@@ -35,7 +35,7 @@ const Caption = styled(CaptionText)`
   width: 240px;
 `;
 
-const Profile: React.FC<ProfileProps> = ({ imgSrc, name, caption }) => {
+const Profile = ({ imgSrc, name, caption }: ProfileProps) => {
   return (
     <Container>
       <ProfileImg src={imgSrc} alt={name} />
