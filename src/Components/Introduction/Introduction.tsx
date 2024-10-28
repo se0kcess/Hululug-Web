@@ -20,7 +20,7 @@ const Container = styled(BodyText)`
   background-color: ${theme.colors.gray[50]};
 `;
 
-const Introduction: React.FC<IntroductionProps> = ({ title, content }) => {
+const Introduction = ({ title, content }: IntroductionProps) => {
   return (
     <>
       <Title>{title}</Title>
