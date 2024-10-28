@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 import { CaptionText, Title2 } from '@/styles/Typography';
 import theme from '@/styles/theme';
@@ -46,7 +45,7 @@ const IngredientAmount = styled(CaptionText)`
   color: ${theme.colors.gray[700]};
 `;
 
-const Ingredients: React.FC<IngredientsProps> = ({ title, ingredientData }) => {
+const Ingredients = ({ title, ingredientData }: IngredientsProps) => {
   return (
     <Container>
       <Title>{title}</Title>
