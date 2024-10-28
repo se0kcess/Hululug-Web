@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import { BodyText, CaptionText } from '@/styles/Typography';
