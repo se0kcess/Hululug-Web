@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
-import Link from '@/assets/icons/Link'; // Share 아이콘 경로 확인 필요
+import Link from '@/assets/icons/Link';
 import { ChipText } from '@/styles/Typography';
 
 interface ShareToastProps {
   type?: 'default' | 'icon'; // 'default' 타입은 텍스트만, 'icon' 타입은 아이콘 + 텍스트
-  message: string; // 표시할 메시지
+  message: string;
 }
 
 const ToastContainer = styled(ChipText)`
@@ -31,7 +31,7 @@ export const ShareToast = ({ type = 'default', message }: ShareToastProps) => {
     <ToastContainer>
       {type === 'icon' && (
         <IconWrapper>
-          <Link width={13} height={16} color="currentColor" />
+          <Link width={18} height={18} color="currentColor" />
         </IconWrapper>
       )}
       <span>{message}</span>
