@@ -20,21 +20,21 @@ const ModalContainer = styled.div`
   text-align: center;
 `;
 
-const Message = styled(Title2)`
+export const Message = styled(Title2)`
   color: ${theme.colors.black};
   margin: 0;
   margin-bottom: 24px;
   padding: 0;
 `;
 
-const ButtonGroup = styled.div`
+export const ButtonGroup = styled.div`
   display: flex;
   justify-content: center;
   padding: 0 40px;
   gap: 12px;
 `;
 
-const Button = styled(ButtonText)<{ primary?: boolean }>`
+export const Button = styled(ButtonText)<{ primary?: boolean }>`
   width: 75px;
   height: 38px;
   display: flex;
