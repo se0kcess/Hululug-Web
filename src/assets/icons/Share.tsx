@@ -1,4 +1,4 @@
-export const Share = ({ width = 24, height = 24, color = '#1D2228', ...props }) => {
+export const Share = ({ width = 24, height = 24, color = '#85919D', ...props }) => {
   return (
     <svg
       width={width}
