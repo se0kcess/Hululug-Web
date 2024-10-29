@@ -41,7 +41,7 @@ export const CommentTitleStory: StoryFn = () => (
 export const CommentInputFieldStory: StoryFn = () => (
   <>
     <CommentInputField disabled={false} placeholder="레시피 작성자에게 댓글을 남겨주세요." />
-    <CommentInputField disabled={false} placeholder="너무 맛있어요" />
+    <CommentInputField disabled={false} value="너무 맛있어요" />
   </>
 );
 
