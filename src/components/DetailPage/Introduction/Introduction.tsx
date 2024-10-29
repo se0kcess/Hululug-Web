@@ -7,11 +7,11 @@ interface IntroductionProps {
   content: string;
 }
 
-const Title = styled(Title1)`
+export const Title = styled(Title1)`
   width: 327px;
 `;
 
-const Container = styled(BodyText)`
+export const Container = styled(BodyText)`
   width: 327px;
   height: auto;
   padding: 12px 16px;
@@ -22,8 +22,8 @@ const Container = styled(BodyText)`
 const Introduction = ({ title, content }: IntroductionProps) => {
   return (
     <>
-      <Title>{title}</Title>
-      <Container>{content}</Container>
+      <Title>{title === '' ? '제목이 없습니다.' : title}</Title>
+      <Container>{content === '' ? '소개글이 없습니다.' : content}</Container>
     </>
   );
 };
