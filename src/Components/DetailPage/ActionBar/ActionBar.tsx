@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import { HeartIconContainer } from '@/Components/common/HeartIconContainer/HeartIconContainer';
-import { BookmarkButton } from '@/Components/common/BookmarkButton/BookmarkButton';
-import { ShareButton } from '@/Components/ShareButton/ShareButton';
-import { CommentIconContainer } from '@/Components/CommentIconContainer/CommentIconContainer';
+import { HeartIconContainer } from '@/components/common/HeartIconContainer/HeartIconContainer';
+import { BookmarkButton } from '@/components/common/BookmarkButton/BookmarkButton';
+import { ShareButton } from '@/components/DetailPage/ShareButton/ShareButton';
+import { CommentIconContainer } from '@/components/DetailPage/CommentIconContainer/CommentIconContainer';
 import theme from '@/styles/theme';
 
 interface ActionBarProps {
