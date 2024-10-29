@@ -15,7 +15,7 @@ const meta: Meta<typeof ShareToast> = {
             justifyContent: 'center',
             alignItems: 'center',
             height: '100vh',
-            backgroundColor: 'white',
+            backgroundColor: theme.colors.white,
           }}
         >
           <Story />
