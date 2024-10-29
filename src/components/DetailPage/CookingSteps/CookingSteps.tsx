@@ -16,7 +16,7 @@ const Container = styled.div`
   max-width: 400px;
 `;
 
-const Title = styled(Title2)`
+export const StyledTitle = styled(Title2)`
   color: ${theme.colors.black};
   margin-bottom: 16px;
 `;
@@ -50,10 +50,12 @@ const StepDescription = styled(BodyText)`
   display: flex;
 `;
 
+export const Title = ({ text }: { text: string }) => <StyledTitle>{text}</StyledTitle>;
+
 const CookingSteps = ({ steps }: CookingStepsProps) => {
   return (
     <Container>
-      <Title>조리 순서</Title>
+      <Title text="조리 순서" />
       {steps.map((step) => (
         <StepContainer key={step.number}>
           <StepNumber>{step.number}</StepNumber>

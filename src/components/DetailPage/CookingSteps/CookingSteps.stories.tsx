@@ -1,5 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
-import CookingSteps from './CookingSteps';
+import CookingSteps, { Title } from './CookingSteps';
 
 export default {
   title: 'Components/CookingSteps',
@@ -23,4 +23,16 @@ Default.args = {
     { number: 4, description: '면이 완전히 풀어지면 대파를 넣고 1분 정도 더 끓인다.' },
     { number: 5, description: '물이 줄어들고 면이 익으면 불을 끄고 그릇에 담아 완성한다.' },
   ],
+};
+
+export const TitleStory: StoryFn = () => (
+  <>
+    <Title text={'조리순서'} />
+  </>
+);
+
+// CookingSteps에 단일 단계만 포함한 스토리
+export const SingleStep: StoryFn<typeof CookingSteps> = (args) => <CookingSteps {...args} />;
+SingleStep.args = {
+  steps: [{ number: 1, description: '대파는 송송 썰어 준비한다.' }],
 };
