@@ -16,20 +16,20 @@ const Container = styled.div`
   gap: 12px;
 `;
 
-const ProfileImg = styled.img`
+export const ProfileImg = styled.img`
   width: 56px;
   height: 56px;
   border-radius: 50%; // 둥근 프로필 이미지로 설정
   object-fit: cover;
 `;
 
-const Name = styled(BodyText)`
+export const Name = styled(BodyText)`
   width: 100px;
   color: ${theme.colors.gray[700]};
   margin: 0px;
 `;
 
-const Caption = styled(CaptionText)`
+export const Caption = styled(CaptionText)`
   color: ${theme.colors.gray[500]};
   width: 240px;
 `;
