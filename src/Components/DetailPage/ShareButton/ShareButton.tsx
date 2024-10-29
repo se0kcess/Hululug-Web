@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
 import { Share } from '@/assets/icons/Share';
-import { ShareToast } from '@/components//DetailPage/ShareToast/ShareToast';
+import { ShareToast } from '@/components/DetailPage/ShareToast/ShareToast';
 
 interface ShareButtonProps {
   onShare: () => void; // 공유 버튼 클릭 시 호출될 함수
