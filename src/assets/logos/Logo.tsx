@@ -1,11 +1,10 @@
-// components/icons/Logo.tsx
 interface LogoProps {
   className?: string;
   width?: number;
   height?: number;
 }
 
-export const Logo: React.FC<LogoProps> = ({ className, width = 97, height = 32 }) => {
+const Logo = ({ className, width = 97, height = 32 }: LogoProps) => {
   return (
     <svg
       width={width}
@@ -36,3 +35,4 @@ export const Logo: React.FC<LogoProps> = ({ className, width = 97, height = 32 }
     </svg>
   );
 };
+export default Logo;
