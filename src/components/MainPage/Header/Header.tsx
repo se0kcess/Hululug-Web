@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
-import { Logo } from '@/assets/logos/Logo';
+import Logo from '@/assets/logos/Logo';
 
 const HeaderContainer = styled.header`
   display: flex;
