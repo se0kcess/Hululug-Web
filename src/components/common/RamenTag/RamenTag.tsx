@@ -1,6 +1,6 @@
-import React from 'react';
 import styled from '@emotion/styled';
 import { RamenType } from '@/types/ramen';
+import { ChipText } from '@/styles/Typography';
 
 interface RamenTagProps {
   ramen: RamenType;
@@ -10,21 +10,22 @@ interface RamenTagProps {
 const TagContainer = styled.div`
   display: inline-flex;
   align-items: center;
-  padding: 4px 12px;
+  padding: 0.5rem 0.75rem;
   background: ${({ theme }) => theme.colors.primaryPastel};
   color: ${({ theme }) => theme.colors.primaryMain};
-  border-radius: 16px;
-  font-size: 14px;
+  border-radius: 1rem;
+  box-sizing: border-box;
+  white-space: nowrap;
 `;
 
 const RemoveButton = styled.button`
   background: none;
   border: none;
   padding: 0;
-  margin-left: 8px;
+  margin-left: 0.5rem;
   cursor: pointer;
   color: ${({ theme }) => theme.colors.primaryMain};
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1;
 
   &:hover {
@@ -32,10 +33,10 @@ const RemoveButton = styled.button`
   }
 `;
 
-export const RamenTag: React.FC<RamenTagProps> = ({ ramen, onRemove }) => {
+export const RamenTag = ({ ramen, onRemove }: RamenTagProps) => {
   return (
     <TagContainer>
-      {ramen.name}
+      <ChipText>{ramen.name}</ChipText>
       {onRemove && <RemoveButton onClick={onRemove}>×</RemoveButton>}
     </TagContainer>
   );
