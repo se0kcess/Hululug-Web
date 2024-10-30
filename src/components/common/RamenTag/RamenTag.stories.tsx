@@ -61,14 +61,3 @@ export const MultipleTagsRow = {
     </div>
   ),
 };
-
-// 클릭 이벤트 테스트를 위한 인터랙티브 버전
-export const Interactive: Story = {
-  args: {
-    ramen: {
-      id: 1,
-      name: '신라면',
-    },
-    onRemove: () => alert('태그가 삭제되었습니다.'),
-  },
-};
