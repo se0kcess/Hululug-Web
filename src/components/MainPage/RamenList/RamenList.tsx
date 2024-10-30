@@ -25,7 +25,6 @@ interface RamenListProps {
 }
 
 const Container = styled.div`
-  width: 100%;
   display: flex;
   flex-direction: column;
 `;
@@ -33,7 +32,7 @@ const Container = styled.div`
 const RecipeCard = styled.div`
   display: flex;
   gap: 1rem;
-  padding: 1rem;
+  margin-top: 1.5rem;
   border-radius: 1rem;
   background: ${theme.colors.white};
   cursor: pointer;

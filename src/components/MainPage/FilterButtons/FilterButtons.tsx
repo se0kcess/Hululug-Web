@@ -11,7 +11,6 @@ import { SortModal } from '@/components/MainPage/SortModal/SortModal';
 const ButtonsContainer = styled.div`
   display: flex;
   gap: 0.5rem;
-  padding: 1rem;
 `;
 
 const FilterButton = styled.button<{ isActive?: boolean }>`

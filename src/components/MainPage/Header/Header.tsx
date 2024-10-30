@@ -5,6 +5,7 @@ import Logo from '@/assets/logos/Logo';
 
 const HeaderContainer = styled.header`
   display: flex;
+  background-color: ${theme.colors.white};
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1rem;

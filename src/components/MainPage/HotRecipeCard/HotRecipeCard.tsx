@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { BodyText, HeaderText } from '@/styles/Typography';
+import { BodyText, Title2 } from '@/styles/Typography';
 import theme from '@/styles/theme';
 import sampleRecipeImage from '@assets/ramyun-images/sample-1.png';
 import sampleProfileImage from '@assets/images/profile-img-1.png';
@@ -45,12 +45,13 @@ const ContentOverlay = styled.div`
   justify-content: flex-end;
   gap: 1rem;
 `;
-const StyledTitle = styled(HeaderText)`
+const StyledTitle = styled(Title2)`
   color: ${theme.colors.white};
   position: absolute;
   bottom: 3.5rem;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: ${theme.typography.title1.weight};
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
@@ -64,8 +65,8 @@ const ProfileContainer = styled.div`
 `;
 
 const ProfileImage = styled.img`
-  width: 2rem;
-  height: 2rem;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
   object-fit: cover;
 `;
@@ -78,8 +79,7 @@ const AuthorName = styled(BodyText)`
 
 const HeartWrapper = styled.div`
   position: absolute;
-  right: 1rem;
-  bottom: 1.5rem;
+  right: 0.25rem;
 `;
 
 const HotRecipeCard = ({ id, title, author, likes, onClick }: HotRecipeCardProps) => {
@@ -92,10 +92,10 @@ const HotRecipeCard = ({ id, title, author, likes, onClick }: HotRecipeCardProps
           <ProfileContainer>
             <ProfileImage src={sampleProfileImage} alt={`${author}의 프로필`} />
             <AuthorName>{author}</AuthorName>
+            <HeartWrapper>
+              <HeartIconContainer initialLikes={likes} recipeId={id} />
+            </HeartWrapper>
           </ProfileContainer>
-          <HeartWrapper>
-            <HeartIconContainer initialLikes={likes} recipeId={id} />
-          </HeartWrapper>
         </ContentOverlay>
       </ImageWrapper>
     </Container>

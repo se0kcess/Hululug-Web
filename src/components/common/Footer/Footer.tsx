@@ -10,7 +10,8 @@ const FooterContainer = styled.footer`
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 3.75rem;
+  max-width: 430px;
+  height: 4rem;
   background-color: ${theme.colors.white};
   border-top: 1px solid ${theme.colors.gray[100]};
   display: flex;
