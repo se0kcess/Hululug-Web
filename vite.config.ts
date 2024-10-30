@@ -1,9 +1,53 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: {
+        name: '후루룩',
+        short_name: 'ㅎㄹㄹ',
+        description: '나만의 라면을 후루룩!',
+        theme_color: '#ffffff',
+        icons: [
+          {
+            src: './src/assets/app-icons/apple-touch-icon-72x72.png',
+            sizes: '72x72',
+            type: 'image/png',
+          },
+          {
+            src: './src/assets/app-icons/apple-touch-icon-76x76.png',
+            sizes: '76x76',
+            type: 'image/png',
+          },
+          {
+            src: './src/assets/app-icons/apple-touch-icon-114x114.png',
+            sizes: '114x114',
+            type: 'image/png',
+          },
+          {
+            src: './src/assets/app-icons/apple-touch-icon-120x120.png',
+            sizes: '120x120',
+            type: 'image/png',
+          },
+          {
+            src: './src/assets/app-icons/apple-touch-icon-144x144.png',
+            sizes: '144x144',
+            type: 'image/png',
+          },
+          {
+            src: './src/assets/app-icons/apple-touch-icon-152x152.png',
+            sizes: '152x152',
+            type: 'image/png',
+          },
+        ],
+      },
+    }),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
