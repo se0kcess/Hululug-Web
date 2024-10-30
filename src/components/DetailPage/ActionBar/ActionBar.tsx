@@ -34,7 +34,7 @@ const ActionItem = styled.div`
   cursor: pointer;
 `;
 
-export const ActionBar = ({
+const ActionBar = ({
   likes,
   comments,
   recipeId,
@@ -63,3 +63,5 @@ export const ActionBar = ({
     </Container>
   );
 };
+
+export default ActionBar;
