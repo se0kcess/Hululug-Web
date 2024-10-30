@@ -25,10 +25,10 @@ export const CommentTitle = styled(Title2)`
   color: ${theme.colors.black};
 `;
 
-export const CommnetCount = styled(Title2)`
+export const CommentCount = styled(Title2)`
+  width: auto;
   color: ${theme.colors.primaryMain};
-  margin: 0;
-  margin-left: 4px;
+  margin: 0 4px;
 `;
 
 export const InputWrapper = styled.div`
@@ -63,7 +63,7 @@ export const ButtonWrapper = styled.div`
 `;
 
 export const SubmitButton = styled(ButtonText)<{ disabled: boolean }>`
-  width: 84px;
+  width: auto;
   min-height: 40px;
   padding: 0 16px;
   display: flex;
@@ -80,10 +80,9 @@ export const SubmitButton = styled(ButtonText)<{ disabled: boolean }>`
   }
 `;
 
-// CommentInput 컴포넌트 정의
 const CommentInput = ({ recipeId, isLoggedIn, onCommentAdded }: CommentFormProps) => {
   const [content, setContent] = useState('');
-  const [commentCount, setCommentCount] = useState(0);
+  const [commentCount, setCommentCount] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchCommentCount = async () => {
@@ -92,6 +91,7 @@ const CommentInput = ({ recipeId, isLoggedIn, onCommentAdded }: CommentFormProps
         setCommentCount(response.data.count);
       } catch (error) {
         console.error('Failed to fetch comment count:', error);
+        setCommentCount(0); // 오류 시 기본값을 0으로 설정
       }
     };
     fetchCommentCount();
@@ -108,7 +108,7 @@ const CommentInput = ({ recipeId, isLoggedIn, onCommentAdded }: CommentFormProps
       if (response.data.status === 200) {
         onCommentAdded(content);
         setContent('');
-        setCommentCount(commentCount + 1);
+        setCommentCount((prevCount) => (prevCount !== null ? prevCount + 1 : 1));
       } else {
         console.error('Failed to add comment:', response.data.message);
       }
@@ -120,7 +120,7 @@ const CommentInput = ({ recipeId, isLoggedIn, onCommentAdded }: CommentFormProps
   return (
     <Container>
       <CommentTitle>
-        댓글 <CommnetCount>{commentCount}</CommnetCount>
+        댓글 <CommentCount>{commentCount !== null ? commentCount : '...'}</CommentCount>
       </CommentTitle>
       <InputWrapper>
         <CommentInputField
@@ -129,7 +129,7 @@ const CommentInput = ({ recipeId, isLoggedIn, onCommentAdded }: CommentFormProps
           onChange={(e) => setContent(e.target.value)}
         />
         <ButtonWrapper>
-          <SubmitButton disabled={!isLoggedIn || !content.trim()} onClick={handleSubmit}>
+          <SubmitButton disabled={!isLoggedIn} onClick={handleSubmit}>
             댓글 등록
           </SubmitButton>
         </ButtonWrapper>
