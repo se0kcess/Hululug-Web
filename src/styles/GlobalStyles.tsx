@@ -6,12 +6,51 @@ const globalStyles = css`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family:
+      'Pretendard',
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      Oxygen,
+      Ubuntu,
+      Cantarell,
+      'Open Sans',
+      'Helvetica Neue',
+      sans-serif;
   }
   html,
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-      'Open Sans', 'Helvetica Neue', sans-serif;
-    background-color: #fff;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    min-height: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    position: relative;
+    background-color: white;
+  }
+
+  body {
+    background-color: #f5f5f5;
+    line-height: 1.5;
+    word-break: keep-all;
+    word-wrap: break-word;
+  }
+
+  html.wf-loading * {
+    opacity: 0;
+  }
+
+  html.wf-active *,
+  html.wf-inactive * {
+    opacity: 1;
+    transition: opacity 0.1s ease-out;
   }
 
   a {
