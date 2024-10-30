@@ -43,7 +43,6 @@ export const Default = () => (
     />
     <Input
       color={theme.colors.gray[700]} // 공통 색상
-      borderColor={theme.colors.red[500]} // 개별 borderColor
       disabled={true}
       placeholder="hululug@naver.com"
       type="text"
