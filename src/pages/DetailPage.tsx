@@ -8,10 +8,10 @@ const Container = styled.div`
   min-height: calc(100vh - 60px);
 `;
 
-export default function Home() {
+export default function DetailPage() {
   return (
     <Container>
-      <h1>Home Page</h1>
+      <h1>Detail Page</h1>
     </Container>
   );
 }

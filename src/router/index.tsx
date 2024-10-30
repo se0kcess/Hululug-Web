@@ -1,11 +1,13 @@
+import DetailPage from '@/pages/DetailPage';
+import MainPage from '@/pages/MainPage';
 import { Routes, Route } from 'react-router-dom';
-import Home from '@/pages/Home';
 
 export default function Router() {
   return (
     <Routes>
       <Route>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<MainPage />} />
+        <Route path="/details" element={<DetailPage />} />
       </Route>
     </Routes>
   );
