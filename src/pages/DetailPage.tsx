@@ -12,7 +12,7 @@ import Ingredients from '@/components/DetailPage/Ingredients/Ingredients';
 import CookingSteps from '@/components/DetailPage/CookingSteps/CookingSteps';
 import CommentInput from '@/components/DetailPage/CommentInput/CommentInput';
 import Comments from '@/components/DetailPage/Comments/Comments';
-import ActionBar from '@/components/DetailPage/ActionBar/ActionBar';
+import { ActionBar } from '@/components/DetailPage/ActionBar/ActionBar';
 
 import SamleImg from '@/assets/images/profile-img-2.png';
 import theme from '@/styles/theme';
