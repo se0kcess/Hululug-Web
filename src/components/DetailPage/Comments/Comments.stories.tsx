@@ -6,43 +6,24 @@ export default {
   title: 'Components/Comments',
   component: Comments,
   argTypes: {
-    onDeleteRequest: { action: 'delete requested' },
+    comments: { control: 'object' },
+    recipeId: { control: 'number' },
     onCommentsUpdate: { action: 'comments updated' },
   },
 } as Meta<typeof Comments>;
 
 const Template: StoryFn<typeof Comments> = (args) => {
-  const [comments, setComments] = useState(args.comments);
+  const [comments, setComments] = useState<typeof args.comments>(args.comments);
 
-  const handleDeleteRequest = (commentId: number) => {
-    // 댓글 삭제: 댓글 ID로 필터링하여 상태 업데이트
-    const updatedComments = comments.filter((comment) => comment.id !== commentId);
+  const handleCommentsUpdate = (updatedComments: typeof args.comments) => {
     setComments(updatedComments);
-    args.onDeleteRequest(commentId); // 스토리북 액션 로깅
   };
 
-  const handleCommentsUpdate = (commentId: number) => {
-    // 댓글 수정: 예시로 `edited` 상태 업데이트
-    const updatedComments = comments.map((comment) =>
-      comment.id === commentId ? { ...comment, edited: !comment.edited } : comment,
-    );
-    setComments(updatedComments);
-    args.onCommentsUpdate(commentId); // 스토리북 액션 로깅
-  };
-
-  return (
-    <Comments
-      {...args}
-      comments={comments}
-      onDeleteRequest={handleDeleteRequest}
-      onCommentsUpdate={handleCommentsUpdate}
-    />
-  );
+  return <Comments {...args} comments={comments} onCommentsUpdate={handleCommentsUpdate} />;
 };
 
 export const Default = Template.bind({});
 Default.args = {
-  // recipeId: 123,
   comments: [
     {
       id: 1,
@@ -70,4 +51,5 @@ Default.args = {
       isOwnComment: false,
     },
   ],
+  recipeId: 123,
 };
