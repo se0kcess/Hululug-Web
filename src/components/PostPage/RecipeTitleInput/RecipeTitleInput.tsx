@@ -1,5 +1,16 @@
 import theme from '@/styles/theme';
+import { Title2 } from '@/styles/Typography';
 import styled from '@emotion/styled';
+
+const TitleCon = styled.div`
+  width: 100%;
+`;
+
+const RecipeTitle = styled(Title2)`
+  color: ${theme.colors.black};
+  margin: 0;
+  margin-bottom: 12px;
+`;
 
 const TitleInputStyle = styled.input`
   width: 100%;
@@ -17,7 +28,12 @@ const TitleInputStyle = styled.input`
 `;
 
 const RecipeTitleInput = ({ placeholder = '제목을 입력하세요' }) => {
-  return <TitleInputStyle placeholder={placeholder} />;
+  return (
+    <TitleCon>
+      <RecipeTitle>레시피 제목</RecipeTitle>
+      <TitleInputStyle placeholder={placeholder} />
+    </TitleCon>
+  );
 };
 
 export default RecipeTitleInput;
