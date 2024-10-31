@@ -1,4 +1,5 @@
 import DetailPage from '@/pages/DetailPage';
+import LoginPage from '@/pages/LoginPage';
 import MainPage from '@/pages/MainPage';
 import MyPage from '@/pages/MyPage';
 import PostPage from '@/pages/PostPage';
@@ -21,6 +22,7 @@ export default function Router() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/post" element={<PostPage />} />
         <Route path="/search" element={<SearchPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/profile/edit" element={<EditProfile />} />
         <Route path="/ramenworldcup" element={<RamenWorldCupStartPage />} />
         <Route path="/ramenworldcup/game" element={<RamenWorldCupGamePage />} />
