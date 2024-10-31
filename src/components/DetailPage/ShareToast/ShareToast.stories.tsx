@@ -4,7 +4,7 @@ import theme from '@/styles/theme';
 import { ShareToast } from './ShareToast';
 
 const meta: Meta<typeof ShareToast> = {
-  title: 'Components/ShareToast',
+  title: 'Components/DetailPage/ShareToast',
   component: ShareToast,
   decorators: [
     (Story) => (

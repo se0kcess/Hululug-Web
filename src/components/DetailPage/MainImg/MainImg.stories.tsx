@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import MainImg from './MainImg';
 
 export default {
-  title: 'Components/MainImg',
+  title: 'Components/DetailPage/MainImg',
   component: MainImg,
   argTypes: {
     imgSrc: { control: 'text' },

@@ -9,7 +9,7 @@ import CommentInput, {
 } from './CommentInput';
 
 export default {
-  title: 'Components/CommentInput',
+  title: 'Components/DetailPage/CommentInput',
   component: CommentInput,
   argTypes: {
     recipeId: { control: 'number' },
