@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { CaptionText } from '@/styles/Typography';
 import CommentFill from '@/assets/icons/CommentFill';
 import CommentOutline from '@/assets/icons/CommentOutline';
+import theme from '@/styles/theme';
 
 interface CommentIconContainerProps {
   commentCount: number;
@@ -11,13 +12,10 @@ interface CommentIconContainerProps {
 const Container = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
+  gap: 8px;
 `;
 
 const IconWrapper = styled.div`
-  width: 1.5rem;
-  height: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,7 +24,6 @@ const IconWrapper = styled.div`
 
 const StyledCommentCount = styled(CaptionText)`
   color: ${({ theme }) => theme.colors.gray[500]};
-  font-size: 1rem;
 `;
 
 export const CommentIconContainer = ({
@@ -37,9 +34,9 @@ export const CommentIconContainer = ({
     <Container>
       <IconWrapper>
         {showFilledIcon ? (
-          <CommentFill width={24} height={24} color="currentColor" />
+          <CommentFill width={24} height={24} color={theme.colors.gray[500]} />
         ) : (
-          <CommentOutline width={24} height={24} color="currentColor" />
+          <CommentOutline width={24} height={24} color={theme.colors.gray[500]} />
         )}
       </IconWrapper>
       <StyledCommentCount>{commentCount.toLocaleString()}</StyledCommentCount>
