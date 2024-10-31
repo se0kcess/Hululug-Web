@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import { BodyText, Title2 } from '@/styles/Typography';
+import Plus from '@/assets/icons/Plus';
 
 const Container = styled.div`
   display: flex;
@@ -24,7 +25,7 @@ const Header = styled.div`
 const Label1 = styled(BodyText)`
   color: ${theme.colors.gray[500]};
   margin: 0;
-  flex: 2; /* NameInput과 동일한 flex 값 */
+  flex: 3; /* NameInput과 동일한 flex 값으로 설정 */
   display: flex;
   align-items: center;
 `;
@@ -32,18 +33,19 @@ const Label1 = styled(BodyText)`
 const Label2 = styled(BodyText)`
   color: ${theme.colors.gray[500]};
   margin: 0;
-  flex: 1; /* QuantityInput과 동일한 flex 값 */
+  flex: 1; /* QuantityInput과 동일한 flex 값으로 설정 */
   display: flex;
-  align-items: center; /* 세로 중앙 정렬 */
+  align-items: center;
 `;
 
 const InputRow = styled.div`
   display: flex;
+  width: 100%; /* Row가 가로를 충분히 차지하도록 설정 */
   gap: 8px;
 `;
 
 const NameInput = styled.input`
-  flex: 2; /* 재료명 필드의 너비를 더 넓게 설정 */
+  flex: 1; /* 재료명 필드의 너비를 넓게 설정 */
   height: 44px;
   padding: 0 12px;
   color: ${theme.colors.gray[700]};
@@ -58,7 +60,7 @@ const NameInput = styled.input`
 `;
 
 const QuantityInput = styled.input`
-  flex: 1; /* 수량 필드의 너비를 상대적으로 좁게 설정 */
+  width: 100px;
   height: 44px;
   padding: 0 12px;
   color: ${theme.colors.gray[700]};
@@ -120,7 +122,9 @@ const RecipeIngredientsCon = () => {
           />
         </InputRow>
       ))}
-      <AddButton onClick={handleAddIngredient}>+</AddButton>
+      <AddButton onClick={handleAddIngredient}>
+        <Plus width={16} height={16} fill={theme.colors.gray[500]} />
+      </AddButton>
     </Container>
   );
 };
