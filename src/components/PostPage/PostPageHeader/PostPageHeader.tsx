@@ -15,11 +15,7 @@ const PostHeader = styled(Title2)`
 `;
 
 const PostPageHeader = () => {
-  return (
-    <div style={{ width: '375px' }}>
-      <PostHeader>레시피 작성</PostHeader>
-    </div>
-  );
+  return <PostHeader>레시피 작성</PostHeader>;
 };
 
 export default PostPageHeader;
