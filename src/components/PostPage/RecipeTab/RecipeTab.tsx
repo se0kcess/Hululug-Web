@@ -1,21 +1,26 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
+import { BodyText } from '@/styles/Typography';
 
 const TabContainer = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  box-sizing: border-box;
 `;
 
-const Tab = styled.div<{ isActive: boolean }>`
-  flex: 1;
-  padding: 12px 0;
-  text-align: center;
+const Tab = styled(BodyText)<{ isActive: boolean }>`
+  flex: 1; /* 각 탭이 동일한 비율로 공간을 차지하도록 설정 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
   cursor: pointer;
+  box-sizing: border-box;
+
   color: ${({ isActive }) => (isActive ? theme.colors.primaryMain : theme.colors.gray[200])};
-  font-weight: ${({ isActive }) => (isActive ? 'bold' : 'normal')};
   border-bottom: 2px solid
     ${({ isActive }) => (isActive ? theme.colors.primaryMain : theme.colors.gray[200])};
   transition:
