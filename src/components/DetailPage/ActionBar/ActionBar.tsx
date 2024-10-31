@@ -17,7 +17,6 @@ interface ActionBarProps {
 
 const Container = styled.div`
   width: 100%;
-  max-width: 400px;
   height: 64px;
   display: flex;
   align-items: center;
@@ -34,7 +33,7 @@ const ActionItem = styled.div`
   cursor: pointer;
 `;
 
-const ActionBar = ({
+export const ActionBar = ({
   likes,
   comments,
   recipeId,
@@ -63,5 +62,3 @@ const ActionBar = ({
     </Container>
   );
 };
-
-export default ActionBar;
