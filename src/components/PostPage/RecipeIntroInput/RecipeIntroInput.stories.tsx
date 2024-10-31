@@ -4,7 +4,7 @@ import theme from '@/styles/theme';
 import RecipeIntroInput from './RecipeIntroInput';
 
 export default {
-  title: 'Components/RecipeIntroInput', // 스토리북에서 컴포넌트 위치를 지정
+  title: 'Components/PostPage/RecipeIntroInput', // 스토리북에서 컴포넌트 위치를 지정
   component: RecipeIntroInput,
   decorators: [
     (Story) => (

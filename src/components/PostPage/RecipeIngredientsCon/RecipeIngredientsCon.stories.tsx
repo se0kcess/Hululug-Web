@@ -4,7 +4,7 @@ import theme from '@/styles/theme';
 import RecipeIngredientsCon from './RecipeIngredientsCon';
 
 export default {
-  title: 'Components/RecipeIngredientsCon', // 스토리북에서 컴포넌트 위치를 지정
+  title: 'Components/PostPage/RecipeIngredientsCon', // 스토리북에서 컴포넌트 위치를 지정
   component: RecipeIngredientsCon,
   decorators: [
     (Story) => (

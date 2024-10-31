@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import RecipeTab from './RecipeTab';
 
 export default {
-  title: 'Components/RecipeTab', // 스토리북 내 컴포넌트 위치를 지정
+  title: 'Components/PostPage/RecipeTab', // 스토리북 내 컴포넌트 위치를 지정
   component: RecipeTab,
 } as Meta;
 

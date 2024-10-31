@@ -4,7 +4,7 @@ import theme from '@/styles/theme';
 import PostPageImgCon from './PostPageImgCon';
 
 export default {
-  title: 'Components/PostPageImgCon', // 스토리북에서 컴포넌트 위치를 지정
+  title: 'Components/PostPage/PostPageImgCon', // 스토리북에서 컴포넌트 위치를 지정
   component: PostPageImgCon,
   decorators: [
     (Story) => (

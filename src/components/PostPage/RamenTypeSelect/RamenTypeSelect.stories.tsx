@@ -4,7 +4,7 @@ import theme from '@/styles/theme';
 import RamenTypeSelect from './RamenTypeSelect';
 
 export default {
-  title: 'Components/RamenTypeSelect', // 스토리북에서 컴포넌트 위치를 지정
+  title: 'Components/PostPage/RamenTypeSelect', // 스토리북에서 컴포넌트 위치를 지정
   component: RamenTypeSelect,
   decorators: [
     (Story) => (
