@@ -1,4 +1,5 @@
 import DetailPage from '@/pages/DetailPage';
+import KakaoCallback from '@/pages/KakaoCallback';
 import LoginPage from '@/pages/LoginPage';
 import MainPage from '@/pages/MainPage';
 import MyPage from '@/pages/MyPage';
@@ -16,6 +17,7 @@ export default function Router() {
         <Route path="/post" element={<PostPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/oauth/callback/kakao" element={<KakaoCallback />} />
       </Route>
     </Routes>
   );

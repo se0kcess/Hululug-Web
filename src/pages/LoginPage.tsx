@@ -3,6 +3,7 @@ import ramenImage from '@/assets/images/ramen-main.png';
 import kakaoLoginButton from '@/assets/images/kakao_login_large_wide.png';
 import LogoSmall from '@/assets/logos/LogoSmall';
 import { Title1 } from '@/styles/Typography';
+import { useKakaoLoginUrl } from '@/hooks/useAuth';
 
 const Container = styled.div`
   width: 90%;
@@ -47,10 +48,12 @@ const KakaoButtonImage = styled.img`
   border-radius: 0.75rem;
 `;
 
-export default function IntroPage() {
+export default function LoginPage() {
+  const kakaoURL = useKakaoLoginUrl();
+
   const handleKakaoLogin = () => {
-    // 카카오 로그인 구현 예정
-    console.log('카카오 로그인 시도');
+    window.location.href = kakaoURL;
+    console.log(kakaoURL);
   };
 
   return (
