@@ -3,7 +3,7 @@ import BannerSlider from '@/components/MainPage/Banner/BannerSlider';
 import { FilterButtons } from '@/components/MainPage/FilterButtons/FilterButtons';
 import Header from '@/components/MainPage/Header/Header';
 import HotRecipeCard from '@/components/MainPage/HotRecipeCard/HotRecipeCard';
-import RamenList from '@/components/MainPage/RamenList/RamenList';
+import RamenList from '@/components/common/RamenList/RamenList';
 import { Title1 } from '@/styles/Typography';
 import styled from '@emotion/styled';
 
