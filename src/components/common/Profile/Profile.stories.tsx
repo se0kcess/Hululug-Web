@@ -4,7 +4,7 @@ import Img1 from '@/assets/images/profile-img-2.png';
 import Img2 from '@/assets/images/profile-img-3.png';
 import Img3 from '@/assets/images/profile-img-4.png';
 export default {
-  title: 'Components/Profile',
+  title: 'Components/DetailPage/Profile',
   component: Profile,
   argTypes: {
     imgSrc: { control: 'text' },

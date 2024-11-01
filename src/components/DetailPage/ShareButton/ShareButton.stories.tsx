@@ -4,7 +4,7 @@ import theme from '@/styles/theme';
 import { ShareButton } from './ShareButton';
 
 const meta: Meta<typeof ShareButton> = {
-  title: 'Components/ShareButton',
+  title: 'Components/DetailPage/ShareButton',
   component: ShareButton,
   decorators: [
     (Story) => (

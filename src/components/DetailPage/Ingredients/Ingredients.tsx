@@ -14,7 +14,7 @@ interface IngredientsProps {
 
 const Container = styled.div`
   width: 100%;
-  max-width: 327px;
+  margin-bottom: 16px;
 `;
 
 const Title = styled(Title2)`
