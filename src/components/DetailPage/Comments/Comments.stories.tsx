@@ -3,7 +3,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import Comments from './Comments';
 
 export default {
-  title: 'Components/Comments',
+  title: 'Components/DetailPage/Comments',
   component: Comments,
   argTypes: {
     comments: { control: 'object' },

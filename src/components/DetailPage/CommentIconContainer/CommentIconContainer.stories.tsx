@@ -4,7 +4,7 @@ import theme from '@/styles/theme';
 import { CommentIconContainer } from './CommentIconContainer';
 
 const meta: Meta<typeof CommentIconContainer> = {
-  title: 'Components/CommentIconContainer',
+  title: 'Components/DetailPage/CommentIconContainer',
   component: CommentIconContainer,
   decorators: [
     (Story) => (

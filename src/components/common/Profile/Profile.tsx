@@ -13,7 +13,7 @@ const Container = styled.div`
   height: 88px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 `;
 
 export const ProfileImg = styled.img`
@@ -21,6 +21,7 @@ export const ProfileImg = styled.img`
   height: 56px;
   border-radius: 50%; // 둥근 프로필 이미지로 설정
   object-fit: cover;
+  box-sizing: border-box;
 `;
 
 export const Name = styled(BodyText)`

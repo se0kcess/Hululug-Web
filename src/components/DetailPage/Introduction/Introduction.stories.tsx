@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import Introduction from './Introduction';
 
 export default {
-  title: 'Components/Introduction',
+  title: 'Components/DetailPage/Introduction',
   component: Introduction,
   argTypes: {
     title: { control: 'text', defaultValue: '라볶이 소개' },

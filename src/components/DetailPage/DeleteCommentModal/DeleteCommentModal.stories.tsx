@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import DeleteCommentModal, { Button, ButtonGroup, Message } from './DeleteCommentModal';
 
 export default {
-  title: 'Components/DeleteCommentModal',
+  title: 'Components/DetailPage/DeleteCommentModal',
   component: DeleteCommentModal,
   argTypes: {
     onCancel: { action: '취소' },

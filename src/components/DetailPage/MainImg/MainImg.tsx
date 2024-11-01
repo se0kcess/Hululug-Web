@@ -7,7 +7,7 @@ interface MainImgProps {
 }
 
 const ImgContainer = styled.div<{ width?: string; height?: string }>`
-  width: ${(props) => props.width || '375px'};
+  width: ${(props) => props.width || '100%'};
   overflow: hidden;
   height: ${(props) => props.height || '282px'};
 `;

@@ -4,7 +4,7 @@ import theme from '@/styles/theme';
 import { ActionBar } from './ActionBar';
 
 const meta: Meta<typeof ActionBar> = {
-  title: 'Components/ActionBar',
+  title: 'Components/DetailPage/ActionBar',
   component: ActionBar,
   decorators: [
     (Story) => (

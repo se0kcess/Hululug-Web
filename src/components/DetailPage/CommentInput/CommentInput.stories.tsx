@@ -2,14 +2,14 @@ import { Meta, StoryFn } from '@storybook/react';
 import CommentInput, {
   CommentFormProps,
   CommentTitle,
-  CommnetCount,
+  CommentCount,
   CommentInputField,
   SubmitButton,
   ButtonWrapper,
 } from './CommentInput';
 
 export default {
-  title: 'Components/CommentInput',
+  title: 'Components/DetailPage/CommentInput',
   component: CommentInput,
   argTypes: {
     recipeId: { control: 'number' },
@@ -29,11 +29,11 @@ Default.args = {
 export const CommentTitleStory: StoryFn = () => (
   <>
     <CommentTitle>
-      댓글 <CommnetCount>10</CommnetCount>
+      댓글 <CommentCount>10</CommentCount>
     </CommentTitle>
 
     <CommentTitle>
-      댓글 <CommnetCount>0</CommnetCount>
+      댓글 <CommentCount>0</CommentCount>
     </CommentTitle>
   </>
 );
