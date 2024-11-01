@@ -9,6 +9,7 @@ const Container = styled.div`
   gap: 12px;
   width: 100%;
   max-width: 500px;
+  padding: 24px 0;
 `;
 
 const Title = styled(Title2)`
@@ -46,7 +47,7 @@ const Input = styled.textarea`
 const AddButton = styled.button`
   width: 100%;
   height: 40px;
-  margin: 33px 0;
+  margin: 10px 0;
   display: flex;
   align-items: center;
   justify-content: center;
