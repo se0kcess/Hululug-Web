@@ -10,6 +10,7 @@ const Container = styled.div`
   width: 100%;
   max-width: 500px;
   gap: 12px;
+  margin-bottom: 24px;
 `;
 
 const Title = styled(Title2)`
