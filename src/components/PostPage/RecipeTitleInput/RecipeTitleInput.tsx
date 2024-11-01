@@ -1,7 +1,6 @@
 import theme from '@/styles/theme';
 import { Title2 } from '@/styles/Typography';
 import styled from '@emotion/styled';
-import { useState } from 'react';
 
 const TitleCon = styled.div`
   width: 100%;
