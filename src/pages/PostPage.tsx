@@ -20,6 +20,7 @@ const Container = styled.div`
   min-height: calc(100vh);
   padding: 0 24px 24px 24px;
 `;
+
 const BtnCon = styled.div`
   width: 100%;
   position: absolute;
@@ -36,35 +37,63 @@ const RecipeIntroduction = ({ onNext }: { onNext: () => void }) => {
 
   return (
     <>
-      <PostPageImgCon onImageAdd={() => setImgAdded(true)} /> {/* 이미지 추가 시 상태 업데이트 */}
+      <PostPageImgCon onImageAdd={() => setImgAdded(true)} />
       <RecipeTitleInput value={title} onChange={(e) => setTitle(e.target.value)} />
       <RecipeIntroInput value={intro} onChange={(e) => setIntro(e.target.value)} />
       <BtnCon>
-        <NextBtn isActive={isNextEnabled} onClick={isNextEnabled ? onNext : undefined} />{' '}
+        <NextBtn isActive={isNextEnabled} onClick={isNextEnabled ? onNext : undefined} />
       </BtnCon>
-      {/* 조건 충족 시만 활성화 */}
     </>
   );
 };
 
-const RecipeIngredients = ({ onNext }: { onNext: () => void }) => (
-  <>
-    <RamenTypeSelect />
-    <RecipeIngredientsCon />
-    <BtnCon>
-      <IngredientsNextBtn isActive={true} onNextClick={onNext} />
-    </BtnCon>
-  </>
-);
+const RecipeIngredients = ({ onNext, onPrev }: { onNext: () => void; onPrev: () => void }) => {
+  const [ramenSelected, setRamenSelected] = useState(false);
+  const [ingredientsFilled, setIngredientsFilled] = useState(false);
 
-const RecipeSteps = () => (
-  <>
-    <CookingStepsCon />
-    <BtnCon>
-      <CompletedBtnCon isActive={true} />
-    </BtnCon>
-  </>
-);
+  const isNextEnabled = ramenSelected && ingredientsFilled;
+
+  return (
+    <>
+      <RamenTypeSelect
+        onDisSelect={() => setRamenSelected(false)}
+        onSelect={() => setRamenSelected(true)}
+      />
+      <RecipeIngredientsCon onIngredientsFilled={(filled) => setIngredientsFilled(filled)} />
+      <BtnCon>
+        <IngredientsNextBtn
+          isActive={isNextEnabled}
+          onNextClick={isNextEnabled ? onNext : undefined}
+          onPrevClick={onPrev}
+        />
+      </BtnCon>
+    </>
+  );
+};
+
+const RecipeSteps = ({ onPrev }: { onPrev: () => void }) => {
+  const [steps, setSteps] = useState(['']);
+  const handleStepChange = (index: number, value: string) => {
+    const updatedSteps = [...steps];
+    updatedSteps[index] = value;
+    setSteps(updatedSteps);
+  };
+
+  const handleAddStep = () => {
+    setSteps([...steps, '']);
+  };
+
+  const isCompletedEnabled = steps.every((step) => step.trim() !== '');
+
+  return (
+    <>
+      <CookingStepsCon steps={steps} onStepChange={handleStepChange} onAddStep={handleAddStep} />
+      <BtnCon>
+        <CompletedBtnCon isActive={isCompletedEnabled} onPrev={onPrev} />
+      </BtnCon>
+    </>
+  );
+};
 
 export default function PostPage() {
   const [activeTab, setActiveTab] = useState('레시피 소개');
@@ -77,14 +106,24 @@ export default function PostPage() {
     }
   };
 
+  const handlePrevTab = () => {
+    if (activeTab === '레시피 재료') {
+      setActiveTab('레시피 소개');
+    } else if (activeTab === '레시피 순서') {
+      setActiveTab('레시피 재료');
+    }
+  };
+
   return (
     <Container>
       <PostPageHeader />
       <RecipeTab activeTab={activeTab} onTabChange={() => {}} />
 
       {activeTab === '레시피 소개' && <RecipeIntroduction onNext={handleNextTab} />}
-      {activeTab === '레시피 재료' && <RecipeIngredients onNext={handleNextTab} />}
-      {activeTab === '레시피 순서' && <RecipeSteps />}
+      {activeTab === '레시피 재료' && (
+        <RecipeIngredients onNext={handleNextTab} onPrev={handlePrevTab} />
+      )}
+      {activeTab === '레시피 순서' && <RecipeSteps onPrev={handlePrevTab} />}
     </Container>
   );
 }
