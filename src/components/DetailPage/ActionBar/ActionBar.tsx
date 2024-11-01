@@ -45,7 +45,13 @@ export const ActionBar = ({
   return (
     <Container>
       <ActionItem onClick={onLike}>
-        <HeartIconContainer initialLikes={likes} recipeId={recipeId} />
+        <HeartIconContainer
+          initialLikes={likes}
+          recipeId={recipeId}
+          activeColor={theme.colors.primaryMain}
+          inactiveColor={theme.colors.gray[500]}
+          likeCountColor={theme.colors.gray[500]}
+        />
       </ActionItem>
 
       <ActionItem onClick={onComment}>
