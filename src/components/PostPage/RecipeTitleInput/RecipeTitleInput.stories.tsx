@@ -1,23 +1,31 @@
+// RecipeTitleInput.stories.tsx
+import React, { useState } from 'react';
 import { Meta, StoryFn } from '@storybook/react';
-import { ThemeProvider } from '@emotion/react';
-import theme from '@/styles/theme';
 import RecipeTitleInput from './RecipeTitleInput';
 
 export default {
-  title: 'Components/PostPage/RecipeTitleInput', // 스토리북에서 컴포넌트 위치를 지정
+  title: 'Components/PostPage/RecipeTitleInput',
   component: RecipeTitleInput,
-  decorators: [
-    (Story) => (
-      <ThemeProvider theme={theme}>
-        <Story />
-      </ThemeProvider>
-    ),
-  ],
-} as Meta;
+  argTypes: {
+    placeholder: { control: 'text' },
+    value: { control: 'text' },
+    onChange: { action: 'changed' },
+  },
+} as Meta<typeof RecipeTitleInput>;
 
-const Template: StoryFn = (args) => <RecipeTitleInput {...args} />;
+const Template: StoryFn<typeof RecipeTitleInput> = (args) => {
+  const [value, setValue] = useState(args.value || '');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+    args.onChange(e); // Storybook action log
+  };
+
+  return <RecipeTitleInput {...args} value={value} onChange={handleChange} />;
+};
 
 export const Default = Template.bind({});
 Default.args = {
-  placeholder: '제목을 입력해주세요.', // 기본 placeholder 텍스트
+  placeholder: '제목을 입력하세요',
+  value: '',
 };
