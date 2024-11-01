@@ -45,11 +45,22 @@ const NextButton = styled.button<{ isActive: boolean }>`
   transition: background-color 0.3s;
 `;
 
-const IngredientsNextBtn = ({ isActive }: { isActive: boolean }) => {
+interface IngredientsNextBtnProps {
+  isActive: boolean;
+  onPrevClick?: () => void;
+  onNextClick?: () => void;
+}
+
+const IngredientsNextBtn = ({ isActive, onPrevClick, onNextClick }: IngredientsNextBtnProps) => {
   return (
     <ButtonContainer>
-      <PrevButton>이전</PrevButton>
-      <NextButton isActive={isActive}>다음</NextButton>
+      <PrevButton onClick={onPrevClick}>이전</PrevButton>
+      <NextButton
+        isActive={isActive}
+        onClick={isActive ? onNextClick : undefined} // 비활성화 상태에서는 클릭 이벤트 없음
+      >
+        다음
+      </NextButton>
     </ButtonContainer>
   );
 };
