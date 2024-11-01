@@ -10,6 +10,7 @@ import { ArrowDown } from '@/assets/icons/ArrowDown';
 const Container = styled.div`
   width: 100%;
   max-width: 450px;
+  padding: 24px 0 12px 0;
 `;
 
 const Label = styled(Title2)`
@@ -98,7 +99,7 @@ const TagContainer = styled.div`
   gap: 8px;
   justify-content: center;
   width: 100%;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 `;
 
 const Tag = styled(ChipText)<{ isSelected: boolean }>`
