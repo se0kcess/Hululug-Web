@@ -64,28 +64,28 @@ const ModalOverlay = styled.div`
 
 interface CompletedBtnConProps {
   isActive: boolean;
+  onPrev: () => void;
 }
 
-const CompletedBtnCon = ({ isActive }: CompletedBtnConProps) => {
+const CompletedBtnCon = ({ isActive, onPrev }: CompletedBtnConProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleCompletedClick = () => {
     if (isActive) {
-      setIsModalOpen(true); // 활성화된 경우 모달을 연다
+      setIsModalOpen(true);
     }
   };
 
   const handleCancel = () => setIsModalOpen(false);
   const handleRegister = () => {
     setIsModalOpen(false);
-    // 레시피 등록 로직 추가
     console.log('레시피 등록됨');
   };
 
   return (
     <>
       <ButtonContainer>
-        <PrevButton>이전</PrevButton>
+        <PrevButton onClick={onPrev}>이전</PrevButton>
         <CompletedButton isActive={isActive} onClick={handleCompletedClick}>
           작성완료
         </CompletedButton>
