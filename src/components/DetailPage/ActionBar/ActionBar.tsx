@@ -13,6 +13,8 @@ interface ActionBarProps {
   onComment: () => void;
   onBookmark: () => void;
   onShare: () => void;
+  bookmarkInactiveColor?: string;
+  bookmarkActiveColor?: string;
 }
 
 const Container = styled.div`
@@ -41,6 +43,8 @@ export const ActionBar = ({
   onComment,
   onBookmark,
   onShare,
+  bookmarkInactiveColor = theme.colors.gray[500],
+  bookmarkActiveColor = theme.colors.primaryMain,
 }: ActionBarProps) => {
   return (
     <Container>
@@ -59,7 +63,13 @@ export const ActionBar = ({
       </ActionItem>
 
       <ActionItem onClick={onBookmark}>
-        <BookmarkButton recipeId={parseInt(recipeId)} size={24} onBookmarkChange={onBookmark} />
+        <BookmarkButton
+          recipeId={parseInt(recipeId)}
+          size={24}
+          onBookmarkChange={onBookmark}
+          inactiveColor={bookmarkInactiveColor}
+          activeColor={bookmarkActiveColor}
+        />
       </ActionItem>
 
       <ActionItem onClick={onShare}>

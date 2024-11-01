@@ -71,6 +71,9 @@ const CommentSec = styled.div`
 
 const ActionBarCon = styled.div`
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-top: 1px solid ${theme.colors.gray[50]};
   background-color: ${theme.colors.white};
   position: sticky;
@@ -111,7 +114,13 @@ export default function DetailPage() {
             <RamenTag ramen={{ id: 1, name: '신라면' }} />
             <div style={{ display: 'flex', gap: 8 }}>
               <RenderPostDate date="2023-10-31" className="custom-class" />
-              <HeartIconContainer initialLikes={100} recipeId="recipe-123" />
+              <HeartIconContainer
+                activeColor={theme.colors.gray[500]}
+                inactiveColor={theme.colors.gray[500]}
+                likeCountColor={theme.colors.gray[500]}
+                initialLikes={100}
+                recipeId="recipe-123"
+              />
             </div>
           </TagDateLike>
 
