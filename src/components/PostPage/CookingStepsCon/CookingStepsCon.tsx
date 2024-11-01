@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import { BodyText, Title2 } from '@/styles/Typography';
@@ -57,19 +56,15 @@ const AddButton = styled.button`
   cursor: pointer;
 `;
 
-const CookingStepsCon = () => {
-  const [steps, setSteps] = useState(['']);
-
-  const handleAddStep = () => {
-    setSteps([...steps, '']);
-  };
-
-  const handleStepChange = (index: number, value: string) => {
-    const newSteps = [...steps];
-    newSteps[index] = value;
-    setSteps(newSteps);
-  };
-
+const CookingStepsCon = ({
+  steps,
+  onStepChange,
+  onAddStep,
+}: {
+  steps: string[];
+  onStepChange: (index: number, value: string) => void;
+  onAddStep: () => void;
+}) => {
   return (
     <Container>
       <Title>조리 순서</Title>
@@ -79,11 +74,11 @@ const CookingStepsCon = () => {
           <Input
             placeholder="레시피를 입력해주세요."
             value={step}
-            onChange={(e) => handleStepChange(index, e.target.value)}
+            onChange={(e) => onStepChange(index, e.target.value)}
           />
         </StepContainer>
       ))}
-      <AddButton onClick={handleAddStep}>
+      <AddButton onClick={onAddStep}>
         <Plus width={20} height={20} fill={theme.colors.gray[500]} />
       </AddButton>
     </Container>
