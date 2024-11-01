@@ -8,7 +8,7 @@ import { RamenTag } from '@/components/common/RamenTag/RamenTag';
 import { RenderPostDate } from '@/components/common/RenderPostDate/RenderPostDate';
 import { HeartIconContainer } from '@/components/common/HeartIconContainer/HeartIconContainer';
 import Introduction from '@/components/DetailPage/Introduction/Introduction';
-import Profile from '@/components/DetailPage/Profile/Profile';
+import Profile from '@/components/common/Profile/Profile';
 import Ingredients from '@/components/DetailPage/Ingredients/Ingredients';
 import CookingSteps from '@/components/DetailPage/CookingSteps/CookingSteps';
 import CommentInput from '@/components/DetailPage/CommentInput/CommentInput';

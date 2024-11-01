@@ -1,8 +1,8 @@
-import { Caption } from '@/components/DetailPage/Profile/Profile';
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import theme from '@/styles/theme';
 import Input from '@/components/EditProfilePage/Input/Input';
+import { Caption } from '@/components/common/Profile/Profile';
 
 const TextStyle = styled(Caption)<{ isError: boolean }>`
   color: ${(props) => (props.isError ? theme.colors.red : theme.colors.gray[500])};
