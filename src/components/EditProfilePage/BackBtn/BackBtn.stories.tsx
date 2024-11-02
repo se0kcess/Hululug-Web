@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import BackBtn, { BackBtnProps } from './BackBtn';
 
 export default {
-  title: 'Components/BackBtn',
+  title: 'Components/EditProfile/BackBtn',
   component: BackBtn,
   argTypes: {
     onClick: { action: 'clicked' },

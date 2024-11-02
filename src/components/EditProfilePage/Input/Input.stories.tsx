@@ -3,7 +3,7 @@ import Input, { InputType } from './Input';
 import theme from '@/styles/theme';
 
 export default {
-  title: 'Components/Input',
+  title: 'Components/EditProfile/Input',
   component: Input,
   argTypes: {
     color: { control: 'color', defaultValue: theme.colors.gray[200] }, // 기본 placeholder 색상
