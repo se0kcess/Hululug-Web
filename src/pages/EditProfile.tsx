@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
-// import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import theme from '@/styles/theme';
 import EditProfileHeader from '@/components/EditProfilePage/EditProfileHeader/EditProfileHeader';
 import BackButton from '@/components/common/BackButton/BackButton';
@@ -87,22 +86,24 @@ const ButtonCon = styled.div`
   padding: 24px;
 `;
 
-const CompleteBtn = styled.button`
+const CompleteBtn = styled.button<{ disabled: boolean }>`
   width: 100%;
   height: 48px;
   border-radius: 12px;
   color: ${theme.colors.white};
-  background-color: ${theme.colors.primaryMain};
+  background-color: ${(props) =>
+    props.disabled ? theme.colors.gray[100] : theme.colors.primaryMain};
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: ${theme.typography.button.size};
   line-height: ${theme.typography.button.lineHeight};
   font-weight: ${theme.typography.button.weight};
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   border: none;
   &:hover {
-    background-color: ${theme.colors.primaryDark};
+    background-color: ${(props) =>
+      props.disabled ? theme.colors.gray[100] : theme.colors.primaryDark};
   }
 `;
 
@@ -111,10 +112,13 @@ export default function EditProfile() {
   const [nickname, setNickname] = useState('백종원');
   const [introduce, setIntroduce] = useState('');
   const [profileImage, setProfileImage] = useState(SampleImg);
+  const [isNicknameValid, setIsNicknameValid] = useState(true);
+
+  const isFormValid = isNicknameValid;
 
   useEffect(() => {
     setId('user@example.com');
-  }, [profileImage, setProfileImage]);
+  }, []);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -125,20 +129,10 @@ export default function EditProfile() {
   };
 
   const handleComplete = async () => {
-    console.log(`이름 ${nickname} 소개 ${introduce} 이미지 ${profileImage}`);
-
-    // try {
-    //   const response = await axios.put('/users', {
-    //     nickname,
-    //     introduce,
-    //     profile_image: profileImage,
-    //   });
-    //   console.log(response.data); // 서버 응답 확인
-    //   alert('프로필이 성공적으로 수정되었습니다!');
-    // } catch (error) {
-    //   console.error(error);
-    //   alert('프로필 수정 중 오류가 발생했습니다.');
-    // }
+    if (isFormValid) {
+      console.log(`이름 ${nickname} 소개 ${introduce} 이미지 ${profileImage}`);
+      // 서버에 프로필 정보 전송
+    }
   };
 
   return (
@@ -167,6 +161,7 @@ export default function EditProfile() {
             propValue={nickname}
             onChange={(e) => setNickname(e.target.value)}
             optional={true}
+            isError={(isError) => setIsNicknameValid(!isError)}
           />
         </NickNameCon>
         <IntroCon>
@@ -181,7 +176,9 @@ export default function EditProfile() {
         </IntroCon>
       </InputCon>
       <ButtonCon>
-        <CompleteBtn onClick={handleComplete}>수정 완료</CompleteBtn>
+        <CompleteBtn onClick={handleComplete} disabled={!isFormValid}>
+          수정 완료
+        </CompleteBtn>
       </ButtonCon>
     </Container>
   );
