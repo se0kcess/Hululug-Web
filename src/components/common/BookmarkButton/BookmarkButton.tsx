@@ -5,11 +5,11 @@ import useBookmarkStore from '@/store/bookmarkStore';
 import theme from '@/styles/theme';
 
 interface BookmarkButtonProps {
-  recipeId: number;
+  recipeId: string;
   size?: number;
   activeColor?: string;
   inactiveColor?: string;
-  onBookmarkChange?: (recipeId: number, isBookmarked: boolean) => void;
+  onBookmarkChange?: (recipeId: string, isBookmarked: boolean) => void;
 }
 
 const StyledButton = styled.button`

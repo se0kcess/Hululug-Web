@@ -64,7 +64,7 @@ export const ActionBar = ({
 
       <ActionItem onClick={onBookmark}>
         <BookmarkButton
-          recipeId={parseInt(recipeId)}
+          recipeId={recipeId}
           size={24}
           onBookmarkChange={onBookmark}
           inactiveColor={bookmarkInactiveColor}
