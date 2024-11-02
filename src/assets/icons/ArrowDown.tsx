@@ -1,11 +1,10 @@
 interface ArrowDownProps {
-  className?: string;
   width?: number;
   height?: number;
   color?: string;
 }
 
-export const ArrowDown: React.FC<ArrowDownProps> = ({ className, width = 24, height = 24 }) => {
+export const ArrowDown = ({ width = 24, height = 24 }: ArrowDownProps) => {
   return (
     <svg
       width={width}
@@ -13,7 +12,6 @@ export const ArrowDown: React.FC<ArrowDownProps> = ({ className, width = 24, hei
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
     >
       <path
         fillRule="evenodd"

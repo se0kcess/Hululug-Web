@@ -1,5 +1,4 @@
 import { useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import styled from '@emotion/styled';
 import MainImg from '@/components/DetailPage/MainImg/MainImg';
@@ -17,7 +16,7 @@ import { ActionBar } from '@/components/DetailPage/ActionBar/ActionBar';
 
 import SamleImg from '@/assets/images/profile-img-2.png';
 import theme from '@/styles/theme';
-import BackIcon from '@/assets/icons/ArrowLeft';
+import BackButton from '@/components/common/BackButton/BackButton';
 
 const Container = styled.div`
   margin: 0;
@@ -27,10 +26,10 @@ const Container = styled.div`
   align-items: center;
   min-height: calc(100vh - 60px);
 `;
-const BackBtn = styled.div`
+const BackButtonContainer = styled.div`
   position: absolute;
   top: 24px;
-  left: 24px;
+  left: 18px;
   cursor: pointer;
 `;
 
@@ -81,7 +80,6 @@ const ActionBarCon = styled.div`
 `;
 
 export default function DetailPage() {
-  const navigate = useNavigate();
   const commentSecRef = useRef<HTMLDivElement>(null);
   const handleLike = () => {
     console.log('Liked!');
@@ -104,9 +102,9 @@ export default function DetailPage() {
   return (
     <>
       <Container>
-        <BackBtn onClick={() => navigate('/')}>
-          <BackIcon width={28} height={28} fill={theme.colors.white} />
-        </BackBtn>
+        <BackButtonContainer>
+          <BackButton width={32} height={32} fill={theme.colors.white} />
+        </BackButtonContainer>
         <MainImg imgSrc={ImgSrc}></MainImg>
         <IntroSec>
           {/* 태그와 날짜/좋아요 아이콘 배치 */}
