@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import theme from '@/styles/theme';
 import Input from '@/components/EditProfilePage/Input/Input';
 import { Caption } from '@/components/common/Profile/Profile';
@@ -24,6 +24,7 @@ interface CharacterCountProps {
   propValue?: string;
   placeholder?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isError?: (isError: boolean) => void; // 추가된 isError 콜백
 }
 
 const CharacterCount = ({
@@ -33,6 +34,7 @@ const CharacterCount = ({
   placeholder = '',
   propValue = '',
   onChange,
+  isError, // 새로운 콜백 prop
 }: CharacterCountProps) => {
   const [value, setValue] = useState(propValue);
 
@@ -45,22 +47,29 @@ const CharacterCount = ({
   };
 
   const currentLength = value.length;
-  const isError = currentLength > maxLength || currentLength < minLength;
+  const hasError = currentLength > maxLength || currentLength < minLength;
+
+  // isError 콜백 호출로 상위 컴포넌트에 에러 상태 전달
+  useEffect(() => {
+    if (isError) {
+      isError(hasError);
+    }
+  }, [hasError, isError]);
 
   return (
     <div style={{ width: '100%' }}>
       <Input
         color={theme.colors.gray[700]}
-        borderColor={isError ? theme.colors.red : theme.colors.gray[100]}
+        borderColor={hasError ? theme.colors.red : theme.colors.gray[100]}
         placeholder={placeholder}
         value={value}
         onChange={handleChange}
       />
       <CharacterCountContainer>
-        <TextStyle isError={isError}>
+        <TextStyle isError={hasError}>
           {optional ? `한글/영문 포함 ${minLength}자 이상 ${maxLength}자 이하` : ''}
         </TextStyle>
-        <TextStyle isError={isError}>
+        <TextStyle isError={hasError}>
           {currentLength} / {maxLength}자
         </TextStyle>
       </CharacterCountContainer>
