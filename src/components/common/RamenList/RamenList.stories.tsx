@@ -14,7 +14,7 @@ const sampleRecipes: RamenRecipe[] = [
     date: '2024.10.23',
     image: '/src/assets/ramyun-images/sample-1.png',
     ramenType: { id: 1, name: '신라면' },
-    bookmarkId: 1,
+    bookmarkId: 'bookmark-1', // number -> string으로 변경
   },
   {
     id: '2',
@@ -25,7 +25,7 @@ const sampleRecipes: RamenRecipe[] = [
     date: '2024.10.22',
     image: '/src/assets/ramyun-images/sample-2.png',
     ramenType: { id: 2, name: '진라면' },
-    bookmarkId: 2,
+    bookmarkId: 'bookmark-2', // number -> string으로 변경
   },
 ];
 
@@ -89,7 +89,7 @@ export const ManyItems: Story = {
         ...sampleRecipes[0],
         id: `${index + 1}`,
         title: `라면 레시피 ${index + 1}`,
-        bookmarkId: index + 1,
+        bookmarkId: `bookmark-${index + 1}`, // number -> string으로 변경하고 의미있는 prefix 추가
       })),
   },
 };

@@ -9,7 +9,7 @@ const meta: Meta<typeof BookmarkButton> = {
   title: 'Components/BookmarkButton',
   component: BookmarkButton,
   args: {
-    recipeId: 1,
+    recipeId: '1',
     size: 24,
   },
   decorators: [
@@ -59,9 +59,9 @@ export const LargeSize: Story = {
 export const MultipleButtons: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: '16px' }}>
-      <BookmarkButton recipeId={1} />
-      <BookmarkButton recipeId={2} />
-      <BookmarkButton recipeId={3} />
+      <BookmarkButton recipeId={'1'} />
+      <BookmarkButton recipeId={'2'} />
+      <BookmarkButton recipeId={'3'} />
     </div>
   ),
 };
@@ -76,7 +76,7 @@ export const Interactive: Story = {
       >
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
           <BookmarkButton
-            recipeId={1}
+            recipeId={'1'}
             onBookmarkChange={(id, isBookmarked) =>
               console.log(`Recipe ${id} is ${isBookmarked ? 'bookmarked' : 'unbookmarked'}`)
             }

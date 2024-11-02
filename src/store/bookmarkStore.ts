@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 
 interface BookmarkState {
-  bookmarkedRecipes: number[];
-  toggleBookmark: (recipeId: number) => void;
+  bookmarkedRecipes: string[];
+  toggleBookmark: (recipeId: string) => void;
   clearBookmarks: () => void;
 }
 

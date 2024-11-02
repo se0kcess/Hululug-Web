@@ -69,7 +69,7 @@ export default function MainPage() {
       date: '24.10.23',
       image: '/src/assets/ramyun-images/sample-1.png',
       ramenType: { id: 20, name: '짜파게티' },
-      bookmarkId: 1,
+      bookmarkId: '1',
     },
     {
       id: '5',
@@ -80,7 +80,7 @@ export default function MainPage() {
       date: '24.10.22',
       image: '/src/assets/ramyun-images/sample-2.png',
       ramenType: { id: 10, name: '삼양라면' },
-      bookmarkId: 2,
+      bookmarkId: '2',
     },
     {
       id: '6',
@@ -91,7 +91,7 @@ export default function MainPage() {
       date: '24.10.22',
       image: '/src/assets/ramyun-images/sample-3.png',
       ramenType: { id: 12, name: '신라면' },
-      bookmarkId: 3,
+      bookmarkId: '3',
     },
   ];
 
