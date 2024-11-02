@@ -5,7 +5,9 @@ import Input from '@/components/EditProfilePage/Input/Input';
 import { Caption } from '@/components/common/Profile/Profile';
 
 const TextStyle = styled(Caption)<{ isError: boolean }>`
+  display: flex;
   color: ${(props) => (props.isError ? theme.colors.red : theme.colors.gray[500])};
+  width: auto;
 `;
 
 const CharacterCountContainer = styled.div`
@@ -17,22 +19,28 @@ const CharacterCountContainer = styled.div`
 
 interface CharacterCountProps {
   maxLength: number;
-  minLength?: number; // 최소 글자 수
-  optional?: boolean; // 선택사항 여부
-  propValue?: string; // input prop value (optional)
+  minLength?: number;
+  optional?: boolean;
+  propValue?: string;
+  placeholder?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const CharacterCount = ({
   maxLength,
   minLength = 2,
   optional = false,
-  propValue,
+  placeholder = '',
+  propValue = '',
+  onChange,
 }: CharacterCountProps) => {
-  const [value, setValue] = useState(propValue ? propValue : '');
+  const [value, setValue] = useState(propValue);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length <= maxLength) {
-      setValue(e.target.value);
+    const newValue = e.target.value;
+    if (newValue.length <= maxLength) {
+      setValue(newValue);
+      if (onChange) onChange(e); // e 자체를 전달
     }
   };
 
@@ -40,13 +48,11 @@ const CharacterCount = ({
   const isError = currentLength > maxLength || currentLength < minLength;
 
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       <Input
         color={theme.colors.gray[700]}
         borderColor={isError ? theme.colors.red : theme.colors.gray[100]}
-        disabled={false}
-        placeholder="변경할 닉네임을 입력해주세요"
-        type="text"
+        placeholder={placeholder}
         value={value}
         onChange={handleChange}
       />
