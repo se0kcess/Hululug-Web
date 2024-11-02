@@ -4,7 +4,7 @@ interface IconProps {
   fill?: string;
 }
 
-const BackIcon = ({ width = 24, height = 24, fill = '#1D2228' }: IconProps) => {
+const ArrowLeft = ({ width = 24, height = 24, fill = '#1D2228' }: IconProps) => {
   return (
     <svg
       width={width}
@@ -23,4 +23,4 @@ const BackIcon = ({ width = 24, height = 24, fill = '#1D2228' }: IconProps) => {
   );
 };
 
-export default BackIcon;
+export default ArrowLeft;
