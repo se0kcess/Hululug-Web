@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import Ingredients from './Ingredients';
 
 export default {
-  title: 'Components/Ingredients',
+  title: 'Components/DetailPage/Ingredients',
   component: Ingredients,
   argTypes: {
     title: { control: 'text' },

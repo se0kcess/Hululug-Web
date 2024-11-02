@@ -13,11 +13,12 @@ interface ActionBarProps {
   onComment: () => void;
   onBookmark: () => void;
   onShare: () => void;
+  bookmarkInactiveColor?: string;
+  bookmarkActiveColor?: string;
 }
 
 const Container = styled.div`
   width: 100%;
-  max-width: 400px;
   height: 64px;
   display: flex;
   align-items: center;
@@ -42,11 +43,19 @@ export const ActionBar = ({
   onComment,
   onBookmark,
   onShare,
+  bookmarkInactiveColor = theme.colors.gray[500],
+  bookmarkActiveColor = theme.colors.primaryMain,
 }: ActionBarProps) => {
   return (
     <Container>
       <ActionItem onClick={onLike}>
-        <HeartIconContainer initialLikes={likes} recipeId={recipeId} />
+        <HeartIconContainer
+          initialLikes={likes}
+          recipeId={recipeId}
+          activeColor={theme.colors.primaryMain}
+          inactiveColor={theme.colors.gray[500]}
+          likeCountColor={theme.colors.gray[500]}
+        />
       </ActionItem>
 
       <ActionItem onClick={onComment}>
@@ -54,7 +63,13 @@ export const ActionBar = ({
       </ActionItem>
 
       <ActionItem onClick={onBookmark}>
-        <BookmarkButton recipeId={parseInt(recipeId)} size={24} onBookmarkChange={onBookmark} />
+        <BookmarkButton
+          recipeId={parseInt(recipeId)}
+          size={24}
+          onBookmarkChange={onBookmark}
+          inactiveColor={bookmarkInactiveColor}
+          activeColor={bookmarkActiveColor}
+        />
       </ActionItem>
 
       <ActionItem onClick={onShare}>

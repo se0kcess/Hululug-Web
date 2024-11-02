@@ -8,15 +8,17 @@ interface IntroductionProps {
 }
 
 export const Title = styled(Title1)`
-  width: 327px;
+  width: 100%;
+  padding: 16px 0;
 `;
 
 export const Container = styled(BodyText)`
-  width: 327px;
+  width: 100%;
   height: auto;
   padding: 12px 16px;
   border-radius: 8px;
   background-color: ${theme.colors.gray[50]};
+  margin-bottom: 16px;
 `;
 
 const Introduction = ({ title, content }: IntroductionProps) => {

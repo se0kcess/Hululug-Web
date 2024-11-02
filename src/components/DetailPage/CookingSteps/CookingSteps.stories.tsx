@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import CookingSteps, { Title } from './CookingSteps';
 
 export default {
-  title: 'Components/CookingSteps',
+  title: 'Components/DetailPage/CookingSteps',
   component: CookingSteps,
   argTypes: {
     steps: { control: 'object' }, // Controls 패널에서 steps 배열을 변경 가능하도록 설정
