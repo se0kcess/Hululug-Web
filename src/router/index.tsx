@@ -6,6 +6,7 @@ import SearchPage from '@/pages/SearchPage';
 import EditProfile from '@/pages/EditProfile';
 import { Routes, Route } from 'react-router-dom';
 import RamenWorldCupStartPage from '@/pages/RamenWorldCup/RamenWorldCupStartPage';
+import RamenWorldCupGamePage from '@/pages/RamenWorldCup/RamenWorldCupGamePage';
 
 export default function Router() {
   return (
@@ -18,6 +19,7 @@ export default function Router() {
         <Route path="/search" element={<SearchPage />} />
         <Route path="/profile/edit" element={<EditProfile />} />
         <Route path="/ramenworldcup" element={<RamenWorldCupStartPage />} />
+        <Route path="/ramenworldcup/game" element={<RamenWorldCupGamePage />} />
       </Route>
     </Routes>
   );
