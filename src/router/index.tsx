@@ -3,6 +3,7 @@ import MainPage from '@/pages/MainPage';
 import MyPage from '@/pages/MyPage';
 import PostPage from '@/pages/PostPage';
 import SearchPage from '@/pages/SearchPage';
+import WithdrawPage from '@/pages/WithdrawPage';
 import { Routes, Route } from 'react-router-dom';
 
 export default function Router() {
@@ -14,6 +15,7 @@ export default function Router() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/post" element={<PostPage />} />
         <Route path="/search" element={<SearchPage />} />
+        <Route path="/withdraw" element={<WithdrawPage />} />
       </Route>
     </Routes>
   );
