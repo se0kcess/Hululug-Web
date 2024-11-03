@@ -128,7 +128,7 @@ export default function RamenWorldCupGamePage() {
   const handleChoice = (ramenId: string) => {
     const isGameOver = handleSelect(ramenId);
     if (isGameOver) {
-      navigate('/result');
+      navigate('/ramenworldcup/result');
     }
   };
 
