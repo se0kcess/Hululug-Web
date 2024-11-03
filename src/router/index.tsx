@@ -5,6 +5,7 @@ import PostPage from '@/pages/PostPage';
 import SearchPage from '@/pages/SearchPage';
 import EditProfile from '@/pages/EditProfile';
 import { Routes, Route } from 'react-router-dom';
+import RamenWorldCupStartPage from '@/pages/RamenWorldCup/RamenWorldCupStartPage';
 
 export default function Router() {
   return (
@@ -16,6 +17,7 @@ export default function Router() {
         <Route path="/post" element={<PostPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/profile/edit" element={<EditProfile />} />
+        <Route path="/ramenworldcup" element={<RamenWorldCupStartPage />} />
       </Route>
     </Routes>
   );
