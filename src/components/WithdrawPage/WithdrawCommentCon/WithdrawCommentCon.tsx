@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Title2, BodyText } from '@/styles/Typography';
+import { BodyText, Title1 } from '@/styles/Typography';
 import theme from '@/styles/theme';
 
 const Container = styled.div`
@@ -7,9 +7,8 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const Title = styled(Title2)`
+const Title = styled(Title1)`
   color: ${theme.colors.gray[700]};
-  border: 1px solid red;
   margin-top: 40px;
   margin-bottom: 4px;
 `;
