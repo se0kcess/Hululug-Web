@@ -1,11 +1,13 @@
 import styled from '@emotion/styled';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import theme from '@/styles/theme';
 import Input from '@/components/EditProfilePage/Input/Input';
 import { Caption } from '@/components/common/Profile/Profile';
 
 const TextStyle = styled(Caption)<{ isError: boolean }>`
+  display: flex;
   color: ${(props) => (props.isError ? theme.colors.red : theme.colors.gray[500])};
+  width: auto;
 `;
 
 const CharacterCountContainer = styled.div`
@@ -17,44 +19,57 @@ const CharacterCountContainer = styled.div`
 
 interface CharacterCountProps {
   maxLength: number;
-  minLength?: number; // 최소 글자 수
-  optional?: boolean; // 선택사항 여부
-  propValue?: string; // input prop value (optional)
+  minLength?: number;
+  optional?: boolean;
+  propValue?: string;
+  placeholder?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isError?: (isError: boolean) => void; // 추가된 isError 콜백
 }
 
 const CharacterCount = ({
   maxLength,
   minLength = 2,
   optional = false,
-  propValue,
+  placeholder = '',
+  propValue = '',
+  onChange,
+  isError, // 새로운 콜백 prop
 }: CharacterCountProps) => {
-  const [value, setValue] = useState(propValue ? propValue : '');
+  const [value, setValue] = useState(propValue);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length <= maxLength) {
-      setValue(e.target.value);
+    const newValue = e.target.value;
+    if (newValue.length <= maxLength) {
+      setValue(newValue);
+      if (onChange) onChange(e); // e 자체를 전달
     }
   };
 
   const currentLength = value.length;
-  const isError = currentLength > maxLength || currentLength < minLength;
+  const hasError = currentLength > maxLength || currentLength < minLength;
+
+  // isError 콜백 호출로 상위 컴포넌트에 에러 상태 전달
+  useEffect(() => {
+    if (isError) {
+      isError(hasError);
+    }
+  }, [hasError, isError]);
 
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       <Input
         color={theme.colors.gray[700]}
-        borderColor={isError ? theme.colors.red : theme.colors.gray[100]}
-        disabled={false}
-        placeholder="변경할 닉네임을 입력해주세요"
-        type="text"
+        borderColor={hasError ? theme.colors.red : theme.colors.gray[100]}
+        placeholder={placeholder}
         value={value}
         onChange={handleChange}
       />
       <CharacterCountContainer>
-        <TextStyle isError={isError}>
+        <TextStyle isError={hasError}>
           {optional ? `한글/영문 포함 ${minLength}자 이상 ${maxLength}자 이하` : ''}
         </TextStyle>
-        <TextStyle isError={isError}>
+        <TextStyle isError={hasError}>
           {currentLength} / {maxLength}자
         </TextStyle>
       </CharacterCountContainer>

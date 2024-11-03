@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import CharacterCount from './CharacterCount';
 
 export default {
-  title: 'Components/CharacterCount',
+  title: 'Components/EditProfile/CharacterCount',
   component: CharacterCount,
   argTypes: {
     maxLength: {
