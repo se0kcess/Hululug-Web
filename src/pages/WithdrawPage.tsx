@@ -110,7 +110,7 @@ const WithdrawPage = () => {
         <CheckBox checked={isChecked} onChange={handleCheckboxChange} />
       </MainContent>
       <WithdrawBtnCon>
-        <WithdrawBtn disabled={!isChecked} onClick={handleWithdrawClick}>
+        <WithdrawBtn disabled={!isChecked} onClick={() => isChecked && handleWithdrawClick()}>
           회원 탈퇴
         </WithdrawBtn>
       </WithdrawBtnCon>
