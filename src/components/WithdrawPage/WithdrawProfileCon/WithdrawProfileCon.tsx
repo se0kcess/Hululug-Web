@@ -5,7 +5,8 @@ import Profile from '@/components/common/Profile/Profile';
 
 import SamepleImg from '@/assets/images/profile-img-4.png';
 import theme from '@/styles/theme';
-const ProfileCon = styled(BodyText)`
+
+const ProfileCon = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -16,7 +17,7 @@ const ProfileCon = styled(BodyText)`
 const WithdrawProfileCon = () => {
   return (
     <ProfileCon>
-      탈퇴 계정 정보
+      <BodyText>탈퇴 계정 정보</BodyText>
       <div
         style={{
           border: `1px solid ${theme.colors.gray[100]}`,
