@@ -9,24 +9,10 @@ interface ProfileSettingsButtonProps {
 
 const IconButton = styled.button`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 8px;
-  border-radius: 8px;
-  border: none;
-  background: transparent;
+  align-items: top;
+  width: 2.5rem;
+  height: 2.5rem;
   cursor: pointer;
-  transition: background-color 200ms ease-in-out;
-
-  &:hover {
-    background-color: ${theme.colors.gray[50]};
-  }
-
-  &:active {
-    background-color: ${theme.colors.gray[100]};
-  }
 `;
 
 const ProfileSettingsButton = ({ onLogout }: ProfileSettingsButtonProps) => {
