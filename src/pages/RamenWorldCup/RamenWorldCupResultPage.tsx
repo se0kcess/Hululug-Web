@@ -134,7 +134,7 @@ export default function RamenWorldCupResultPage() {
           <Button
             variant="secondary"
             onClick={() => {
-              // 공유 기능 구현
+              // 공유 기능
               if (navigator.share) {
                 navigator.share({
                   title: '라면 이상형 월드컵',
@@ -142,7 +142,6 @@ export default function RamenWorldCupResultPage() {
                   url: window.location.href,
                 });
               } else {
-                // 클립보드 복사 등 대체 공유 방법 구현
                 navigator.clipboard.writeText(window.location.href);
                 alert('링크가 복사되었습니다!');
               }
