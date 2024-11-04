@@ -4,6 +4,7 @@ import MyPage from '@/pages/MyPage';
 import PostPage from '@/pages/PostPage';
 import SearchPage from '@/pages/SearchPage';
 import EditProfile from '@/pages/EditProfile';
+import WithdrawPage from '@/pages/WithdrawPage';
 import { Routes, Route } from 'react-router-dom';
 import RamenWorldCupStartPage from '@/pages/RamenWorldCup/RamenWorldCupStartPage';
 import RamenWorldCupGamePage from '@/pages/RamenWorldCup/RamenWorldCupGamePage';
@@ -26,6 +27,7 @@ export default function Router() {
         <Route path="/ramenworldcup/result" element={<RamenWorldCupResultPage />} />
         <Route path="/ramenworldcup/rank" element={<RamenWorldCupRankingPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/withdraw" element={<WithdrawPage />} />
       </Route>
     </Routes>
   );
