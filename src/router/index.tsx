@@ -10,6 +10,7 @@ import RamenWorldCupStartPage from '@/pages/RamenWorldCup/RamenWorldCupStartPage
 import RamenWorldCupGamePage from '@/pages/RamenWorldCup/RamenWorldCupGamePage';
 import RamenWorldCupResultPage from '@/pages/RamenWorldCup/RamenWorldCupResultPage';
 import RamenWorldCupRankingPage from '@/pages/RamenWorldCup/RamenWorldCupRankingPage';
+import { SignupPage } from '@/pages/SignUpPage';
 
 export default function Router() {
   return (
@@ -25,6 +26,7 @@ export default function Router() {
         <Route path="/ramenworldcup/game" element={<RamenWorldCupGamePage />} />
         <Route path="/ramenworldcup/result" element={<RamenWorldCupResultPage />} />
         <Route path="/ramenworldcup/rank" element={<RamenWorldCupRankingPage />} />
+        <Route path="/signup" element={<SignupPage />} />
         <Route path="/withdraw" element={<WithdrawPage />} />
       </Route>
     </Routes>

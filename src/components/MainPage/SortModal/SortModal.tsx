@@ -25,6 +25,7 @@ const ModalOverlay = styled.div<{ isOpen: boolean }>`
 const ModalContent = styled.div`
   background: ${theme.colors.white};
   width: 100%;
+  max-width: 430px;
   border-radius: 20px 20px 0 0;
   overflow: hidden;
 

@@ -5,7 +5,7 @@ import { RenderPostDate } from './RenderPostDate';
 import theme from '@/styles/theme';
 
 const meta: Meta<typeof RenderPostDate> = {
-  title: 'Components/RenderPostDate',
+  title: 'Components/common/RenderPostDate',
   component: RenderPostDate,
   tags: ['autodocs'],
   decorators: [

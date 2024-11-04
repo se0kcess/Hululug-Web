@@ -34,6 +34,7 @@ const ModalOverlay = styled.div<{ isOpen: boolean }>`
 const ModalContent = styled.div<{ translateY: number }>`
   background: ${theme.colors.white};
   width: 100%;
+  max-width: 430px;
   max-height: 80vh;
   border-radius: 20px 20px 0 0;
   padding: 1.5rem 1rem;
