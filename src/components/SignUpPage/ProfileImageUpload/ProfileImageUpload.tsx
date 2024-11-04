@@ -15,7 +15,7 @@ const ImageContainer = styled.div<{ size: 'small' | 'regular' }>`
   position: relative;
   width: ${(props) => (props.size === 'small' ? '80px' : '120px')};
   height: ${(props) => (props.size === 'small' ? '80px' : '120px')};
-  margin: 20px auto;
+  margin: 1.25rem auto;
 `;
 
 const ProfileImage = styled.img`
@@ -63,7 +63,7 @@ const UploadButton = styled.label<{ size: 'small' | 'regular'; isLoading?: boole
 const ErrorText = styled(CaptionText)`
   color: ${(props) => props.theme.colors.red};
   text-align: center;
-  margin-top: 8px;
+  margin-top: 0.5rem;
 `;
 
 const HiddenInput = styled.input`
