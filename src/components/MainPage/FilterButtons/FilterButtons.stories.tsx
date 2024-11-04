@@ -7,7 +7,7 @@ import { useRamenFilterStore } from '@/store/ramenFilterStore';
 import { useSortStore } from '@/store/sortStore';
 
 const meta: Meta<typeof FilterButtons> = {
-  title: 'Components/FilterButtons',
+  title: 'Components/MainPage/FilterButtons',
   component: FilterButtons,
   parameters: {
     layout: 'centered',

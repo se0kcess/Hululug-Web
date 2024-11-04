@@ -3,7 +3,7 @@ import SubmitBtn from './SubmitBtn';
 import theme from '@/styles/theme';
 
 export default {
-  title: 'Components/SubmitBtn',
+  title: 'Components/EditProfile/SubmitBtn',
   component: SubmitBtn,
   argTypes: {
     backgroundColor: { control: 'color', defaultValue: theme.colors.primaryMain },

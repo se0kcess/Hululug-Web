@@ -4,7 +4,7 @@ import { ThemeProvider } from '@emotion/react';
 import theme from '@/styles/theme';
 
 const meta: Meta<typeof HotRecipeCard> = {
-  title: 'Components/HotRecipeCard',
+  title: 'Components/MainPage/HotRecipeCard',
   component: HotRecipeCard,
   parameters: {
     layout: 'centered',

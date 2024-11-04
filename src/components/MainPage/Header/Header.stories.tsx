@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router-dom';
 import theme from '@/styles/theme';
 
 const meta = {
-  title: 'Components/Header',
+  title: 'Components/MainPage/Header',
   component: Header,
   parameters: {
     layout: 'fullscreen',

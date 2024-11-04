@@ -7,7 +7,7 @@ import theme from '@/styles/theme';
 import { SORT_OPTIONS } from '@/types/sort';
 
 const meta: Meta<typeof SortModal> = {
-  title: 'Components/SortModal',
+  title: 'Components/MainPage/SortModal',
   component: SortModal,
   parameters: {
     layout: 'fullscreen',

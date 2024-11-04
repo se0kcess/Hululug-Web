@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions';
 import MyPageModal from '@/components/MyPage/MyPageModal/MyPageModal';
 
 const meta: Meta<typeof MyPageModal> = {
-  title: 'Components/MyPageModal',
+  title: 'Components/MyPage/MyPageModal',
   component: MyPageModal,
   parameters: {
     layout: 'fullscreen',

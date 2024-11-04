@@ -5,7 +5,7 @@ import { RamenTag } from './RamenTag';
 import theme from '@/styles/theme';
 
 const meta: Meta<typeof RamenTag> = {
-  title: 'Components/RamenTag',
+  title: 'Components/common/RamenTag',
   component: RamenTag,
   tags: ['autodocs'],
   decorators: [
