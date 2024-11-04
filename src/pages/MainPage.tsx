@@ -18,6 +18,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 90%;
+  padding-bottom: 5rem;
   margin: 0 auto;
   min-height: calc(100vh - 60px);
 `;
