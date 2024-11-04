@@ -5,6 +5,8 @@ import { useRamenStore } from '@/store/ramenStore';
 import { RAMEN_IMAGES } from '@/constants/ramenWorldCupList';
 import { ButtonText, ChipText, DisplayText, Title1 } from '@/styles/Typography';
 import BackButton from '@/components/common/BackButton/BackButton';
+import { useRamenQuery } from '@/hooks/useRamenQuery';
+import { useEffect } from 'react';
 
 const Container = styled.div`
   margin: 0 auto;
@@ -96,15 +98,22 @@ const Button = styled(ButtonText)<{ variant?: 'primary' | 'secondary' }>`
 
 export default function RamenWorldCupResultPage() {
   const navigate = useNavigate();
-  const { winner, shuffleRamenList } = useRamenStore();
+  const { winner } = useRamenStore();
+  const { updateWinnerCount } = useRamenQuery(); // API 훅 추가
 
   if (!winner) {
     navigate('/');
     return null;
   }
 
+  // winner의 count 업데이트
+  useEffect(() => {
+    if (winner) {
+      updateWinnerCount.mutate(winner._id);
+    }
+  }, [winner]);
+
   const handleRestart = () => {
-    shuffleRamenList();
     navigate('/ramenworldcup');
   };
 
@@ -116,11 +125,10 @@ export default function RamenWorldCupResultPage() {
 
       <ContentContainer>
         <ResultText>나의 최애 라면은</ResultText>
-
-        <WinnerName>{winner.name}</WinnerName>
+        <WinnerName>{winner.title}</WinnerName>
 
         <RamenImageContainer>
-          <RamenImage src={RAMEN_IMAGES[winner.imageKey]} alt={winner.name} />
+          <RamenImage src={RAMEN_IMAGES[winner.imageKey]} alt={winner.title} />
         </RamenImageContainer>
 
         <RankingLink onClick={() => navigate('/ramenworldcup/rank')}>
@@ -134,11 +142,10 @@ export default function RamenWorldCupResultPage() {
           <Button
             variant="secondary"
             onClick={() => {
-              // 공유 기능
               if (navigator.share) {
                 navigator.share({
                   title: '라면 이상형 월드컵',
-                  text: `나의 최애 라면은 ${winner.name}입니다!`,
+                  text: `나의 최애 라면은 ${winner.title}입니다!`,
                   url: window.location.href,
                 });
               } else {

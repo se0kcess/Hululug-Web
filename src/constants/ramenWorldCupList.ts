@@ -1,4 +1,4 @@
-import { Ramen, RamenImageKey } from '@/types/ramenWorldCup';
+import { RamenImageKey } from '@/types/ramenWorldCup';
 
 import shinRamyun from '@/assets/ramyun-images/shin-ramyun.png';
 import jinRamyun from '@/assets/ramyun-images/jin-ramyun.png';
@@ -37,118 +37,103 @@ export const RAMEN_IMAGES: Record<RamenImageKey, string> = {
   ojingeo: ojingeoJjambbong,
 } as const;
 
-// 초기 라면 데이터
-export const INITIAL_RAMEN_LIST: Ramen[] = [
-  {
-    id: 'shin',
-    name: '신라면',
+// DB의 라면 ID와 이미지 키 매핑을 위한 상수
+export const RAMEN_ID_MAP = {
+  '6728603f2f3ce8010638df5': {
+    title: '신라면',
     brand: 'Nongshim',
     imageKey: 'shin',
-    winCount: 0,
   },
-  {
-    id: 'jjapaghetti',
-    name: '짜파게티',
+  '6728605a2f3ce8010638df6': {
+    title: '짜파게티',
     brand: 'Nongshim',
     imageKey: 'jjapaghetti',
-    winCount: 0,
   },
-  {
-    id: 'jin',
-    name: '진라면',
+  '672860692f3ce8010638df7': {
+    title: '진라면',
     brand: 'Ottogi',
     imageKey: 'jin',
-    winCount: 0,
   },
-  {
-    id: 'buldak',
-    name: '불닭볶음면',
+  '672860792f3ce8010638df9': {
+    title: '불닭볶음면',
     brand: 'Samyang',
     imageKey: 'buldak',
-    winCount: 0,
   },
-  {
-    id: 'yukgaejang',
-    name: '육개장',
+  '672860972f3ce8010638dfb': {
+    title: '육개장',
     brand: 'Nongshim',
     imageKey: 'yukgaejang',
-    winCount: 0,
   },
-  {
-    id: 'ansung',
-    name: '안성탕면',
+  '672860a72f3ce8010638dfc': {
+    title: '안성탕면',
     brand: 'Nongshim',
     imageKey: 'ansung',
-    winCount: 0,
   },
-  {
-    id: 'neoguri',
-    name: '너구리',
+  '672860b52f3ce8010638dfd': {
+    title: '너구리',
     brand: 'Nongshim',
     imageKey: 'neoguri',
-    winCount: 0,
   },
-  {
-    id: 'wang',
-    name: '왕뚜껑',
+  '672860ca2f3ce8010638dfe': {
+    title: '왕뚜껑',
     brand: 'Paldo',
     imageKey: 'wangttukkeong',
-    winCount: 0,
   },
-  {
-    id: 'samyang',
-    name: '삼양라면',
+  '672860da2f3ce8010638dff': {
+    title: '삼양라면',
     brand: 'Samyang',
     imageKey: 'samyang',
-    winCount: 0,
   },
-  {
-    id: 'bibim',
-    name: '팔도비빔면',
+  '672860f02f3ce8010638e00': {
+    title: '팔도비빔면',
     brand: 'Paldo',
     imageKey: 'bibim',
-    winCount: 0,
   },
-  {
-    id: 'sesame',
-    name: '참깨라면',
+  '6728610a2f3ce8010638e01': {
+    title: '참깨라면',
     brand: 'Ottogi',
     imageKey: 'sesame',
-    winCount: 0,
   },
-  {
-    id: 'yeol',
-    name: '열라면',
+  '672861232f3ce8010638e02': {
+    title: '열라면',
     brand: 'Ottogi',
     imageKey: 'yeol',
-    winCount: 0,
   },
-  {
-    id: 'saewoo',
-    name: '새우탕',
+  '6728612f2f3ce8010638e03': {
+    title: '새우탕',
     brand: 'Nongshim',
     imageKey: 'saewootang',
-    winCount: 0,
   },
-  {
-    id: 'teumsae',
-    name: '틈새라면',
+  '6728613b2f3ce8010638e04': {
+    title: '틈새라면',
     brand: 'Ottogi',
     imageKey: 'teumsae',
-    winCount: 0,
   },
-  {
-    id: 'cupnoodle',
-    name: '컵누들',
+  '672861522f3ce8010638e05': {
+    title: '컵누들',
     brand: 'Ottogi',
     imageKey: 'cupnoodle',
-    winCount: 0,
   },
-  {
-    id: 'ojingeo',
-    name: '오징어짬뽕',
+  '672861602f3ce8010638e06': {
+    title: '오징어짬뽕',
     brand: 'Nongshim',
     imageKey: 'ojingeo',
-    winCount: 0,
   },
-];
+} as const;
+
+// 타입 정의
+export type RamenId = keyof typeof RAMEN_ID_MAP;
+
+// API 응답 타입
+export interface RamenAPIResponse {
+  status: string;
+  message: string;
+  data: {
+    ramen: Array<{
+      _id: RamenId;
+      title: string;
+      count: number;
+    }>;
+    total_count: number;
+  };
+}

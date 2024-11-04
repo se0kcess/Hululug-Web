@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
-import { useRamenStore } from '@/store/ramenStore';
 import { Title1, BodyText } from '@/styles/Typography';
-import { RAMEN_IMAGES } from '@/constants/ramenWorldCupList';
+import { RAMEN_ID_MAP, RAMEN_IMAGES } from '@/constants/ramenWorldCupList';
 import { useMemo } from 'react';
 import { Medal } from '@/assets/images/Medals';
 import BackButton from '@/components/common/BackButton/BackButton';
+import { useRamenQuery } from '@/hooks/useRamenQuery';
 
 const Container = styled.div`
   margin: 0 auto;
@@ -129,18 +129,23 @@ const WinRate = styled(BodyText)`
 `;
 
 export default function RamenWorldCupRankingPage() {
-  const { ramenList } = useRamenStore();
+  const { getRamenList } = useRamenQuery();
+  const { data: ramenData } = getRamenList;
 
   const rankingData = useMemo(() => {
-    const totalMatches = ramenList.reduce((sum, ramen) => sum + ramen.winCount, 0);
+    if (!ramenData?.data) return [];
 
-    return ramenList
-      .map((ramen) => ({
-        ...ramen,
-        winRate: totalMatches > 0 ? ((ramen.winCount / totalMatches) * 100).toFixed(1) : '0.0',
+    const { ramen, total_count } = ramenData.data;
+
+    return ramen
+      .map((item) => ({
+        ...item,
+        imageKey: RAMEN_ID_MAP[item._id].imageKey,
+        // 각 라면의 승률 = (해당 라면 우승 횟수 / 전체 우승 횟수) * 100
+        winRate: total_count > 0 ? ((item.count / total_count) * 100).toFixed(1) : '0.0',
       }))
       .sort((a, b) => Number(b.winRate) - Number(a.winRate));
-  }, [ramenList]);
+  }, [ramenData]);
 
   const topThree = rankingData.slice(0, 3);
   const restRanking = rankingData.slice(3, 16);
@@ -163,14 +168,14 @@ export default function RamenWorldCupRankingPage() {
           const rank = index === 0 ? 2 : index === 1 ? 1 : 3;
 
           return (
-            <TopRankItem key={ramen.id} rank={rank}>
+            <TopRankItem key={ramen._id} rank={rank}>
               <MedalContainer>
                 <Medal rank={rank as 1 | 2 | 3} size={rank === 1 ? 40 : 36} />
               </MedalContainer>
               <RoundImageContainer rank={rank}>
-                <RamenImage src={RAMEN_IMAGES[ramen.imageKey]} alt={ramen.name} />
+                <RamenImage src={RAMEN_IMAGES[ramen.imageKey]} alt={ramen.title} />
               </RoundImageContainer>
-              <RamenName>{ramen.name}</RamenName>
+              <RamenName>{ramen.title}</RamenName>
               <WinRate>{ramen.winRate}%</WinRate>
             </TopRankItem>
           );
@@ -179,13 +184,13 @@ export default function RamenWorldCupRankingPage() {
 
       <RankingList>
         {restRanking.map((ramen, index) => (
-          <RankingItem key={ramen.id}>
+          <RankingItem key={ramen._id}>
             <RankNumber>{index + 4}</RankNumber>
             <RankImageContainer>
-              <RamenImage src={RAMEN_IMAGES[ramen.imageKey]} alt={ramen.name} />
+              <RamenImage src={RAMEN_IMAGES[ramen.imageKey]} alt={ramen.title} />
             </RankImageContainer>
             <RankInfo>
-              <RamenName>{ramen.name}</RamenName>
+              <RamenName>{ramen.title}</RamenName>
               <WinRate>{ramen.winRate}%</WinRate>
             </RankInfo>
           </RankingItem>
