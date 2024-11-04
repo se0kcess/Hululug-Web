@@ -1,21 +1,22 @@
 import { Meta, StoryFn } from '@storybook/react';
-import { ThemeProvider } from '@emotion/react';
-import theme from '@/styles/theme';
 import PostPageImgCon from './PostPageImgCon';
 
 export default {
-  title: 'Components/PostPage/PostPageImgCon', // 스토리북에서 컴포넌트 위치를 지정
+  title: 'Components/PostPage/PostPageImgCon',
   component: PostPageImgCon,
-  decorators: [
-    (Story) => (
-      <ThemeProvider theme={theme}>
-        <Story />
-      </ThemeProvider>
-    ),
-  ],
+  argTypes: {
+    onImageAdd: { action: 'image added' },
+  },
 } as Meta;
 
-const Template: StoryFn = (args) => <PostPageImgCon {...args} />;
+const Template: StoryFn<{ onImageAdd: () => void }> = (args) => {
+  return <PostPageImgCon {...args} />;
+};
 
 export const Default = Template.bind({});
 Default.args = {};
+
+export const WithImageAdded = Template.bind({});
+WithImageAdded.args = {
+  onImageAdd: () => console.log('Image has been added'),
+};

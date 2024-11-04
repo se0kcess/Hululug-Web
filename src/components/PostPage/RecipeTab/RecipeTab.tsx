@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import { BodyText } from '@/styles/Typography';
@@ -12,14 +11,11 @@ const TabContainer = styled.div`
 `;
 
 const Tab = styled(BodyText)<{ isActive: boolean }>`
-  flex: 1; /* 각 탭이 동일한 비율로 공간을 차지하도록 설정 */
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 42px;
-  cursor: pointer;
-  box-sizing: border-box;
-
   color: ${({ isActive }) => (isActive ? theme.colors.primaryMain : theme.colors.gray[200])};
   border-bottom: 2px solid
     ${({ isActive }) => (isActive ? theme.colors.primaryMain : theme.colors.gray[200])};
@@ -28,15 +24,18 @@ const Tab = styled(BodyText)<{ isActive: boolean }>`
     border-bottom 0.3s;
 `;
 
-const RecipeTab = () => {
-  const [activeTab, setActiveTab] = useState('레시피 소개');
+interface RecipeTabProps {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+}
 
+const RecipeTab = ({ activeTab }: RecipeTabProps) => {
   const tabs = ['레시피 소개', '레시피 재료', '레시피 순서'];
 
   return (
     <TabContainer>
       {tabs.map((tab) => (
-        <Tab key={tab} isActive={activeTab === tab} onClick={() => setActiveTab(tab)}>
+        <Tab key={tab} isActive={activeTab === tab}>
           {tab}
         </Tab>
       ))}

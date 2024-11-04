@@ -18,8 +18,17 @@ const Button = styled(ButtonText)<{ isActive: boolean }>`
   transition: background-color 0.3s;
 `;
 
-const NextBtn = ({ isActive = true }: { isActive: boolean }) => {
-  return <Button isActive={isActive}>다음</Button>;
+interface NextBtnProps {
+  isActive: boolean;
+  onClick?: () => void;
+}
+
+const NextBtn = ({ isActive, onClick }: NextBtnProps) => {
+  return (
+    <Button isActive={isActive} onClick={isActive ? onClick : undefined}>
+      다음
+    </Button>
+  );
 };
 
 export default NextBtn;

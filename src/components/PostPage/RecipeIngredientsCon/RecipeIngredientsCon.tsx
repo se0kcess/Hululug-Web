@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import { BodyText, Title2 } from '@/styles/Typography';
@@ -10,6 +10,7 @@ const Container = styled.div`
   width: 100%;
   max-width: 500px;
   gap: 12px;
+  margin-bottom: 24px;
 `;
 
 const Title = styled(Title2)`
@@ -25,7 +26,7 @@ const Header = styled.div`
 const Label1 = styled(BodyText)`
   color: ${theme.colors.gray[500]};
   margin: 0;
-  flex: 3; /* NameInput과 동일한 flex 값으로 설정 */
+  flex: 3;
   display: flex;
   align-items: center;
 `;
@@ -33,19 +34,19 @@ const Label1 = styled(BodyText)`
 const Label2 = styled(BodyText)`
   color: ${theme.colors.gray[500]};
   margin: 0;
-  flex: 1; /* QuantityInput과 동일한 flex 값으로 설정 */
+  flex: 1;
   display: flex;
   align-items: center;
 `;
 
 const InputRow = styled.div`
   display: flex;
-  width: 100%; /* Row가 가로를 충분히 차지하도록 설정 */
+  width: 100%;
   gap: 8px;
 `;
 
 const NameInput = styled.input`
-  flex: 1; /* 재료명 필드의 너비를 넓게 설정 */
+  flex: 1;
   height: 44px;
   padding: 0 12px;
   color: ${theme.colors.gray[700]};
@@ -88,7 +89,11 @@ const AddButton = styled.button`
   color: ${theme.colors.gray[500]};
 `;
 
-const RecipeIngredientsCon = () => {
+interface RecipeIngredientsConProps {
+  onIngredientsFilled: (filled: boolean) => void;
+}
+
+const RecipeIngredientsCon = ({ onIngredientsFilled }: RecipeIngredientsConProps) => {
   const [ingredients, setIngredients] = useState([{ name: '', quantity: '' }]);
 
   const handleAddIngredient = () => {
@@ -100,6 +105,11 @@ const RecipeIngredientsCon = () => {
     newIngredients[index][field] = value;
     setIngredients(newIngredients);
   };
+
+  useEffect(() => {
+    const allFilled = ingredients.every((ingredient) => ingredient.name && ingredient.quantity);
+    onIngredientsFilled(allFilled);
+  }, [ingredients, onIngredientsFilled]);
 
   return (
     <Container>

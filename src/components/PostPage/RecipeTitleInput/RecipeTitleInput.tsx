@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 
 const TitleCon = styled.div`
   width: 100%;
+  margin: 24px;
 `;
 
 const RecipeTitle = styled(Title2)`
@@ -27,11 +28,21 @@ const TitleInputStyle = styled.input`
   }
 `;
 
-const RecipeTitleInput = ({ placeholder = '제목을 입력하세요' }) => {
+interface RecipeTitleInputProps {
+  placeholder?: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const RecipeTitleInput = ({
+  placeholder = '제목을 입력하세요',
+  value,
+  onChange,
+}: RecipeTitleInputProps) => {
   return (
     <TitleCon>
       <RecipeTitle>레시피 제목</RecipeTitle>
-      <TitleInputStyle placeholder={placeholder} />
+      <TitleInputStyle placeholder={placeholder} value={value} onChange={onChange} />
     </TitleCon>
   );
 };

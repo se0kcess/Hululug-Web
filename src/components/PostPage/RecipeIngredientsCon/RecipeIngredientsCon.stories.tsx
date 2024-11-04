@@ -1,21 +1,32 @@
+import { useState } from 'react';
 import { Meta, StoryFn } from '@storybook/react';
-import { ThemeProvider } from '@emotion/react';
-import theme from '@/styles/theme';
 import RecipeIngredientsCon from './RecipeIngredientsCon';
 
 export default {
-  title: 'Components/PostPage/RecipeIngredientsCon', // 스토리북에서 컴포넌트 위치를 지정
+  title: 'Components/RecipeIngredientsCon',
   component: RecipeIngredientsCon,
-  decorators: [
-    (Story) => (
-      <ThemeProvider theme={theme}>
-        <Story />
-      </ThemeProvider>
-    ),
-  ],
-} as Meta;
+  argTypes: {
+    onIngredientsFilled: { action: 'ingredients filled' },
+  },
+} as Meta<typeof RecipeIngredientsCon>;
 
-const Template: StoryFn = (args) => <RecipeIngredientsCon {...args} />;
+const Template: StoryFn<{ onIngredientsFilled: (filled: boolean) => void }> = (args) => {
+  const [isFilled, setIsFilled] = useState(false);
+
+  const handleIngredientsFilled = (filled: boolean) => {
+    setIsFilled(filled);
+    args.onIngredientsFilled(filled);
+  };
+
+  return (
+    <div>
+      <RecipeIngredientsCon onIngredientsFilled={handleIngredientsFilled} />
+      <div style={{ marginTop: '20px', fontWeight: 'bold' }}>
+        {isFilled ? 'All ingredients are filled' : 'Ingredients are not fully filled'}
+      </div>
+    </div>
+  );
+};
 
 export const Default = Template.bind({});
 Default.args = {};
