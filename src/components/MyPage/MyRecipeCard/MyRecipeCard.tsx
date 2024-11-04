@@ -20,9 +20,9 @@ interface MyRecipeCardProps {
 
 const CardContainer = styled.div`
   background: ${({ theme }) => theme.colors.white};
+  box-shadow: ${theme.shadows[1]};
   border-radius: 16px;
   overflow: hidden;
-  width: 100%;
   cursor: pointer;
 `;
 
@@ -43,7 +43,7 @@ const RecipeImage = styled.img`
 `;
 
 const ContentContainer = styled.div`
-  padding: 0 1rem;
+  padding: 1rem;
 `;
 
 const TitleRow = styled.div`

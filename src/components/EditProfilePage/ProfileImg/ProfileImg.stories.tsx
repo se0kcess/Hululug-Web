@@ -9,7 +9,7 @@ import basicImg3 from '@/assets/images/profile-img-4.png';
 import theme from '@/styles/theme';
 
 export default {
-  title: 'Components/ProfileImg',
+  title: 'Components/EditProfile/ProfileImg',
   component: ProfileImg,
 } as Meta;
 

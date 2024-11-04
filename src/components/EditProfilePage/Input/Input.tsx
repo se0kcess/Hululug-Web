@@ -5,8 +5,8 @@ import theme from '@/styles/theme';
 export interface InputType {
   color?: string;
   borderColor?: string;
-  disabled: boolean;
-  placeholder: string;
+  disabled?: boolean;
+  placeholder?: string;
   type?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -42,10 +42,10 @@ const StyledInput = styled.input<{ inputColor?: string; inputBorderColor?: strin
 const Input = ({
   color = theme.colors.gray[200],
   borderColor = theme.colors.gray[100],
-  disabled,
-  placeholder,
+  disabled = false,
+  placeholder = '',
   type = 'text',
-  value,
+  value = '',
   onChange,
   onBlur,
   onFocus,

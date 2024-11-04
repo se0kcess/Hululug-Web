@@ -5,7 +5,7 @@ import { HeartIconContainer } from '@/components/common/HeartIconContainer/Heart
 import { RamenTag } from '@/components/common/RamenTag/RamenTag';
 import { BookmarkButton } from '@/components/common/BookmarkButton/BookmarkButton';
 import { RenderPostDate } from '@/components/common/RenderPostDate/RenderPostDate';
-import { Title2 } from '@/styles/Typography';
+import { BodyText } from '@/styles/Typography';
 
 export interface RamenRecipe {
   id: string;
@@ -41,7 +41,7 @@ const RecipeCard = styled.div`
 
 const ImageContainer = styled.div`
   position: relative;
-  height: 100px;
+  height: 110px;
   width: 130px;
   aspect-ratio: 4/3;
   border-radius: 0.5rem;
@@ -75,7 +75,7 @@ const TopRow = styled.div`
   align-items: center;
 `;
 
-const Title = styled(Title2)`
+const Title = styled(BodyText)`
   color: ${theme.colors.black};
   overflow: hidden;
   text-overflow: ellipsis;
