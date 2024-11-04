@@ -1,8 +1,7 @@
-// components/signup/ProfileImageUpload.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react';
 import { ProfileImageUpload } from './ProfileImageUpload';
 import { ThemeProvider } from '@emotion/react';
-import theme from '../../styles/theme';
+import theme from '@/styles/theme';
 
 const meta: Meta<typeof ProfileImageUpload> = {
   title: 'Components/Signup/ProfileImageUpload',
