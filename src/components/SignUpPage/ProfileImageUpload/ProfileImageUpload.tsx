@@ -1,7 +1,7 @@
-// components/signup/ProfileImageUpload.tsx
 import { CaptionText } from '@/styles/Typography';
 import styled from '@emotion/styled';
 import { ChangeEvent } from 'react';
+import profileImage from '@assets/images/profile-img-1.png';
 
 interface ProfileImageUploadProps {
   onImageUpload: (file: File) => void;
@@ -72,7 +72,7 @@ const HiddenInput = styled.input`
 
 export const ProfileImageUpload = ({
   onImageUpload,
-  defaultImage = '/src/assets/images/profile-img-1.png',
+  defaultImage = profileImage,
   size = 'regular',
   error,
   isLoading,
