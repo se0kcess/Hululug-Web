@@ -1,17 +1,53 @@
 import styled from '@emotion/styled';
-
+import BackButton from '@/components/common/BackButton/BackButton';
+import { Title2 } from '@/styles/Typography';
+import SearchInput from '@/components/SearchPage/SearchInput/SearchInput';
+import Footer from '@/components/common/Footer/Footer';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100vh;
+  padding: 0 24px;
+  border: 1px solid blue;
+`;
+
+const SearchHeader = styled(Title2)`
+  width: 100%;
+  height: 56px;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 60px);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+`;
+
+const BackBtn = styled.div`
+  position: absolute;
+  left: 0;
+  margin-top: 3px;
+`;
+
+const Content = styled.div`
+  flex: 1;
+  width: 100%;
+  overflow-y: auto;
 `;
 
 export default function SearchPage() {
   return (
     <Container>
-      <h1>Search Page</h1>
+      <SearchHeader>
+        검색
+        <BackBtn>
+          <BackButton />
+        </BackBtn>
+      </SearchHeader>
+      <Content>
+        <SearchInput />
+      </Content>
+      <Footer />
     </Container>
   );
 }
