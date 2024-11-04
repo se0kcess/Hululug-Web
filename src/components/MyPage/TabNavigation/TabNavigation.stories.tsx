@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { TabNavigation } from './TabNavigation';
 
 const meta = {
-  title: 'Components/TabNavigation',
+  title: 'Components/MyPage/TabNavigation',
   component: TabNavigation,
   parameters: {
     layout: 'centered',

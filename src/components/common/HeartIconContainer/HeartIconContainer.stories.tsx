@@ -4,7 +4,7 @@ import { HeartIconContainer } from './HeartIconContainer';
 import theme from '@/styles/theme';
 
 const meta: Meta<typeof HeartIconContainer> = {
-  title: 'Components/HeartIconContainer',
+  title: 'Components/common/HeartIconContainer',
   component: HeartIconContainer,
   decorators: [
     (Story) => (

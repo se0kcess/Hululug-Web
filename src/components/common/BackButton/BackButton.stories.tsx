@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import BackButton from './BackButton';
 
 const meta: Meta<typeof BackButton> = {
-  title: 'Components/BackButton',
+  title: 'Components/common/BackButton',
   component: BackButton,
   decorators: [
     (Story) => (

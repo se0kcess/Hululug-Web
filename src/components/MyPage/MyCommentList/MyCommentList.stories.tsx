@@ -5,7 +5,7 @@ import MyCommentList from './MyCommentList';
 import theme from '@/styles/theme';
 
 const meta: Meta<typeof MyCommentList> = {
-  title: 'Components/MyCommentList',
+  title: 'Components/MyPage/MyCommentList',
   component: MyCommentList,
   decorators: [
     (Story) => (

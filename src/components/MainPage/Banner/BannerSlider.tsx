@@ -148,6 +148,8 @@ const BannerSlider = () => {
     const realIndex = getRealIndex();
     if (realIndex === 0) {
       navigate('/ramenworldcup');
+    } else if (realIndex === 1) {
+      navigate('/ramenworldcup/rank');
     }
   };
 

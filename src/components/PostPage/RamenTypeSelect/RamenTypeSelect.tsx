@@ -10,6 +10,7 @@ import { ArrowDown } from '@/assets/icons/ArrowDown';
 const Container = styled.div`
   width: 100%;
   max-width: 450px;
+  padding: 24px 0 12px 0;
 `;
 
 const Label = styled(Title2)`
@@ -98,7 +99,7 @@ const TagContainer = styled.div`
   gap: 8px;
   justify-content: center;
   width: 100%;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 `;
 
 const Tag = styled(ChipText)<{ isSelected: boolean }>`
@@ -158,7 +159,12 @@ const RemoveButton = styled.button`
   margin-left: 4px;
 `;
 
-const RamenTypeSelect = () => {
+interface RamenTypeSelectProps {
+  onSelect: () => void; // 선택 완료 시 호출할 콜백 함수
+  onDisSelect: () => void;
+}
+
+const RamenTypeSelect = ({ onSelect, onDisSelect }: RamenTypeSelectProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRamen, setSelectedRamen] = useState<RamenType[]>([]);
 
@@ -172,6 +178,11 @@ const RamenTypeSelect = () => {
 
   const handleApply = () => {
     setIsModalOpen(false);
+    if (selectedRamen.length > 0) {
+      onSelect(); // 선택 완료 시 onSelect 콜백 호출
+    } else {
+      onDisSelect();
+    }
   };
 
   const handleRemoveTag = (ramen: RamenType) => {
@@ -192,14 +203,25 @@ const RamenTypeSelect = () => {
         {selectedRamen.map((ramen) => (
           <SelectedTag key={ramen.id}>
             {ramen.name}
-            <RemoveButton onClick={() => handleRemoveTag(ramen)}>
+            <RemoveButton
+              onClick={() => {
+                handleApply();
+                handleRemoveTag(ramen);
+              }}
+            >
               <ClearIcon width={15} height={15} fill={theme.colors.primaryLight} />
             </RemoveButton>
           </SelectedTag>
         ))}
       </SelectedTagContainer>
 
-      <ModalOverlay isOpen={isModalOpen} onClick={() => setIsModalOpen(false)}>
+      <ModalOverlay
+        isOpen={isModalOpen}
+        onClick={() => {
+          setIsModalOpen(false);
+          handleApply();
+        }}
+      >
         <ModalContent onClick={(e) => e.stopPropagation()}>
           <Header>라면 종류</Header>
           <TagContainer>

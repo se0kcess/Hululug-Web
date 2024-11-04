@@ -1,16 +1,28 @@
+import { useState } from 'react';
 import { Meta, StoryFn } from '@storybook/react';
 import RecipeTab from './RecipeTab';
 
 export default {
-  title: 'Components/PostPage/RecipeTab', // 스토리북 내 컴포넌트 위치를 지정
+  title: 'Components/PostPage/RecipeTab',
   component: RecipeTab,
-} as Meta;
+  argTypes: {
+    activeTab: { control: 'text' },
+    onTabChange: { action: 'tab changed' },
+  },
+} as Meta<typeof RecipeTab>;
 
-const Template: StoryFn = (args) => (
-  <div style={{ width: '400px', display: 'flex', margin: '0 auto' }}>
-    <RecipeTab {...args} />
-  </div>
-);
+const Template: StoryFn<typeof RecipeTab> = (args) => {
+  const [activeTab, setActiveTab] = useState(args.activeTab || '레시피 소개');
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    args.onTabChange(tab);
+  };
+
+  return <RecipeTab {...args} activeTab={activeTab} onTabChange={handleTabChange} />;
+};
 
 export const Default = Template.bind({});
-Default.args = {};
+Default.args = {
+  activeTab: '레시피 소개',
+};

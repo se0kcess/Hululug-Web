@@ -6,7 +6,7 @@ import useBookmarkStore from '@/store/bookmarkStore';
 import theme from '@/styles/theme';
 
 const meta: Meta<typeof BookmarkButton> = {
-  title: 'Components/BookmarkButton',
+  title: 'Components/common/BookmarkButton',
   component: BookmarkButton,
   args: {
     recipeId: '1',

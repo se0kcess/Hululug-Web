@@ -5,7 +5,7 @@ import { ThemeProvider } from '@emotion/react';
 import theme from '@/styles/theme';
 
 const meta = {
-  title: 'Components/Footer',
+  title: 'Components/common/Footer',
   component: Footer,
   parameters: {
     layout: 'fullscreen',

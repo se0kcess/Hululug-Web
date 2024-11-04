@@ -1,9 +1,11 @@
+import React from 'react';
 import theme from '@/styles/theme';
 import { Title2 } from '@/styles/Typography';
 import styled from '@emotion/styled';
 
 const IntroCon = styled.div`
   width: 100%;
+  margin-bottom: 24px;
 `;
 
 const IntroTitle = styled(Title2)`
@@ -30,11 +32,20 @@ const IntroInputStyle = styled.textarea`
   }
 `;
 
-const RecipeIntroInput = () => {
+interface RecipeIntroInputProps {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+}
+
+const RecipeIntroInput = ({ value, onChange }: RecipeIntroInputProps) => {
   return (
     <IntroCon>
       <IntroTitle>레시피 소개</IntroTitle>
-      <IntroInputStyle placeholder="간단한 레시피 소개를 입력해주세요." />
+      <IntroInputStyle
+        placeholder="간단한 레시피 소개를 입력해주세요."
+        value={value}
+        onChange={onChange}
+      />
     </IntroCon>
   );
 };

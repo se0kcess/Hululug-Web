@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions';
 import ProfileSettingsButton from './ProfileSettingsButton';
 
 const meta: Meta<typeof ProfileSettingsButton> = {
-  title: 'Components/ProfileSettingsButton',
+  title: 'Components/MyPage/ProfileSettingsButton',
   component: ProfileSettingsButton,
   parameters: {
     layout: 'centered',

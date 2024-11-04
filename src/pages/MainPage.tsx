@@ -7,10 +7,18 @@ import RamenList from '@/components/common/RamenList/RamenList';
 import { Title1 } from '@/styles/Typography';
 import styled from '@emotion/styled';
 
+import profileImg1 from '@assets/images/profile-img-1.png';
+import profileImg2 from '@assets/images/profile-img-2.png';
+import profileImg3 from '@assets/images/profile-img-3.png';
+import ramenImg1 from '@assets/ramyun-images/sample-1.png';
+import ramenImg2 from '@assets/ramyun-images/sample-2.png';
+import ramenImg3 from '@assets/ramyun-images/sample-3.png';
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 90%;
+  padding-bottom: 5rem;
   margin: 0 auto;
   min-height: calc(100vh - 60px);
 `;
@@ -64,10 +72,10 @@ export default function MainPage() {
       id: '4',
       title: '초간단 1분 라볶이',
       author: '백종원',
-      authorImage: '/src/assets/images/profile-img-1.png',
+      authorImage: profileImg1,
       likes: 1100,
       date: '24.10.23',
-      image: '/src/assets/ramyun-images/sample-1.png',
+      image: ramenImg1,
       ramenType: { id: 20, name: '짜파게티' },
       bookmarkId: '1',
     },
@@ -75,10 +83,10 @@ export default function MainPage() {
       id: '5',
       title: '피시방 짜계치',
       author: '라면왕',
-      authorImage: '/src/assets/images/profile-img-2.png',
+      authorImage: profileImg2,
       likes: 1100,
       date: '24.10.22',
-      image: '/src/assets/ramyun-images/sample-2.png',
+      image: ramenImg2,
       ramenType: { id: 10, name: '삼양라면' },
       bookmarkId: '2',
     },
@@ -86,10 +94,10 @@ export default function MainPage() {
       id: '6',
       title: '해물 듬뿍 라면',
       author: '안성재',
-      authorImage: '/src/assets/images/profile-img-3.png',
+      authorImage: profileImg3,
       likes: 98,
       date: '24.10.22',
-      image: '/src/assets/ramyun-images/sample-3.png',
+      image: ramenImg3,
       ramenType: { id: 12, name: '신라면' },
       bookmarkId: '3',
     },

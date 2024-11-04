@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import theme from '@/styles/theme';
 
 const meta: Meta<typeof RamenFilterModal> = {
-  title: 'Components/RamenFilterModal',
+  title: 'Components/common/RamenFilterModal',
   component: RamenFilterModal,
   parameters: {
     layout: 'fullscreen',

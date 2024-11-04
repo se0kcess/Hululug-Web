@@ -1,5 +1,8 @@
+// CompletedBtnCon.tsx
+import { useState } from 'react';
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
+import RegistrationModal from '@/components/PostPage/RegistrationModal/RegistrationModal';
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -45,12 +48,55 @@ const CompletedButton = styled.button<{ isActive: boolean }>`
   transition: background-color 0.3s;
 `;
 
-const CompletedBtnCon = ({ isActive }: { isActive: boolean }) => {
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  justify-content: center;
+  background: #1d222880;
+  z-index: 1000;
+`;
+
+interface CompletedBtnConProps {
+  isActive: boolean;
+  onPrev: () => void;
+}
+
+const CompletedBtnCon = ({ isActive, onPrev }: CompletedBtnConProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleCompletedClick = () => {
+    if (isActive) {
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleCancel = () => setIsModalOpen(false);
+  const handleRegister = () => {
+    setIsModalOpen(false);
+    console.log('레시피 등록됨');
+  };
+
   return (
-    <ButtonContainer>
-      <PrevButton>이전</PrevButton>
-      <CompletedButton isActive={isActive}>작성완료</CompletedButton>
-    </ButtonContainer>
+    <>
+      <ButtonContainer>
+        <PrevButton onClick={onPrev}>이전</PrevButton>
+        <CompletedButton isActive={isActive} onClick={handleCompletedClick}>
+          작성완료
+        </CompletedButton>
+      </ButtonContainer>
+
+      {isModalOpen && (
+        <ModalOverlay>
+          <RegistrationModal onCancel={handleCancel} onRegister={handleRegister} />
+        </ModalOverlay>
+      )}
+    </>
   );
 };
 

@@ -4,7 +4,7 @@ import MyRecipeCard from './MyRecipeCard';
 import theme from '@/styles/theme';
 
 const meta: Meta<typeof MyRecipeCard> = {
-  title: 'Components/MyRecipeCard',
+  title: 'Components/MyPage/MyRecipeCard',
   component: MyRecipeCard,
   decorators: [
     (Story) => (

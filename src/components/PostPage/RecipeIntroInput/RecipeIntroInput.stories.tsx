@@ -1,23 +1,32 @@
+import { useState } from 'react';
 import { Meta, StoryFn } from '@storybook/react';
-import { ThemeProvider } from '@emotion/react';
-import theme from '@/styles/theme';
 import RecipeIntroInput from './RecipeIntroInput';
 
 export default {
-  title: 'Components/PostPage/RecipeIntroInput', // 스토리북에서 컴포넌트 위치를 지정
+  title: 'Components/PostPage/RecipeIntroInput',
   component: RecipeIntroInput,
-  decorators: [
-    (Story) => (
-      <ThemeProvider theme={theme}>
-        <Story />
-      </ThemeProvider>
-    ),
-  ],
-} as Meta;
+  argTypes: {
+    value: { control: 'text' },
+    onChange: { action: 'changed' },
+  },
+} as Meta<typeof RecipeIntroInput>;
 
-const Template: StoryFn = (args) => <RecipeIntroInput {...args} />;
+const Template: StoryFn<typeof RecipeIntroInput> = (args) => {
+  const [value, setValue] = useState(args.value || '');
+
+  return (
+    <RecipeIntroInput
+      {...args}
+      value={value}
+      onChange={(e) => {
+        setValue(e.target.value);
+        args.onChange(e);
+      }}
+    />
+  );
+};
 
 export const Default = Template.bind({});
 Default.args = {
-  placeholder: '간단한 레시피 소개를 입력해주세요.', // 기본 placeholder 텍스트
+  value: '레시피에 대한 간단한 소개를 입력해주세요.',
 };

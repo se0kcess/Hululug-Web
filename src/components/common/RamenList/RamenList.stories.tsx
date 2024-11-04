@@ -30,7 +30,7 @@ const sampleRecipes: RamenRecipe[] = [
 ];
 
 const meta: Meta<typeof RamenList> = {
-  title: 'Components/RamenList',
+  title: 'Components/common/RamenList',
   component: RamenList,
   parameters: {
     layout: 'padded',
