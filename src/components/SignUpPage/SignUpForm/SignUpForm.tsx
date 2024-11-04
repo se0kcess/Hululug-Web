@@ -7,8 +7,13 @@ import { ProfileImageUpload } from '@/components/SignUpPage/ProfileImageUpload/P
 const Form = styled.form`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   padding: 1.25rem;
   gap: 1.5rem;
+`;
+
+const Title = styled(Title1)`
+  margin: 0 auto;
 `;
 
 const InputContainer = styled.div`
@@ -135,7 +140,7 @@ export const SignupForm = () => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Title1>사용할 닉네임과 프로필을 설정해주세요</Title1>
+      <Title>사용할 닉네임과 프로필을 설정해주세요</Title>
 
       <ProfileImageUpload
         onImageUpload={(file) => setFormData((prev) => ({ ...prev, profileImage: file }))}
