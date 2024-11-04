@@ -1,23 +1,30 @@
 import { create } from 'zustand';
-import { Ramen } from '@/types/ramenWorldCup';
-import { INITIAL_RAMEN_LIST } from '@/constants/ramenWorldCupList';
+import { RAMEN_ID_MAP, RAMEN_IMAGES, RamenId } from '@/constants/ramenWorldCupList';
+
+interface RamenInfo {
+  _id: RamenId;
+  title: string;
+  imageKey: keyof typeof RAMEN_IMAGES;
+  count: number;
+}
 
 interface RamenStore {
-  ramenList: Ramen[];
-  currentRound: number; // 현재 라운드 (16강: 0, 8강: 1, 4강: 2, 결승: 3)
-  currentStageRamens: Ramen[]; // 현재 라운드에 참가하는 라면들
-  nextStageRamens: Ramen[]; // 다음 라운드에 진출할 라면들
-  currentMatchRamens: Ramen[]; // 현재 매치의 라면 2개
-  currentMatchNumber: number; // 현재 매치 번호
-  winner: Ramen | null; // 최종 우승 라면
+  ramenList: RamenInfo[]; // ramenList 추가
+  currentRound: number;
+  currentStageRamens: RamenInfo[];
+  nextStageRamens: RamenInfo[];
+  currentMatchRamens: RamenInfo[];
+  currentMatchNumber: number;
+  winner: RamenInfo | null;
 
-  shuffleRamenList: () => void;
-  handleSelect: (ramenId: string) => boolean;
-  getRanking: () => Ramen[];
+  initializeRamenList: (
+    apiRamenList: Array<{ _id: RamenId; title: string; count: number }>,
+  ) => void;
+  handleSelect: (ramenId: RamenId) => boolean;
 }
 
 export const useRamenStore = create<RamenStore>((set, get) => ({
-  ramenList: INITIAL_RAMEN_LIST,
+  ramenList: [],
   currentRound: 0,
   currentStageRamens: [],
   nextStageRamens: [],
@@ -25,11 +32,17 @@ export const useRamenStore = create<RamenStore>((set, get) => ({
   currentMatchNumber: 0,
   winner: null,
 
-  shuffleRamenList: () => {
-    const shuffledList = [...INITIAL_RAMEN_LIST].sort(() => Math.random() - 0.5);
+  initializeRamenList: (apiRamenList) => {
+    // API 응답의 라면 데이터에 이미지 키를 매핑
+    const ramenList = apiRamenList.map((ramen) => ({
+      ...ramen,
+      imageKey: RAMEN_ID_MAP[ramen._id].imageKey,
+    }));
+
+    const shuffledList = [...ramenList].sort(() => Math.random() - 0.5);
 
     set({
-      ramenList: INITIAL_RAMEN_LIST,
+      ramenList,
       currentRound: 0,
       currentStageRamens: shuffledList,
       nextStageRamens: [],
@@ -44,15 +57,8 @@ export const useRamenStore = create<RamenStore>((set, get) => ({
     const { currentRound, currentStageRamens, nextStageRamens, currentMatchNumber } = state;
 
     // 선택된 라면 찾기
-    const selectedRamen = currentStageRamens.find((ramen) => ramen.id === ramenId);
+    const selectedRamen = currentStageRamens.find((ramen) => ramen._id === ramenId);
     if (!selectedRamen) return false;
-
-    // 승리 횟수 업데이트
-    set((state) => ({
-      ramenList: state.ramenList.map((ramen) =>
-        ramen.id === ramenId ? { ...ramen, winCount: ramen.winCount + 1 } : ramen,
-      ),
-    }));
 
     // 다음 라운드 진출자 목록에 추가
     const updatedNextStage = [...nextStageRamens, selectedRamen];
@@ -91,10 +97,5 @@ export const useRamenStore = create<RamenStore>((set, get) => ({
     }
 
     return false;
-  },
-
-  getRanking: () => {
-    const { ramenList } = get();
-    return [...ramenList].sort((a, b) => b.winCount - a.winCount);
   },
 }));

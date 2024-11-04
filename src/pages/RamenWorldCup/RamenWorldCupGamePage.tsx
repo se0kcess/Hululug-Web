@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import { useRamenStore } from '@/store/ramenStore';
 import { ButtonText, ChipText, Title1 } from '@/styles/Typography';
-import { RAMEN_IMAGES } from '@/constants/ramenWorldCupList';
+import { RAMEN_IMAGES, RamenId } from '@/constants/ramenWorldCupList';
 import BackButton from '@/components/common/BackButton/BackButton';
 
 const Container = styled.div`
@@ -125,7 +125,7 @@ export default function RamenWorldCupGamePage() {
     }
   };
 
-  const handleChoice = (ramenId: string) => {
+  const handleChoice = (ramenId: RamenId) => {
     const isGameOver = handleSelect(ramenId);
     if (isGameOver) {
       navigate('/ramenworldcup/result');
@@ -149,11 +149,11 @@ export default function RamenWorldCupGamePage() {
 
         <RamenPairContainer>
           {currentMatchRamens.map((ramen) => (
-            <RamenCard key={ramen.id} onClick={() => handleChoice(ramen.id)}>
+            <RamenCard key={ramen._id} onClick={() => handleChoice(ramen._id)}>
               <RamenImageContainer>
-                <RamenImage src={RAMEN_IMAGES[ramen.imageKey]} alt={ramen.name} />
+                <RamenImage src={RAMEN_IMAGES[ramen.imageKey]} alt={ramen.title} />
               </RamenImageContainer>
-              <ChipText>{ramen.name}</ChipText>
+              <ChipText>{ramen.title}</ChipText>
             </RamenCard>
           ))}
         </RamenPairContainer>

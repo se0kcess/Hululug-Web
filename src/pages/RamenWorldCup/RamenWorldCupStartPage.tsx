@@ -5,6 +5,7 @@ import { useRamenStore } from '@/store/ramenStore';
 import { ButtonText, Title1 } from '@/styles/Typography';
 import BackButton from '@/components/common/BackButton/BackButton';
 import ramenlogo from '@assets/ramyun-images/shin-ramyun.png';
+import { useRamenQuery } from '@/hooks/useRamenQuery';
 
 const Container = styled.div`
   margin: 0 auto;
@@ -54,11 +55,19 @@ const StartButton = styled.button`
 
 export default function RamenWorldCupStartPage() {
   const navigate = useNavigate();
-  const { shuffleRamenList } = useRamenStore();
+  const { initializeRamenList } = useRamenStore();
+  const { getRamenList } = useRamenQuery();
 
-  const handleStart = () => {
-    shuffleRamenList();
-    navigate('/ramenworldcup/game');
+  const handleStart = async () => {
+    try {
+      const { data } = await getRamenList.refetch();
+      if (data?.data.ramen) {
+        initializeRamenList(data.data.ramen);
+        navigate('/ramenworldcup/game');
+      }
+    } catch (error) {
+      console.error('라면 데이터 로딩 실패:', error);
+    }
   };
 
   return (
@@ -73,8 +82,8 @@ export default function RamenWorldCupStartPage() {
 
         <RamenImage src={ramenlogo} alt="라면" />
 
-        <StartButton onClick={handleStart}>
-          <ButtonText>테스트 시작하기</ButtonText>
+        <StartButton onClick={handleStart} disabled={getRamenList.isLoading}>
+          <ButtonText>{getRamenList.isLoading ? '로딩 중...' : '테스트 시작하기'}</ButtonText>
         </StartButton>
       </Body>
     </Container>
