@@ -8,7 +8,6 @@ import EmptySearchIcon from '@/assets/images/EmptySearch';
 import { BodyText, Title2 } from '@/styles/Typography';
 import { RamenType } from '@/types/ramen'; // RamenType 임포트
 import RamenList from '@/components/common/RamenList/RamenList';
-
 // RamenRecipe 타입 정의
 interface RamenRecipe {
   id: string;
@@ -23,9 +22,12 @@ interface RamenRecipe {
 }
 
 const Container = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100vh - 120px);
+  overflow-y: auto;
+  box-sizing: border-box;
 `;
 
 const SearchContainer = styled.div`
@@ -80,10 +82,10 @@ const ClearBtn = styled.button`
 const SearchResults = styled.div`
   flex: 1;
   display: flex;
+  margin-top: 200px;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  text-align: center;
+  padding: 16px 0;
 `;
 
 const TitleCon = styled.div`
