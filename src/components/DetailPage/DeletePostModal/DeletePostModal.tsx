@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import { ButtonText, Title2 } from '@/styles/Typography';
 
-interface DeletePostModalProps {
+export interface DeletePostModalProps {
   onCancel: () => void;
   onDelete: () => void;
 }
@@ -17,7 +17,7 @@ const Overlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Ensure it's above other elements */
+  z-index: 100;
 `;
 
 const ModalContainer = styled.div`
