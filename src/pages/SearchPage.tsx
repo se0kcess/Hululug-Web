@@ -9,7 +9,6 @@ const Container = styled.div`
   align-items: center;
   height: 100vh;
   padding: 0 24px;
-  border: 1px solid blue;
 `;
 
 const SearchHeader = styled(Title2)`
