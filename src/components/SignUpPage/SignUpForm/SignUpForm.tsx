@@ -1,8 +1,13 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { BodyText, CaptionText, Title1 } from '@/styles/Typography';
 import { SignupFormData } from '@/types/signup';
 import { ProfileImageUpload } from '@/components/SignUpPage/ProfileImageUpload/ProfileImageUpload';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { authApi } from '@/api/authAPI';
+import { useAuthStore } from '@/store/authStore';
+import axios from 'axios';
+import defaultProfileImage from '@assets/images/profile-img-1.png';
 
 const Form = styled.form`
   display: flex;
@@ -67,15 +72,21 @@ interface ValidationErrors {
 }
 
 export const SignupForm = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const code = searchParams.get('code');
+  console.log('Authorization code:', code);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<SignupFormData>({
     nickname: '',
-    description: '',
+    introduce: '',
   });
-
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [touched, setTouched] = useState({
     nickname: false,
   });
+
+  const isSubmitDisabled = !!errors.nickname || !touched.nickname || !formData.nickname;
 
   const validateNickname = useCallback((value: string) => {
     if (!value) {
@@ -111,6 +122,25 @@ export const SignupForm = () => {
     }
   };
 
+  const getDefaultProfileImageFile = async () => {
+    try {
+      const response = await fetch(defaultProfileImage); // @assets/images/profile-img-1.png
+      const blob = await response.blob();
+
+      // 이미지 blob을 File 객체로 변환
+      const file = new File([blob], 'default-profile.png', {
+        type: 'image/png',
+        lastModified: new Date().getTime(),
+      });
+
+      console.log('Default profile image created:', file); // 디버깅용
+      return file;
+    } catch (error) {
+      console.error('기본 이미지 변환 중 오류:', error);
+      return null;
+    }
+  };
+
   const handleNicknameBlur = () => {
     setTouched((prev) => ({ ...prev, nickname: true }));
     const error = validateNickname(formData.nickname);
@@ -120,30 +150,83 @@ export const SignupForm = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    console.log('Current URL:', window.location.href);
+    console.log('Search Params:', Object.fromEntries(searchParams.entries()));
+  }, [searchParams]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 제출 시 최종 유효성 검사
     const nicknameError = validateNickname(formData.nickname);
-
     if (nicknameError) {
       setErrors({ nickname: nicknameError });
       setTouched({ nickname: true });
       return;
     }
 
-    // TODO: 회원가입 처리 로직
-    console.log('Form submitted:', formData);
+    if (!code) {
+      alert('인가코드가 필요합니다. 다시 로그인해주세요.');
+      navigate('/login');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const submitData = new FormData();
+      submitData.append('nickname', formData.nickname);
+      submitData.append('introduce', formData.introduce);
+      submitData.append('"code"', code);
+
+      if (formData.profile_image) {
+        submitData.append('profile_image', formData.profile_image);
+      } else {
+        const defaultImageFile = await getDefaultProfileImageFile();
+        if (defaultImageFile) {
+          submitData.append('profile_image', defaultImageFile);
+        }
+      }
+
+      console.log('Submitting data:', submitData);
+
+      // FormData 내용 확인 (디버깅용)
+      for (let pair of submitData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+
+      const response = await authApi.signup(submitData);
+      useAuthStore.getState().setUser(response.data);
+      navigate('/main');
+    } catch (error) {
+      console.error('회원가입 중 오류 발생:', error);
+      if (axios.isAxiosError(error)) {
+        // 오류 응답의 자세한 내용 확인
+        console.error('Error response:', error.response?.data);
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          alert('인증이 만료되었습니다. 다시 로그인해주세요.');
+          navigate('/login');
+          return;
+        }
+        const errorMessage = error.response?.data?.message || '회원가입 중 오류가 발생했습니다.';
+        alert(errorMessage);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const isSubmitDisabled = !!errors.nickname || !touched.nickname;
+  if (!code) {
+    return <div>인가코드가 없습니다. 다시 로그인해주세요.</div>;
+  }
 
   return (
     <Form onSubmit={handleSubmit}>
       <Title>사용할 닉네임과 프로필을 설정해주세요</Title>
 
       <ProfileImageUpload
-        onImageUpload={(file) => setFormData((prev) => ({ ...prev, profileImage: file }))}
+        onImageUpload={(file) => setFormData((prev) => ({ ...prev, profile_image: file }))}
+        isLoading={isLoading}
       />
 
       <InputContainer>
@@ -155,6 +238,7 @@ export const SignupForm = () => {
           maxLength={10}
           placeholder="닉네임을 입력해주세요."
           hasError={!!errors.nickname && touched.nickname}
+          disabled={isLoading}
         />
         <CharCount hasError={!!errors.nickname && touched.nickname}>
           {touched.nickname && errors.nickname && <ErrorText>{errors.nickname}</ErrorText>}
@@ -165,16 +249,17 @@ export const SignupForm = () => {
       <InputContainer>
         <BodyText>한 줄 소개(선택)</BodyText>
         <Input
-          value={formData.description}
-          onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+          value={formData.introduce}
+          onChange={(e) => setFormData((prev) => ({ ...prev, introduce: e.target.value }))}
           maxLength={20}
           placeholder="간단한 자기소개를 작성해주세요."
+          disabled={isLoading}
         />
-        <CharCount>{formData.description.length} / 20자</CharCount>
+        <CharCount>{formData.introduce.length} / 20자</CharCount>
       </InputContainer>
 
-      <SubmitButton type="submit" disabled={isSubmitDisabled}>
-        확인
+      <SubmitButton type="submit" disabled={isSubmitDisabled || isLoading}>
+        {isLoading ? '처리중...' : '확인'}
       </SubmitButton>
     </Form>
   );

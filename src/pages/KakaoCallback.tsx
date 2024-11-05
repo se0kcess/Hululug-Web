@@ -20,7 +20,7 @@ export default function KakaoCallback() {
     login(code, {
       onSuccess: (response: LoginResponse) => {
         if (!response.data) {
-          navigate('/signup', { state: { code } });
+          navigate(`/signup?code=${code}`);
         } else {
           navigate('/main');
         }
@@ -30,7 +30,7 @@ export default function KakaoCallback() {
 
         // 404 에러인 경우 (사용자가 존재하지 않는 경우) 회원가입 페이지로 이동
         if (axios.isAxiosError(error) && error.response?.status === 404) {
-          navigate('/signup', {
+          navigate(`/signup?code=${code}`, {
             state: {
               code,
               message: '회원가입이 필요합니다.',

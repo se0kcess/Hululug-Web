@@ -16,18 +16,28 @@ export const authApi = {
     return data.data.login_url;
   },
 
+  getKakaoSignUpUrl: async () => {
+    // 카카오 로그인 URL을 직접 생성
+    const KAKAO_AUTH_URL = 'https://kauth.kakao.com/oauth/authorize';
+    const CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
+    const REDIRECT_URI = import.meta.env.VITE_SIGNUP_REDIRECT_URI;
+    const signUpUrl = `${KAKAO_AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
+
+    console.log('Generated signup URL:', signUpUrl); // 디버깅용
+    return signUpUrl;
+  },
+
   login: async (code: string): Promise<LoginResponse> => {
     const { data } = await axiosInstance.post<LoginResponse>('/users/sessions', { code });
     return data;
   },
 
-  signup: async (userData: {
-    nickname: string;
-    introduce: string;
-    profile_image: string;
-    code: string;
-  }): Promise<ApiResponse<User>> => {
-    const { data } = await axiosInstance.post<ApiResponse<User>>('/users', userData);
+  signup: async (formData: FormData): Promise<ApiResponse<User>> => {
+    const { data } = await axiosInstance.post<ApiResponse<User>>('/users', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return data;
   },
 };
