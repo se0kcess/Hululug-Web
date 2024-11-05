@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import { ButtonText, Title2, BodyText } from '@/styles/Typography';
-import axios from 'axios';
+// import axios from 'axios';
 
 export interface CommentFormProps {
   recipeId: number;
@@ -80,47 +80,47 @@ export const SubmitButton = styled(ButtonText)<{ disabled: boolean }>`
   }
 `;
 
-const CommentInput = ({ recipeId, isLoggedIn, onCommentAdded }: CommentFormProps) => {
+const CommentInput = ({ isLoggedIn }: CommentFormProps) => {
   const [content, setContent] = useState('');
-  const [commentCount, setCommentCount] = useState<number | null>(null);
+  // const [commentCount, setCommentCount] = useState<number | null>(null);
 
-  useEffect(() => {
-    const fetchCommentCount = async () => {
-      try {
-        const response = await axios.get(`/api/recipes/${recipeId}/comments/count`);
-        setCommentCount(response.data.count);
-      } catch (error) {
-        console.error('Failed to fetch comment count:', error);
-        setCommentCount(0); // 오류 시 기본값을 0으로 설정
-      }
-    };
-    fetchCommentCount();
-  }, [recipeId]);
+  // useEffect(() => {
+  //   const fetchCommentCount = async () => {
+  //     try {
+  //       const response = await axios.get(`/api/recipes/${recipeId}/comments/count`);
+  //       setCommentCount(response.data.count);
+  //     } catch (error) {
+  //       console.error('Failed to fetch comment count:', error);
+  //       setCommentCount(0); // 오류 시 기본값을 0으로 설정
+  //     }
+  //   };
+  //   fetchCommentCount();
+  // }, [recipeId]);
 
-  const handleSubmit = async () => {
-    if (!content.trim()) return;
-    try {
-      const response = await axios.post('/recipes/comments', {
-        recipeId,
-        content,
-      });
+  // const handleSubmit = async () => {
+  //   if (!content.trim()) return;
+  //   try {
+  //     const response = await axios.post('/recipes/comments', {
+  //       recipeId,
+  //       content,
+  //     });
 
-      if (response.data.status === 200) {
-        onCommentAdded(content);
-        setContent('');
-        setCommentCount((prevCount) => (prevCount !== null ? prevCount + 1 : 1));
-      } else {
-        console.error('Failed to add comment:', response.data.message);
-      }
-    } catch (error) {
-      console.error('Failed to add comment:', error);
-    }
-  };
+  //     if (response.data.status === 200) {
+  //       onCommentAdded(content);
+  //       setContent('');
+  //       setCommentCount((prevCount) => (prevCount !== null ? prevCount + 1 : 1));
+  //     } else {
+  //       console.error('Failed to add comment:', response.data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error('Failed to add comment:', error);
+  //   }
+  // };
 
   return (
     <Container>
       <CommentTitle>
-        댓글 <CommentCount>{commentCount !== null ? commentCount : '...'}</CommentCount>
+        {/* 댓글 <CommentCount>{commentCount !== null ? commentCount : '...'}</CommentCount> */}
       </CommentTitle>
       <InputWrapper>
         <CommentInputField
@@ -129,9 +129,7 @@ const CommentInput = ({ recipeId, isLoggedIn, onCommentAdded }: CommentFormProps
           onChange={(e) => setContent(e.target.value)}
         />
         <ButtonWrapper>
-          <SubmitButton disabled={!isLoggedIn} onClick={handleSubmit}>
-            댓글 등록
-          </SubmitButton>
+          <SubmitButton disabled={!isLoggedIn}>댓글 등록</SubmitButton>
         </ButtonWrapper>
       </InputWrapper>
     </Container>
