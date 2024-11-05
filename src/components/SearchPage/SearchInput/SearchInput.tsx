@@ -140,14 +140,7 @@ const SearchInput = () => {
           </TitleCon>
         </SearchResults>
       )}
-      {recipes.length > 0 && (
-        <SearchRamenList
-          recipes={recipes}
-          onRecipeClick={(id) => {
-            console.log(`Recipe clicked: ${id}`);
-          }}
-        />
-      )}
+      {recipes.length > 0 && <SearchRamenList recipes={recipes} />}
     </Container>
   );
 };
