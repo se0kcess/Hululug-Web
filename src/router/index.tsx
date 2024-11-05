@@ -24,7 +24,7 @@ export default function Router() {
         <Route path="/post" element={<PostPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/oauth/callback/kakao" element={<KakaoCallback />} />
+        <Route path="/kakao/oauth" element={<KakaoCallback />} />
         <Route path="/profile/edit" element={<EditProfile />} />
         <Route path="/ramenworldcup" element={<RamenWorldCupStartPage />} />
         <Route path="/ramenworldcup/game" element={<RamenWorldCupGamePage />} />

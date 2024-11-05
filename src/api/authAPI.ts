@@ -1,36 +1,33 @@
-import { KakaoAuthResponse } from '@/types/auth';
+import { ApiResponse, LoginResponse, LoginUrlResponse, User } from '@/types/auth';
 import axios from 'axios';
 
-const KAKAO_TOKEN_URL = 'https://kauth.kakao.com/oauth/token';
-const KAKAO_USER_INFO_URL = 'https://kapi.kakao.com/v2/user/me';
-const REST_API_KEY = import.meta.env.VITE_KAKAO_CLIENT_ID;
-const REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
+const axiosInstance = axios.create({
+  baseURL: '/api', // 프록시 사용
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 export const authApi = {
-  getKakaoToken: async (code: string): Promise<KakaoAuthResponse> => {
-    const data = {
-      grant_type: 'authorization_code',
-      client_id: REST_API_KEY,
-      redirect_uri: REDIRECT_URI,
-      code,
-    };
+  getKakaoLoginUrl: async () => {
+    const { data } = await axiosInstance.get<ApiResponse<LoginUrlResponse>>('/users/kakao/url');
+    console.log(data);
 
-    const queryString = new URLSearchParams(data).toString();
-    const response = await axios.post(
-      `${KAKAO_TOKEN_URL}?${queryString}`,
-      {},
-      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
-    );
-
-    return response.data;
+    return data.data.login_url;
   },
 
-  getKakaoUserInfo: async (accessToken: string) => {
-    const response = await axios.get(KAKAO_USER_INFO_URL, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    return response.data;
+  login: async (code: string): Promise<LoginResponse> => {
+    const { data } = await axiosInstance.post<LoginResponse>('/users/sessions', { code });
+    return data;
+  },
+
+  signup: async (userData: {
+    nickname: string;
+    introduce: string;
+    profile_image: string;
+    code: string;
+  }): Promise<ApiResponse<User>> => {
+    const { data } = await axiosInstance.post<ApiResponse<User>>('/users', userData);
+    return data;
   },
 };
