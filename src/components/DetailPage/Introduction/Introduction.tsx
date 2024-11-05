@@ -8,7 +8,7 @@ interface IntroductionProps {
 }
 
 export const Title = styled(Title1)`
-  width: 100%;
+  width: 80%;
   padding: 16px 0;
 `;
 

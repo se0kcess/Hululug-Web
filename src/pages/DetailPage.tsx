@@ -1,5 +1,4 @@
-import { useRef } from 'react';
-
+import { useState, useRef } from 'react';
 import styled from '@emotion/styled';
 import MainImg from '@/components/DetailPage/MainImg/MainImg';
 import ImgSrc from '@/assets/ramyun-images/sample-1.png';
@@ -12,11 +11,13 @@ import Ingredients from '@/components/DetailPage/Ingredients/Ingredients';
 import CookingSteps from '@/components/DetailPage/CookingSteps/CookingSteps';
 import CommentInput from '@/components/DetailPage/CommentInput/CommentInput';
 import Comments from '@/components/DetailPage/Comments/Comments';
+import DeletePostModal from '@/components/DetailPage/DeletePostModal/DeletePostModal';
 import { ActionBar } from '@/components/DetailPage/ActionBar/ActionBar';
-
 import SamleImg from '@/assets/images/profile-img-2.png';
 import theme from '@/styles/theme';
 import BackButton from '@/components/common/BackButton/BackButton';
+import Clear from '@/assets/icons/Clear';
+import Pencil from '@/assets/icons/Pencil';
 
 const Container = styled.div`
   margin: 0;
@@ -26,6 +27,7 @@ const Container = styled.div`
   align-items: center;
   min-height: calc(100vh - 60px);
 `;
+
 const BackButtonContainer = styled.div`
   position: absolute;
   top: 24px;
@@ -79,14 +81,36 @@ const ActionBarCon = styled.div`
   bottom: 0;
 `;
 
+const EditCon = styled.div`
+  display: flex;
+  gap: 8px;
+  position: absolute;
+  right: 0;
+  top: 16px;
+`;
+
+const EditBtn = styled.button`
+  cursor: pointer;
+  background: none;
+  border: none;
+`;
+
+const PostDeleteBtn = styled.button`
+  cursor: pointer;
+  background: none;
+  border: none;
+`;
+
 export default function DetailPage() {
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const isLoggedIn = true; // 로그인 상태를 확인하는 변수 (예시)
   const commentSecRef = useRef<HTMLDivElement>(null);
+
   const handleLike = () => {
     console.log('Liked!');
   };
 
   const handleComment = () => {
-    // CommentSec으로 스크롤 이동
     if (commentSecRef.current) {
       commentSecRef.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -99,6 +123,28 @@ export default function DetailPage() {
   const handleShare = () => {
     console.log('Shared!');
   };
+
+  const handleDelete = async () => {
+    // 게시글 삭제
+    console.log('게시글 삭제버튼 클릭.');
+
+    try {
+      const response = await fetch(`/recipes/recipe-123`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Recipe deleted:', data.message);
+      } else {
+        console.error('Failed to delete the recipe:', data.message);
+      }
+    } catch (error) {
+      console.error('Error deleting recipe:', error);
+    }
+    setDeleteModalOpen(false);
+  };
+
   return (
     <>
       <Container>
@@ -107,7 +153,6 @@ export default function DetailPage() {
         </BackButtonContainer>
         <MainImg imgSrc={ImgSrc}></MainImg>
         <IntroSec>
-          {/* 태그와 날짜/좋아요 아이콘 배치 */}
           <TagDateLike>
             <RamenTag ramen={{ id: 1, name: '신라면' }} />
             <div style={{ display: 'flex', gap: 8 }}>
@@ -122,11 +167,23 @@ export default function DetailPage() {
             </div>
           </TagDateLike>
 
-          {/* 레시피 소개 및 프로필 섹션 */}
-          <Introduction
-            title="초간단 1분 라볶이"
-            content="분식집 차려도 될 만큼 맛있는 라볶이 황금 비율 양념장은 추억의 바로 그 맛!"
-          />
+          <div style={{ position: 'relative' }}>
+            <Introduction
+              title="초간단 1분 라볶이"
+              content="분식집 차려도 될 만큼 맛있는 라볶이 황금 비율 양념장은 추억의 바로 그 맛!"
+            />
+            {isLoggedIn && (
+              <EditCon>
+                <EditBtn onClick={() => console.log('Edit clicked')}>
+                  <Pencil width={24} height={24} fill={theme.colors.gray[200]} />
+                </EditBtn>
+                <PostDeleteBtn onClick={() => setDeleteModalOpen(true)}>
+                  <Clear width={24} height={24} fill={theme.colors.gray[200]} />
+                </PostDeleteBtn>
+              </EditCon>
+            )}
+          </div>
+
           <hr style={{ border: `1px solid ${theme.colors.gray[100]}` }} />
           <Profile imgSrc={SamleImg} name="백종원" caption="드셔보셔유" />
         </IntroSec>
@@ -161,7 +218,6 @@ export default function DetailPage() {
                   '냄비에 물, 분말스프(1/2~2/3), 건더기스프, 설탕, 고추장을 넣고 풀어주며 끓인다.',
               },
               { number: 3, description: '육수가 끓으면 면을 넣고 끓인다.' },
-
               { number: 4, description: '면이 완전히 풀어지면 대파를 넣고 1분 정도 더 끓인다.' },
               {
                 number: 5,
@@ -171,7 +227,6 @@ export default function DetailPage() {
           />
         </IngredientsCon>
 
-        {/* 댓글 섹션 */}
         <hr
           style={{
             width: '100%',
@@ -224,15 +279,19 @@ export default function DetailPage() {
 
         <ActionBarCon>
           <ActionBar
-            likes={120} // Initial likes count
-            comments={34} // Initial comments count
-            recipeId="123" // Unique recipe ID as a string
-            onLike={handleLike} // Like event handler
-            onComment={handleComment} // Comment event handler
-            onBookmark={handleBookmark} // Bookmark event handler
-            onShare={handleShare} // Share event handler
+            likes={120}
+            comments={34}
+            recipeId="123"
+            onLike={handleLike}
+            onComment={handleComment}
+            onBookmark={handleBookmark}
+            onShare={handleShare}
           />
         </ActionBarCon>
+
+        {isDeleteModalOpen && (
+          <DeletePostModal onCancel={() => setDeleteModalOpen(false)} onDelete={handleDelete} />
+        )}
       </Container>
     </>
   );
