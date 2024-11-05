@@ -49,21 +49,33 @@ const KakaoButtonImage = styled.img`
 `;
 
 export default function LoginPage() {
-  const kakaoURL = useKakaoLoginUrl();
+  const { data: loginUrl, isPending, error } = useKakaoLoginUrl();
 
   const handleKakaoLogin = () => {
-    window.location.href = kakaoURL;
-    console.log(kakaoURL);
+    if (loginUrl) {
+      console.log('Login URL:', loginUrl);
+      window.location.href = loginUrl;
+    }
   };
+
+  if (isPending) {
+    return <div>로딩중...</div>;
+  }
+
+  // 에러 상태 표시
+  if (error) {
+    console.error('Error fetching login URL:', error);
+    return <div>에러가 발생했습니다</div>;
+  }
 
   return (
     <Container>
       <LogoContainer>
-        <LogoSmall />
+        <LogoSmall width={120} />
       </LogoContainer>
       <RamenImage src={ramenImage} alt="라면 이미지" />
       <Title>{`나만의 라면 레시피를\n공유하세요!`}</Title>
-      <KakaoButton onClick={handleKakaoLogin}>
+      <KakaoButton onClick={handleKakaoLogin} disabled={isPending}>
         <KakaoButtonImage src={kakaoLoginButton} alt="카카오 로그인" />
       </KakaoButton>
     </Container>
