@@ -1,7 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styled from '@emotion/styled';
+import { useParams } from 'react-router-dom';
+import { useRecipeDetail } from '@/hooks/useRecipeDetail';
+import useRecipeDetailStore from '@/store/recipeDetailStore';
 import MainImg from '@/components/DetailPage/MainImg/MainImg';
-import ImgSrc from '@/assets/ramyun-images/sample-1.png';
 import { RamenTag } from '@/components/common/RamenTag/RamenTag';
 import { RenderPostDate } from '@/components/common/RenderPostDate/RenderPostDate';
 import { HeartIconContainer } from '@/components/common/HeartIconContainer/HeartIconContainer';
@@ -13,11 +15,11 @@ import CommentInput from '@/components/DetailPage/CommentInput/CommentInput';
 import Comments from '@/components/DetailPage/Comments/Comments';
 import DeletePostModal from '@/components/DetailPage/DeletePostModal/DeletePostModal';
 import { ActionBar } from '@/components/DetailPage/ActionBar/ActionBar';
-import SamleImg from '@/assets/images/profile-img-2.png';
 import theme from '@/styles/theme';
 import BackButton from '@/components/common/BackButton/BackButton';
 import Clear from '@/assets/icons/Clear';
 import Pencil from '@/assets/icons/Pencil';
+import tagMapping from '@/constants/ramenTagMapping';
 
 const Container = styled.div`
   margin: 0;
@@ -100,39 +102,47 @@ const PostDeleteBtn = styled.button`
   background: none;
   border: none;
 `;
+const Tag = styled.div`
+  max-width: 100px;
+  max-height: 28px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${theme.colors.primaryPastel};
+  color: ${theme.colors.primaryMain};
+  border-radius: 100px;
+  padding: 4px 12px;
+`;
 
 export default function DetailPage() {
+  const { recipeId } = useParams<{ recipeId: string }>();
+  const { data: recipe, isLoading, error, isSuccess } = useRecipeDetail(recipeId!);
+  const storedRecipe = useRecipeDetailStore((state) => state.recipe);
+  const setRecipe = useRecipeDetailStore((state) => state.setRecipe);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-  const isLoggedIn = true; // 로그인 상태를 확인하는 변수 (예시)
+  const isLoggedIn = false;
   const commentSecRef = useRef<HTMLDivElement>(null);
 
-  const handleLike = () => {
-    console.log('Liked!');
-  };
-
-  const handleComment = () => {
-    if (commentSecRef.current) {
-      commentSecRef.current.scrollIntoView({ behavior: 'smooth' });
+  useEffect(() => {
+    if (isSuccess && recipe) {
+      setRecipe(recipe);
     }
-  };
+  }, [isSuccess, recipe, setRecipe]);
 
-  const handleBookmark = () => {
-    console.log('Bookmark toggled!');
-  };
+  if (isLoading) return <div>Loading...</div>;
+  if (error || !storedRecipe) return <div>Error: {error?.message || 'Recipe not found'}</div>;
 
-  const handleShare = () => {
-    console.log('Shared!');
+  const ramenTag = {
+    name: tagMapping[storedRecipe.tags[0]] || '알 수 없음',
   };
 
   const handleDelete = async () => {
-    // 게시글 삭제
     console.log('게시글 삭제버튼 클릭.');
-
     try {
-      const response = await fetch(`/recipes/recipe-123`, {
+      const response = await fetch(`/recipes/${recipeId}`, {
         method: 'DELETE',
       });
-
       const data = await response.json();
       if (response.ok) {
         console.log('Recipe deleted:', data.message);
@@ -151,27 +161,25 @@ export default function DetailPage() {
         <BackButtonContainer>
           <BackButton width={32} height={32} fill={theme.colors.white} />
         </BackButtonContainer>
-        <MainImg imgSrc={ImgSrc}></MainImg>
+        <MainImg imgSrc={storedRecipe.thumbnail} />
         <IntroSec>
           <TagDateLike>
-            <RamenTag ramen={{ id: 1, name: '신라면' }} />
+            {storedRecipe.tags.slice(0, 2).map((tag, index) => (
+              <Tag key={index}>{tagMapping[tag] || 'Unknown Tag'}</Tag>
+            ))}
             <div style={{ display: 'flex', gap: 8 }}>
-              <RenderPostDate date="2023-10-31" className="custom-class" />
+              <RenderPostDate date={new Date(storedRecipe.created_at).toLocaleDateString()} />
               <HeartIconContainer
                 activeColor={theme.colors.gray[500]}
                 inactiveColor={theme.colors.gray[500]}
                 likeCountColor={theme.colors.gray[500]}
-                initialLikes={100}
-                recipeId="recipe-123"
+                initialLikes={storedRecipe.likes}
+                recipeId={storedRecipe._id}
               />
             </div>
           </TagDateLike>
-
           <div style={{ position: 'relative' }}>
-            <Introduction
-              title="초간단 1분 라볶이"
-              content="분식집 차려도 될 만큼 맛있는 라볶이 황금 비율 양념장은 추억의 바로 그 맛!"
-            />
+            <Introduction title={storedRecipe.title} content={storedRecipe.introduce} />
             {isLoggedIn && (
               <EditCon>
                 <EditBtn onClick={() => console.log('Edit clicked')}>
@@ -183,12 +191,13 @@ export default function DetailPage() {
               </EditCon>
             )}
           </div>
-
           <hr style={{ border: `1px solid ${theme.colors.gray[100]}` }} />
-          <Profile imgSrc={SamleImg} name="백종원" caption="드셔보셔유" />
+          <Profile
+            imgSrc={storedRecipe.writer.profile_image}
+            name={storedRecipe.writer.nickname}
+            caption={storedRecipe.writer.introduce}
+          />
         </IntroSec>
-
-        {/* 재료 및 조리 과정 */}
         <hr
           style={{
             width: '100%',
@@ -200,33 +209,18 @@ export default function DetailPage() {
         <IngredientsCon>
           <Ingredients
             title="재료"
-            ingredientData={[
-              { name: '라면', amount: '1개' },
-              { name: '대파', amount: '1/3대' },
-              { name: '물', amount: '1.5컵' },
-              { name: '황설탕', amount: '1T' },
-              { name: '고추장', amount: '1T' },
-            ]}
+            ingredientData={storedRecipe.ingredients.map((ing) => ({
+              name: ing.name,
+              amount: ing.unit,
+            }))}
           />
-
           <CookingSteps
-            steps={[
-              { number: 1, description: '대파는 송송 썰어 준비한다.' },
-              {
-                number: 2,
-                description:
-                  '냄비에 물, 분말스프(1/2~2/3), 건더기스프, 설탕, 고추장을 넣고 풀어주며 끓인다.',
-              },
-              { number: 3, description: '육수가 끓으면 면을 넣고 끓인다.' },
-              { number: 4, description: '면이 완전히 풀어지면 대파를 넣고 1분 정도 더 끓인다.' },
-              {
-                number: 5,
-                description: '물이 줄어들고 면이 익으면 불을 끄고 그릇에 담아 완성한다.',
-              },
-            ]}
+            steps={storedRecipe.cooking_steps.map((desc, index) => ({
+              number: index + 1,
+              description: desc,
+            }))}
           />
         </IngredientsCon>
-
         <hr
           style={{
             width: '100%',
@@ -237,58 +231,29 @@ export default function DetailPage() {
         />
         <CommentInputCon>
           <CommentInput
-            recipeId={1}
+            recipeId={parseInt(storedRecipe._id)}
             isLoggedIn={true}
             onCommentAdded={(content) => console.log(content)}
           />
         </CommentInputCon>
         <CommentSec ref={commentSecRef}>
           <Comments
-            comments={[
-              {
-                id: 1,
-                avatar: '../../src/assets/images/profile-img-2.png',
-                name: '라면왕(나)',
-                content: '라면왕은 전데요?',
-                date: '2024.10.24',
-                isOwnComment: true,
-                edited: true,
-              },
-              {
-                id: 2,
-                avatar: '../../src/assets/images/profile-img-3.png',
-                name: '롱스톤',
-                content: '텍스처가 없잖아요',
-                date: '2024.10.25',
-                isOwnComment: true,
-                edited: true,
-              },
-              {
-                id: 3,
-                avatar: '../../src/assets/images/profile-img-4.png',
-                name: '물코기',
-                content: '물..물코기',
-                date: '2024.10.25',
-                isOwnComment: false,
-              },
-            ]}
-            recipeId={123}
+            comments={[]}
+            recipeId={parseInt(storedRecipe._id)}
             onCommentsUpdate={(updatedComments) => console.log('comments updated', updatedComments)}
           />
         </CommentSec>
-
         <ActionBarCon>
           <ActionBar
-            likes={120}
-            comments={34}
-            recipeId="123"
-            onLike={handleLike}
-            onComment={handleComment}
-            onBookmark={handleBookmark}
-            onShare={handleShare}
+            likes={storedRecipe.likes}
+            comments={0}
+            recipeId={storedRecipe._id}
+            onLike={() => console.log('Liked!')}
+            onComment={() => console.log('Commented!')}
+            onBookmark={() => console.log('Bookmarked!')}
+            onShare={() => console.log('Shared!')}
           />
         </ActionBarCon>
-
         {isDeleteModalOpen && (
           <DeletePostModal onCancel={() => setDeleteModalOpen(false)} onDelete={handleDelete} />
         )}
