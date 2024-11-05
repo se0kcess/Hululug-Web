@@ -1,9 +1,6 @@
 import styled from '@emotion/styled';
+import { RamenType } from '@/types/ramen';
 import { ChipText } from '@/styles/Typography';
-
-export interface RamenType {
-  name: string; // 라면 태그의 이름
-}
 
 interface RamenTagProps {
   ramen: RamenType;
