@@ -3,6 +3,7 @@ import { useState } from 'react';
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import RegistrationModal from '@/components/PostPage/RegistrationModal/RegistrationModal';
+import useRecipeStore from '@/store/recipeStore';
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -69,6 +70,13 @@ interface CompletedBtnConProps {
 
 const CompletedBtnCon = ({ isActive, onPrev }: CompletedBtnConProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const {
+    title,
+    intro,
+    steps,
+    ingredients,
+    selectedRamen, // 라면 종류
+  } = useRecipeStore();
 
   const handleCompletedClick = () => {
     if (isActive) {
@@ -80,6 +88,13 @@ const CompletedBtnCon = ({ isActive, onPrev }: CompletedBtnConProps) => {
   const handleRegister = () => {
     setIsModalOpen(false);
     console.log('레시피 등록됨');
+    console.log({
+      title,
+      intro,
+      ingredients,
+      steps,
+      selectedRamen, // 선택된 라면 종류도 포함
+    });
   };
 
   return (
