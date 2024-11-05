@@ -5,6 +5,8 @@ import { BookmarkButton } from '@/components/common/BookmarkButton/BookmarkButto
 import { RenderPostDate } from '@/components/common/RenderPostDate/RenderPostDate';
 import { BodyText, CaptionText } from '@/styles/Typography';
 import tagMapping from '@/constants/ramenTagMapping';
+import { useNavigate } from 'react-router-dom';
+
 export interface RamenRecipe {
   _id: string;
   recipe_id: string;
@@ -119,13 +121,14 @@ const AuthorName = styled(CaptionText)`
   color: ${theme.colors.gray[700]};
 `;
 
-const SearchRamenList = ({ recipes, onRecipeClick }: SearchRamenListProps) => {
+const SearchRamenList = ({ recipes }: SearchRamenListProps) => {
   console.log(recipes);
+  const navigate = useNavigate();
 
   return (
     <Container>
       {recipes.map((recipe) => (
-        <RecipeCard key={recipe.recipe_id} onClick={() => onRecipeClick?.(recipe.recipe_id)}>
+        <RecipeCard key={recipe.recipe_id} onClick={() => navigate(`/details/${recipe.recipe_id}`)}>
           <ImageContainer>
             <RecipeImage src={recipe.thumbnail} alt={recipe.title} />
             <HeartPosition>
