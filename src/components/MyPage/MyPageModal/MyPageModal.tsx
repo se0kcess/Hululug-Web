@@ -129,7 +129,7 @@ const MyPageModal = ({ isOpen, onClose, onLogout }: MyPageModalProps) => {
   };
 
   const handleEditProfile = () => {
-    navigate('/editprofile');
+    navigate('/profile/edit');
     onClose();
   };
 
