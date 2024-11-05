@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import { useRecipeDetail } from '@/hooks/useRecipeDetail';
 import useRecipeDetailStore from '@/store/recipeDetailStore';
 import MainImg from '@/components/DetailPage/MainImg/MainImg';
-import { RamenTag } from '@/components/common/RamenTag/RamenTag';
 import { RenderPostDate } from '@/components/common/RenderPostDate/RenderPostDate';
 import { HeartIconContainer } from '@/components/common/HeartIconContainer/HeartIconContainer';
 import Introduction from '@/components/DetailPage/Introduction/Introduction';
@@ -132,10 +131,6 @@ export default function DetailPage() {
 
   if (isLoading) return <div>Loading...</div>;
   if (error || !storedRecipe) return <div>Error: {error?.message || 'Recipe not found'}</div>;
-
-  const ramenTag = {
-    name: tagMapping[storedRecipe.tags[0]] || '알 수 없음',
-  };
 
   const handleDelete = async () => {
     console.log('게시글 삭제버튼 클릭.');
