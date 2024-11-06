@@ -5,7 +5,7 @@ import { ButtonText, Title2, BodyText } from '@/styles/Typography';
 // import axios from 'axios';
 
 export interface CommentFormProps {
-  recipeId: number;
+  recipeId: string;
   isLoggedIn: boolean;
   onCommentAdded: (newComment: string) => void;
 }
