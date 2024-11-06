@@ -3,9 +3,6 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
   baseURL: '/api', // 프록시 사용
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 export const authApi = {
@@ -23,7 +20,6 @@ export const authApi = {
     const REDIRECT_URI = import.meta.env.VITE_SIGNUP_REDIRECT_URI;
     const signUpUrl = `${KAKAO_AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
 
-    console.log('Generated signup URL:', signUpUrl); // 디버깅용
     return signUpUrl;
   },
 

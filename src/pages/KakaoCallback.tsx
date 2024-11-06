@@ -30,14 +30,13 @@ export default function KakaoCallback() {
 
         // 404 에러인 경우 (사용자가 존재하지 않는 경우) 회원가입 페이지로 이동
         if (axios.isAxiosError(error) && error.response?.status === 404) {
-          navigate(`/signup?code=${code}`, {
-            state: {
-              code,
-              message: '회원가입이 필요합니다.',
-            },
-          });
+          // 회원이 아닌 경우 회원가입용 카카오 로그인으로 리다이렉트
+          const kakaoSignupURL = `https://kauth.kakao.com/oauth/authorize?client_id=${
+            import.meta.env.VITE_KAKAO_CLIENT_ID
+          }&redirect_uri=${import.meta.env.VITE_SIGNUP_REDIRECT_URI}&response_type=code`;
+
+          window.location.href = kakaoSignupURL;
         } else {
-          // 다른 에러의 경우 로그인 페이지로 이동
           navigate('/login');
         }
       },
