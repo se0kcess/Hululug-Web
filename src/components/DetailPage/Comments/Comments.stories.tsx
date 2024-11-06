@@ -1,55 +1,37 @@
-import { useState } from 'react';
+// Comments.stories.tsx
 import { Meta, StoryFn } from '@storybook/react';
-import Comments from './Comments';
+import Comments, { CommentsProps } from './Comments';
+import { Comment } from '@/types/comment';
 
 export default {
-  title: 'Components/DetailPage/Comments',
+  title: 'Components/Comments',
   component: Comments,
   argTypes: {
-    comments: { control: 'object' },
-    recipeId: { control: 'number' },
     onCommentsUpdate: { action: 'comments updated' },
   },
-} as Meta<typeof Comments>;
+} as Meta;
 
-const Template: StoryFn<typeof Comments> = (args) => {
-  const [comments, setComments] = useState<typeof args.comments>(args.comments);
-
-  const handleCommentsUpdate = (updatedComments: typeof args.comments) => {
-    setComments(updatedComments);
-  };
-
-  return <Comments {...args} comments={comments} onCommentsUpdate={handleCommentsUpdate} />;
-};
+const Template: StoryFn<CommentsProps> = (args) => <Comments {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-  comments: [
-    {
-      id: 1,
-      avatar: '../../src/assets/images/profile-img-2.png',
-      name: '라면왕(나)',
-      content: '라면왕은 전데요?',
-      date: '2024.10.24',
-      isOwnComment: true,
-      edited: true,
-    },
-    {
-      id: 2,
-      avatar: '../../src/assets/images/profile-img-3.png',
-      name: '롱스톤',
-      content: '텍스처가 없잖아요',
-      date: '2024.10.25',
-      isOwnComment: false,
-    },
-    {
-      id: 3,
-      avatar: '../../src/assets/images/profile-img-4.png',
-      name: '물코기',
-      content: '물..물코기',
-      date: '2024.10.25',
-      isOwnComment: false,
-    },
-  ],
-  recipeId: 123,
+  recipeId: 'sampleRecipeId',
+  onCommentsUpdate: (updatedComments: Comment[]) =>
+    console.log('Comments updated:', updatedComments),
 };
+
+export const WithMockData = Template.bind({});
+WithMockData.args = {
+  recipeId: 'sampleRecipeId',
+  onCommentsUpdate: (updatedComments: Comment[]) =>
+    console.log('Comments updated:', updatedComments),
+};
+
+// WithMockData에 mockComments를 적용하여 Storybook에서 데이터 제공
+WithMockData.decorators = [
+  (Story) => (
+    <div>
+      <Story {...WithMockData.args} />
+    </div>
+  ),
+];
