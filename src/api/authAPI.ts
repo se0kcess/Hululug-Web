@@ -31,12 +31,17 @@ export const authApi = {
     return data;
   },
 
-  signup: async (formData: FormData): Promise<ApiResponse<User>> => {
-    const { data } = await axiosInstance.post<ApiResponse<User>>('/users', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return data;
+  signup: async (formData: FormData) => {
+    try {
+      const { data } = await axiosInstance.post<ApiResponse<User>>('/users', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return data;
+    } catch (error) {
+      console.error('API Error:', error);
+      throw error;
+    }
   },
 };

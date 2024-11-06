@@ -175,10 +175,17 @@ export const SignupForm = () => {
 
     try {
       const submitData = new FormData();
+
+      // 필수 데이터 추가
       submitData.append('nickname', formData.nickname);
-      submitData.append('introduce', formData.introduce);
       submitData.append('code', code);
 
+      // 소개 텍스트가 있는 경우에만 추가
+      if (formData.introduce.trim()) {
+        submitData.append('introduce', formData.introduce);
+      }
+
+      // 프로필 이미지 처리
       if (formData.profile_image) {
         submitData.append('profile_image', formData.profile_image);
       } else {
@@ -188,20 +195,31 @@ export const SignupForm = () => {
         }
       }
 
-      console.log('Submitting data:', submitData);
-
-      for (let pair of submitData.entries()) {
-        console.log(pair[0], pair[1]);
+      // FormData 내용 확인
+      console.log('=== FormData Contents ===');
+      for (const [key, value] of submitData.entries()) {
+        if (value instanceof File) {
+          console.log(key, ':', {
+            name: value.name,
+            type: value.type,
+            size: value.size,
+          });
+        } else {
+          console.log(key, ':', value);
+        }
       }
 
-      // 3. 회원가입 요청
       const response = await authApi.signup(submitData);
+      console.log('Signup Response:', response);
+
       useAuthStore.getState().setUser(response.data);
       navigate('/main');
     } catch (error) {
       console.error('회원가입 중 오류 발생:', error);
       if (axios.isAxiosError(error)) {
-        console.error('Error response:', error.response?.data);
+        console.error('Error Response:', error.response?.data);
+        console.error('Error Config:', error.config);
+
         if (error.response?.status === 401 || error.response?.status === 403) {
           alert('인증이 만료되었습니다. 다시 로그인해주세요.');
           navigate('/login');
