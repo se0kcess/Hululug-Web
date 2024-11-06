@@ -3,11 +3,10 @@ import apiTest from '@/api/authAPITEST';
 import { Comment, CommentsResponse } from '@/types/comment';
 
 const fetchComments = async (recipeId: string): Promise<Comment[]> => {
+  console.log('recipeId-useRecipe', recipeId);
+
   try {
-    const response = await apiTest.get<CommentsResponse>(
-      `/recipes/672743a575e46d70c1d79e46/comments`,
-    );
-    console.log('레시피 아이디:', recipeId);
+    const response = await apiTest.get<CommentsResponse>(`/recipes/${recipeId}/comments`);
     console.log('댓글 응답 데이터:', response.data.data);
     return response.data.data;
   } catch (error) {
