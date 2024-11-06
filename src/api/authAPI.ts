@@ -3,6 +3,9 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
   baseURL: '/api', // 프록시 사용
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 export const authApi = {

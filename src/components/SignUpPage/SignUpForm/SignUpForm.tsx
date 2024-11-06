@@ -174,24 +174,10 @@ export const SignupForm = () => {
     setIsLoading(true);
 
     try {
-      // 1. 회원가입용 카카오 토큰 받기 (signup redirect URI 사용)
-      const tokenResponse = await axios.post('https://kauth.kakao.com/oauth/token', null, {
-        params: {
-          grant_type: 'authorization_code',
-          client_id: import.meta.env.VITE_KAKAO_CLIENT_ID,
-          redirect_uri: import.meta.env.VITE_SIGNUP_REDIRECT_URI, // 회원가입용 리다이렉트 URI
-          code: code,
-        },
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-        },
-      });
-
       const submitData = new FormData();
       submitData.append('nickname', formData.nickname);
       submitData.append('introduce', formData.introduce);
       submitData.append('code', code);
-      submitData.append('access_token', tokenResponse.data.access_token);
 
       if (formData.profile_image) {
         submitData.append('profile_image', formData.profile_image);
@@ -202,11 +188,13 @@ export const SignupForm = () => {
         }
       }
 
-      // FormData 내용 확인 (디버깅용)
+      console.log('Submitting data:', submitData);
+
       for (let pair of submitData.entries()) {
         console.log(pair[0], pair[1]);
       }
 
+      // 3. 회원가입 요청
       const response = await authApi.signup(submitData);
       useAuthStore.getState().setUser(response.data);
       navigate('/main');
@@ -215,13 +203,8 @@ export const SignupForm = () => {
       if (axios.isAxiosError(error)) {
         console.error('Error response:', error.response?.data);
         if (error.response?.status === 401 || error.response?.status === 403) {
-          // 인증 만료 시 회원가입용 카카오 로그인 URL로 리다이렉트
-          const kakaoSignupURL = `https://kauth.kakao.com/oauth/authorize?client_id=${
-            import.meta.env.VITE_KAKAO_CLIENT_ID
-          }&redirect_uri=${import.meta.env.VITE_SIGNUP_REDIRECT_URI}&response_type=code`;
-
           alert('인증이 만료되었습니다. 다시 로그인해주세요.');
-          window.location.href = kakaoSignupURL;
+          navigate('/login');
           return;
         }
         const errorMessage = error.response?.data?.message || '회원가입 중 오류가 발생했습니다.';
