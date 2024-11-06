@@ -34,10 +34,24 @@ export const useRamenStore = create<RamenStore>((set, get) => ({
 
   initializeRamenList: (apiRamenList) => {
     // API 응답의 라면 데이터에 이미지 키를 매핑
-    const ramenList = apiRamenList.map((ramen) => ({
-      ...ramen,
-      imageKey: RAMEN_ID_MAP[ramen._id].imageKey,
-    }));
+    const ramenList = apiRamenList
+      .map((ramen) => {
+        // RAMEN_ID_MAP에서 해당 ID의 imageKey를 가져옴
+        const mappedData = RAMEN_ID_MAP[ramen._id];
+
+        if (!mappedData) {
+          console.error(`No mapping found for ramen ID: ${ramen._id}`);
+          return null;
+        }
+
+        return {
+          _id: ramen._id,
+          title: ramen.title,
+          count: ramen.count,
+          imageKey: mappedData.imageKey,
+        };
+      })
+      .filter((ramen): ramen is RamenInfo => ramen !== null); // null 값 필터링
 
     const shuffledList = [...ramenList].sort(() => Math.random() - 0.5);
 
