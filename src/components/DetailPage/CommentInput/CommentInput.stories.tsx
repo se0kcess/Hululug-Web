@@ -1,28 +1,29 @@
 // CommentInput.stories.tsx
 import { Meta, StoryFn } from '@storybook/react';
 import CommentInput, { CommentFormProps } from './CommentInput';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+// Initialize a QueryClient for React Query
+const queryClient = new QueryClient();
 
 export default {
   title: 'Components/CommentInput',
   component: CommentInput,
   argTypes: {
-    isLoggedIn: { control: 'boolean' },
-    onCommentAdded: { action: 'onCommentAdded' },
+    onCommentAdded: { action: 'comment added' },
   },
 } as Meta;
 
-const Template: StoryFn<CommentFormProps> = (args) => <CommentInput {...args} />;
+// Story template with QueryClientProvider
+const Template: StoryFn<CommentFormProps> = (args) => (
+  <QueryClientProvider client={queryClient}>
+    <CommentInput {...args} />
+  </QueryClientProvider>
+);
 
-export const LoggedIn = Template.bind({});
-LoggedIn.args = {
+export const Default = Template.bind({});
+Default.args = {
   recipeId: 'sampleRecipeId',
   isLoggedIn: true,
-  onCommentAdded: (newComment) => console.log('Comment added:', newComment),
-};
-
-export const LoggedOut = Template.bind({});
-LoggedOut.args = {
-  recipeId: 'sampleRecipeId',
-  isLoggedIn: false,
-  onCommentAdded: (newComment) => console.log('Comment added:', newComment),
+  onCommentAdded: (newComment: string) => console.log('New comment:', newComment),
 };
