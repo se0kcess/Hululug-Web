@@ -5,7 +5,7 @@ import { BodyText, ButtonText, CaptionText } from '@/styles/Typography';
 import { Comment } from '@/types/comment';
 import { useRecipeComments } from '@/hooks/useRecipeComments';
 
-interface CommentsProps {
+export interface CommentsProps {
   recipeId: string;
   onCommentsUpdate?: (updatedComments: Comment[]) => void;
 }
