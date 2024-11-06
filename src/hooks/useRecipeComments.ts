@@ -4,7 +4,6 @@ import { Comment, CommentsResponse } from '@/types/comment';
 
 const fetchComments = async (recipeId: string): Promise<Comment[]> => {
   console.log('recipeId-useRecipe', recipeId);
-
   try {
     const response = await apiTest.get<CommentsResponse>(`/recipes/${recipeId}/comments`);
     console.log('댓글 응답 데이터:', response.data.data);
