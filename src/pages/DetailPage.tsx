@@ -127,6 +127,7 @@ export default function DetailPage() {
     if (isSuccess && recipe) {
       setRecipe(recipe);
     }
+    console.log('레시피 데이터', storedRecipe?._id);
   }, [isSuccess, recipe, setRecipe]);
 
   if (isLoading) return <div>Loading...</div>;
@@ -226,15 +227,14 @@ export default function DetailPage() {
         />
         <CommentInputCon>
           <CommentInput
-            recipeId={parseInt(storedRecipe._id)}
+            recipeId={storedRecipe._id}
             isLoggedIn={true}
             onCommentAdded={(content) => console.log(content)}
           />
         </CommentInputCon>
         <CommentSec ref={commentSecRef}>
           <Comments
-            comments={[]}
-            recipeId={parseInt(storedRecipe._id)}
+            recipeId={storedRecipe._id}
             onCommentsUpdate={(updatedComments) => console.log('comments updated', updatedComments)}
           />
         </CommentSec>
