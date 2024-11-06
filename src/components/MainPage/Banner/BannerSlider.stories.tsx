@@ -3,7 +3,7 @@ import BannerSlider from './BannerSlider';
 import styled from '@emotion/styled';
 
 const meta: Meta<typeof BannerSlider> = {
-  title: 'Components/BannerSlider',
+  title: 'Components/MainPage/BannerSlider',
   component: BannerSlider,
   parameters: {
     layout: 'padded',

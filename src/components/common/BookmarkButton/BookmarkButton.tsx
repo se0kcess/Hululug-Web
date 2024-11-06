@@ -5,10 +5,11 @@ import useBookmarkStore from '@/store/bookmarkStore';
 import theme from '@/styles/theme';
 
 interface BookmarkButtonProps {
-  recipeId: number;
+  recipeId: string;
   size?: number;
-  className?: string;
-  onBookmarkChange?: (recipeId: number, isBookmarked: boolean) => void;
+  activeColor?: string;
+  inactiveColor?: string;
+  onBookmarkChange?: (recipeId: string, isBookmarked: boolean) => void;
 }
 
 const StyledButton = styled.button`
@@ -27,7 +28,8 @@ const StyledButton = styled.button`
 export const BookmarkButton = ({
   recipeId,
   size = 24,
-  className,
+  activeColor = theme.colors.primaryMain,
+  inactiveColor = theme.colors.gray[200],
   onBookmarkChange,
 }: BookmarkButtonProps) => {
   const bookmarkedRecipes = useBookmarkStore((state) => state.bookmarkedRecipes);
@@ -43,15 +45,11 @@ export const BookmarkButton = ({
   };
 
   return (
-    <StyledButton
-      onClick={handleClick}
-      className={className}
-      aria-label={isBookmarked ? '북마크 제거' : '북마크 추가'}
-    >
+    <StyledButton onClick={handleClick} aria-label={isBookmarked ? '북마크 제거' : '북마크 추가'}>
       {isBookmarked ? (
-        <BookmarkFill width={size} height={size} color={theme.colors.gray[200]} />
+        <BookmarkFill width={size} height={size} color={activeColor} />
       ) : (
-        <BookmarkOutline width={size} height={size} color={theme.colors.gray[200]} />
+        <BookmarkOutline width={size} height={size} color={inactiveColor} />
       )}
     </StyledButton>
   );

@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+*.env
 
 # Editor directories and files
 .idea
@@ -22,3 +23,7 @@ dist-ssr
 *.sw?
 
 *storybook.log
+*.tsbuildinfo
+vite.config.*.ts
+vite.config.*.js
+.env

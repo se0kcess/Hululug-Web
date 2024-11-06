@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 import socialBanner from '@assets/images/instagram-banner.png';
 import rankBanner from '@assets/images/ranking-banner.png';
 import worldcupBanner from '@assets/images/worldcup-banner.png';
@@ -26,6 +27,7 @@ const Slide = styled.img`
   min-width: 100%;
   height: auto;
   object-fit: cover;
+  cursor: pointer;
 `;
 
 const Dots = styled.div`
@@ -53,6 +55,7 @@ const Dot = styled.div<{ active: boolean }>`
 `;
 
 const BannerSlider = () => {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [touchStart, setTouchStart] = useState(0);
@@ -141,6 +144,15 @@ const BannerSlider = () => {
     setCurrentSlide(index + 1);
   };
 
+  const handleSlideClick = () => {
+    const realIndex = getRealIndex();
+    if (realIndex === 0) {
+      navigate('/ramenworldcup');
+    } else if (realIndex === 1) {
+      navigate('/ramenworldcup/rank');
+    }
+  };
+
   // 변환 스타일 계산
   const transformStyle = `translateX(${-currentSlide * 100 - dragOffset}%)`;
 
@@ -157,7 +169,13 @@ const BannerSlider = () => {
         }}
       >
         {extendedBanners.map((banner, index) => (
-          <Slide key={index} src={banner} alt={`배너 ${getRealIndex() + 1}`} draggable={false} />
+          <Slide
+            key={index}
+            src={banner}
+            alt={`배너 ${getRealIndex() + 1}`}
+            draggable={false}
+            onClick={handleSlideClick}
+          />
         ))}
       </SlideTrack>
       <Dots>

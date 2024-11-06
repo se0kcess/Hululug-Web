@@ -11,14 +11,13 @@ import { SortModal } from '@/components/MainPage/SortModal/SortModal';
 const ButtonsContainer = styled.div`
   display: flex;
   gap: 0.5rem;
-  padding: 1rem;
 `;
 
 const FilterButton = styled.button<{ isActive?: boolean }>`
   display: flex;
   align-items: center;
-  padding: 0.8rem 1rem;
-  border-radius: 20px;
+  padding: 0.6rem 1rem;
+  border-radius: 24px;
   border: 1px solid
     ${({ isActive, theme }) => (isActive ? theme.colors.primaryMain : theme.colors.gray[200])};
   background: ${theme.colors.white};
