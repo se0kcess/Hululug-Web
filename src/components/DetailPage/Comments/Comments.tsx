@@ -113,6 +113,9 @@ const Comments = ({ recipeId, onCommentsUpdate }: CommentsProps) => {
   const { commentsQuery, updateCommentMutation, deleteCommentMutation } =
     useRecipeComments(recipeId);
 
+  console.log('recipeId', recipeId);
+  console.log('commentsQuery', commentsQuery);
+
   const commentList = commentsQuery.data || [];
 
   useEffect(() => {
