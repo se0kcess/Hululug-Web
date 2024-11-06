@@ -1,7 +1,7 @@
 
 <h1><img width="104" alt="image" src="https://github.com/user-attachments/assets/cf5bdd19-edaf-4af8-96b8-6a8842d06bb5"></h1>
 
-나만의 특별한 라면 레시피 공유 앱
+나만의 특별한 라면 레시피 공유 앱 🍥
 
 <p>
 <strong>🗓️ 프로젝트 기간 : 2024.10.15 ~ 2024.11.06</strong>
