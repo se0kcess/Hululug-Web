@@ -2,7 +2,6 @@ export type RamenRecipeType = {
   id: number;
   name: string;
 };
-
 export interface RamenRecipe {
   _id: string;
   recipe_id: string;
