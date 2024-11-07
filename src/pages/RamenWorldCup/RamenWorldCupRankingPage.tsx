@@ -56,8 +56,8 @@ const TopRankItem = styled.div<{ rank: number }>`
   ${({ rank }) =>
     rank === 1 &&
     `
-    transform: scale(1.1);  // 1등을 좀 더 크게
-    margin-top: -1rem;      // 1등을 위로 올림
+    transform: scale(1.1);
+    margin-top: -1rem;     
   `}
 `;
 
@@ -141,10 +141,9 @@ export default function RamenWorldCupRankingPage() {
       .map((item) => ({
         ...item,
         imageKey: RAMEN_ID_MAP[item._id].imageKey,
-        // 각 라면의 승률 = (해당 라면 우승 횟수 / 전체 우승 횟수) * 100
         winRate: total_count > 0 ? ((item.count / total_count) * 100).toFixed(1) : '0.0',
       }))
-      .sort((a, b) => Number(b.winRate) - Number(a.winRate));
+      .sort((a, b) => b.count - a.count);
   }, [ramenData]);
 
   const topThree = rankingData.slice(0, 3);
@@ -191,7 +190,9 @@ export default function RamenWorldCupRankingPage() {
             </RankImageContainer>
             <RankInfo>
               <RamenName>{ramen.title}</RamenName>
-              <WinRate>{ramen.winRate}%</WinRate>
+              <div>
+                <WinRate>{ramen.winRate}%</WinRate>
+              </div>
             </RankInfo>
           </RankingItem>
         ))}
