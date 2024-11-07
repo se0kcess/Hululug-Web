@@ -1,32 +1,26 @@
-import { useState } from 'react';
 import { Meta, StoryFn } from '@storybook/react';
-import RecipeIngredientsCon from './RecipeIngredientsCon';
+import RecipeIngredientsCon, { RecipeIngredientsConProps } from './RecipeIngredientsCon';
 
 export default {
   title: 'Components/RecipeIngredientsCon',
   component: RecipeIngredientsCon,
   argTypes: {
-    onIngredientsFilled: { action: 'ingredients filled' },
+    onIngredientsFilled: { action: 'onIngredientsFilled' },
+    onIngredientChange: { action: 'onIngredientChange' },
   },
-} as Meta<typeof RecipeIngredientsCon>;
+} as Meta;
 
-const Template: StoryFn<{ onIngredientsFilled: (filled: boolean) => void }> = (args) => {
-  const [isFilled, setIsFilled] = useState(false);
-
-  const handleIngredientsFilled = (filled: boolean) => {
-    setIsFilled(filled);
-    args.onIngredientsFilled(filled);
-  };
-
-  return (
-    <div>
-      <RecipeIngredientsCon onIngredientsFilled={handleIngredientsFilled} />
-      <div style={{ marginTop: '20px', fontWeight: 'bold' }}>
-        {isFilled ? 'All ingredients are filled' : 'Ingredients are not fully filled'}
-      </div>
-    </div>
-  );
-};
+const Template: StoryFn<RecipeIngredientsConProps> = (args) => <RecipeIngredientsCon {...args} />;
 
 export const Default = Template.bind({});
-Default.args = {};
+Default.args = {
+  ingredients: [{ name: '', quantity: '' }],
+};
+
+export const FilledIngredients = Template.bind({});
+FilledIngredients.args = {
+  ingredients: [
+    { name: 'Tomato', quantity: '2 pcs' },
+    { name: 'Onion', quantity: '1 pc' },
+  ],
+};
