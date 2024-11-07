@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { useParams } from 'react-router-dom';
 import { useRecipeDetail } from '@/hooks/useRecipeDetail';
 import useRecipeDetailStore from '@/store/recipeDetailStore';
+import { useUserTestStore } from '@/store/useUserTestStore';
 import MainImg from '@/components/DetailPage/MainImg/MainImg';
 import { RenderPostDate } from '@/components/common/RenderPostDate/RenderPostDate';
 import { HeartIconContainer } from '@/components/common/HeartIconContainer/HeartIconContainer';
@@ -101,6 +102,7 @@ const PostDeleteBtn = styled.button`
   background: none;
   border: none;
 `;
+
 const Tag = styled.div`
   max-width: 100px;
   max-height: 28px;
@@ -120,15 +122,18 @@ export default function DetailPage() {
   const storedRecipe = useRecipeDetailStore((state) => state.recipe);
   const setRecipe = useRecipeDetailStore((state) => state.setRecipe);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-  const isLoggedIn = false;
+  const { user } = useUserTestStore();
+  const isLoggedIn = Boolean(user);
   const commentSecRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    console.log('현재 사용자 데이터:', user);
+    console.log('storedRecipe', storedRecipe);
+
     if (isSuccess && recipe) {
       setRecipe(recipe);
     }
-    console.log('레시피 데이터', storedRecipe?._id);
-  }, [isSuccess, recipe, setRecipe]);
+  }, [isSuccess, recipe, setRecipe, user]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error || !storedRecipe) return <div>Error: {error?.message || 'Recipe not found'}</div>;
@@ -176,7 +181,8 @@ export default function DetailPage() {
           </TagDateLike>
           <div style={{ position: 'relative' }}>
             <Introduction title={storedRecipe.title} content={storedRecipe.introduce} />
-            {isLoggedIn && (
+            {/* 사용자가 로그인 상태이고, my_recipes 배열에 storedRecipe._id가 포함된 경우에만 버튼이 보이도록. */}
+            {isLoggedIn && user && user.my_recipes.includes(storedRecipe._id) && (
               <EditCon>
                 <EditBtn onClick={() => console.log('Edit clicked')}>
                   <Pencil width={24} height={24} fill={theme.colors.gray[200]} />
@@ -228,7 +234,7 @@ export default function DetailPage() {
         <CommentInputCon>
           <CommentInput
             recipeId={storedRecipe._id}
-            isLoggedIn={true}
+            isLoggedIn={isLoggedIn}
             onCommentAdded={(content) => console.log(content)}
           />
         </CommentInputCon>
