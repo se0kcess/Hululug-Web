@@ -1,5 +1,6 @@
 export interface SignupFormData {
+  email: string;
   nickname: string;
-  description: string;
-  profileImage?: File;
+  introduce: string;
+  profile_image?: File;
 }

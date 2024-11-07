@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useLogin } from '@/hooks/useAuth';
-import { LoginResponse } from '@/types/auth';
 import axios from 'axios';
 
 export default function KakaoCallback() {
@@ -18,26 +17,22 @@ export default function KakaoCallback() {
     }
 
     login(code, {
-      onSuccess: (response: LoginResponse) => {
-        if (!response.data) {
-          navigate('/signup', { state: { code } });
-        } else {
-          navigate('/main');
+      onSuccess: (response) => {
+        if (response.data) {
+          navigate('/');
         }
       },
       onError: (error) => {
-        console.error('Login error:', error);
-
-        // 404 에러인 경우 (사용자가 존재하지 않는 경우) 회원가입 페이지로 이동
         if (axios.isAxiosError(error) && error.response?.status === 404) {
-          navigate('/signup', {
+          const email = error.response.data.message.split(' : ')[1]?.trim();
+          navigate(`/signup?code=${code}`, {
             state: {
               code,
+              email,
               message: '회원가입이 필요합니다.',
             },
           });
         } else {
-          // 다른 에러의 경우 로그인 페이지로 이동
           navigate('/login');
         }
       },
