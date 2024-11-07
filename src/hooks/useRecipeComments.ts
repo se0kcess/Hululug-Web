@@ -1,12 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 // import apiTest from '@/api/authAPITEST';
-import axiosInstance from '@/api/authAPITEST';
+import { axiosLocal } from '@/api/authRecipeAPI';
 import { Comment, CommentsResponse } from '@/types/comment';
 
 const fetchComments = async (recipeId: string): Promise<Comment[]> => {
   console.log('recipeId-useRecipe', recipeId);
   try {
-    const response = await axiosInstance.get<CommentsResponse>(`/recipes/${recipeId}/comments`);
+    const response = await axiosLocal.get<CommentsResponse>(`/recipes/${recipeId}/comments`);
     console.log('댓글 응답 데이터:', response.data.data);
     return response.data.data;
   } catch (error) {
@@ -19,9 +19,9 @@ const postComment = async ({ recipeId, content }: { recipeId: string; content: s
   try {
     // 보낼 데이터 및 헤더 로그 확인
     console.log('요청 데이터:', { content });
-    console.log('Axios 인스턴스 헤더:', axiosInstance.defaults.headers);
+    console.log('Axios 인스턴스 헤더:', axiosLocal.defaults.headers);
 
-    const response = await axiosInstance.post(`/recipes/${recipeId}/comments`, { content });
+    const response = await axiosLocal.post(`/recipes/${recipeId}/comments`, { content });
     return response.data.data;
   } catch (error) {
     console.error('댓글 등록 실패. 요청 데이터:', { recipeId, content });
@@ -39,7 +39,7 @@ const updateComment = async ({
   commentId: string;
   content: string;
 }) => {
-  const response = await axiosInstance.patch(`/recipes/${recipeId}/comments/${commentId}`, {
+  const response = await axiosLocal.patch(`/recipes/${recipeId}/comments/${commentId}`, {
     content,
   });
   return response.data.data;
@@ -48,7 +48,7 @@ const updateComment = async ({
 const deleteComment = async ({ recipeId, commentId }: { recipeId: string; commentId: string }) => {
   console.log('삭제링크' + `/recipes/${recipeId}/comments/${commentId}`);
 
-  const response = await axiosInstance.delete(`/recipes/${recipeId}/comments/${commentId}`);
+  const response = await axiosLocal.delete(`/recipes/${recipeId}/comments/${commentId}`);
   console.log('삭제', response);
 
   return response.data;
