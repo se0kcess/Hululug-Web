@@ -4051,21 +4051,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.59.16":
-  version: 5.59.16
-  resolution: "@tanstack/query-core@npm:5.59.16"
-  checksum: 10c0/487a1ac0df5e02ca4ea5bf3b9ee0010ac7fe0856a36fa7bd10947598d3f0ba356c91aa21b123729b26f2116f05b8b69cd8fb17681c24cdd586de17b6fe021521
+"@tanstack/query-core@npm:5.59.20":
+  version: 5.59.20
+  resolution: "@tanstack/query-core@npm:5.59.20"
+  checksum: 10c0/c93a8d41e21db532e92c1c90916bec578729d32d1f39d655603b9e81a9d5aebc8588a4d6a75928e04d3ddc90e71a1f8dc066a61d0ba24108eaf60cc2ce024a2f
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^5.59.16":
-  version: 5.59.16
-  resolution: "@tanstack/react-query@npm:5.59.16"
+"@tanstack/react-query@npm:^5.59.20":
+  version: 5.59.20
+  resolution: "@tanstack/react-query@npm:5.59.20"
   dependencies:
-    "@tanstack/query-core": "npm:5.59.16"
+    "@tanstack/query-core": "npm:5.59.20"
   peerDependencies:
     react: ^18 || ^19
-  checksum: 10c0/82acf170d2d169ad18081e4dc52bdcec3b92bd1b134bb704ab6949937a59fd4d7d4ddb1172dd7fdbd1667a2d2e0ffa118e68bde5f53972649b8e55bd0e87244c
+  checksum: 10c0/fc3342c3a26c51c866d54082d14f86b2f644847ea8f9051000e529a012ea5437e18e35f999fcc453b2eecb0faaf29bd1aaec0956587ade63ba02262d6737800a
   languageName: node
   linkType: hard
 
@@ -4274,6 +4274,13 @@ __metadata:
   version: 2.0.4
   resolution: "@types/http-errors@npm:2.0.4"
   checksum: 10c0/494670a57ad4062fee6c575047ad5782506dd35a6b9ed3894cea65830a94367bd84ba302eb3dde331871f6d70ca287bfedb1b2cf658e6132cd2cbd427ab56836
+  languageName: node
+  linkType: hard
+
+"@types/js-cookie@npm:^3":
+  version: 3.0.6
+  resolution: "@types/js-cookie@npm:3.0.6"
+  checksum: 10c0/173afaf5ea9d86c22395b9d2a00b6adb0006dcfef165d6dcb0395cdc32f5a5dcf9c3c60f97194119963a15849b8f85121e1ae730b03e40bc0c29b84396ba22f9
   languageName: node
   linkType: hard
 
@@ -7544,7 +7551,8 @@ __metadata:
     "@storybook/react": "npm:^8.3.6"
     "@storybook/react-vite": "npm:^8.3.6"
     "@storybook/test": "npm:^8.3.6"
-    "@tanstack/react-query": "npm:^5.59.16"
+    "@tanstack/react-query": "npm:^5.59.20"
+    "@types/js-cookie": "npm:^3"
     "@types/node": "npm:^22.7.9"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
@@ -7560,9 +7568,11 @@ __metadata:
     eslint-plugin-react-refresh: "npm:^0.4.13"
     eslint-plugin-storybook: "npm:^0.10.1"
     globals: "npm:^15.11.0"
+    js-cookie: "npm:^3.0.5"
     prettier: "npm:^3.3.3"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
+    react-intersection-observer: "npm:^9.13.1"
     react-router-dom: "npm:^6.27.0"
     storybook: "npm:^8.3.6"
     typescript: "npm:^5.6.3"
@@ -8134,6 +8144,13 @@ __metadata:
   bin:
     jiti: bin/jiti.js
   checksum: 10c0/05b9ed58cd30d0c3ccd3c98209339e74f50abd9a17e716f65db46b6a35812103f6bde6e134be7124d01745586bca8cc5dae1d0d952267c3ebe55171949c32e56
+  languageName: node
+  linkType: hard
+
+"js-cookie@npm:^3.0.5":
+  version: 3.0.5
+  resolution: "js-cookie@npm:3.0.5"
+  checksum: 10c0/04a0e560407b4489daac3a63e231d35f4e86f78bff9d792011391b49c59f721b513411cd75714c418049c8dc9750b20fcddad1ca5a2ca616c3aca4874cce5b3a
   languageName: node
   linkType: hard
 
@@ -9732,6 +9749,19 @@ __metadata:
     react: ^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1 || ^18.0.0
     react-dom: ^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1 || ^18.0.0
   checksum: 10c0/0d60a0ea758529c32a706d0c69d70b69fb94de3c46442fffdee34f08f51ffceddbb5395b41dfd1565895653e9f60f98ca525835be9d5db1f16d6b22be12f4cd4
+  languageName: node
+  linkType: hard
+
+"react-intersection-observer@npm:^9.13.1":
+  version: 9.13.1
+  resolution: "react-intersection-observer@npm:9.13.1"
+  peerDependencies:
+    react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+  checksum: 10c0/c64722db407e0ca83945bf97621ab4618fa74f3a70b528ff43988818d46feee8962bd12e70203d2d92b31030889a1f813d00e0aa3d781a7bc39fb293c277ee04
   languageName: node
   linkType: hard
 

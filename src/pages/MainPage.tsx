@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { InfiniteData, useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import styled from '@emotion/styled';
 import { getRecipes } from '@/api/recipes';
 import { useFilterStore } from '@/store/filterStore';
@@ -12,7 +13,13 @@ import { RamenList } from '@/components/common/RamenList/RamenList';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner/LoadingSpinner';
 import { HotRecipeCard } from '@/components/MainPage/HotRecipeCard/HotRecipeCard';
 import { Header } from '@/components/MainPage/Header/Header';
+import { useInView } from 'react-intersection-observer';
 import { RamenRecipe } from '@/types/ramenRecipe';
+
+interface RecipeData {
+  recipes: RamenRecipe[];
+  next_cursor: string | null;
+}
 
 const Container = styled.div`
   display: flex;
@@ -71,92 +78,74 @@ const RetryButton = styled.button`
   }
 `;
 
+const EndMessage = styled.div`
+  text-align: center;
+  padding: 2rem;
+  color: ${({ theme }) => theme.colors.gray[500]};
+`;
+
 export default function MainPage() {
   const navigate = useNavigate();
   const { tagId, sort, setTagId, setSort } = useFilterStore();
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+  });
 
-  const [hotRecipes, setHotRecipes] = useState<RamenRecipe[]>([]);
-  const [allRecipes, setAllRecipes] = useState<RamenRecipe[]>([]);
-  const [cursor, setCursor] = useState<string | null>(null);
-  const [isLoadingHot, setIsLoadingHot] = useState(false);
-  const [isLoadingAll, setIsLoadingAll] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  // 인기 레시피 불러오기
-  const fetchHotRecipes = async () => {
-    try {
-      setIsLoadingHot(true);
-      setError(null);
+  // 인기 레시피 조회
+  const {
+    data: hotRecipesData,
+    isLoading: isLoadingHot,
+    error: hotError,
+  } = useQuery({
+    queryKey: ['hotRecipes'],
+    queryFn: async () => {
       const response = await getRecipes({
         sort: 'popular',
         limit: 3,
       });
-      setHotRecipes(response.data.recipes);
-    } catch (err) {
-      setError('인기 레시피를 불러오는데 실패했습니다.');
-      console.error('Failed to fetch hot recipes:', err);
-    } finally {
-      setIsLoadingHot(false);
-    }
-  };
+      return response.data.recipes;
+    },
+  });
 
-  // 전체 레시피 불러오기
-  const fetchAllRecipes = async (resetList: boolean = false) => {
-    try {
-      setIsLoadingAll(true);
-      setError(null);
-
-      const params = {
-        sort,
-        limit: 8,
+  // 전체 레시피 무한 스크롤 조회
+  const {
+    data,
+    isLoading: isLoadingAll,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    error: allError,
+  } = useInfiniteQuery<
+    RecipeData,
+    Error,
+    InfiniteData<RecipeData>,
+    (string | undefined)[],
+    string | undefined
+  >({
+    queryKey: ['recipes', tagId, sort],
+    queryFn: async ({ pageParam }) => {
+      const response = await getRecipes({
+        sort: sort || 'newest',
+        limit: 4,
         ...(tagId && { tag: tagId }),
-        ...(cursor && !resetList && { cursor }),
-      };
+        cursor: pageParam, // string | undefined 타입
+      });
+      return response.data;
+    },
+    getNextPageParam: (lastPage) => lastPage.next_cursor || undefined,
+    initialPageParam: undefined,
+  });
 
-      const response = await getRecipes(params);
-
-      if (resetList) {
-        setAllRecipes(response.data.recipes);
-      } else {
-        setAllRecipes((prev) => [...prev, ...response.data.recipes]);
-      }
-
-      setCursor(response.data.next_cursor);
-    } catch (err) {
-      setError('레시피를 불러오는데 실패했습니다.');
-      console.error('Failed to fetch recipes:', err);
-    } finally {
-      setIsLoadingAll(false);
+  // Intersection Observer로 무한 스크롤 감지
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
     }
-  };
+  }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
-  // 초기 로딩
-  useEffect(() => {
-    fetchHotRecipes();
-  }, []);
-
-  // 필터 변경시 레시피 리스트 재로딩
-  useEffect(() => {
-    setCursor(null);
-    fetchAllRecipes(true);
-  }, [tagId, sort]);
-
-  // 무한 스크롤 구현
-  useEffect(() => {
-    const handleScroll = () => {
-      if (isLoadingAll || !cursor) return;
-
-      const scrollPosition = window.innerHeight + window.scrollY;
-      const documentHeight = document.documentElement.scrollHeight;
-
-      if (scrollPosition >= documentHeight - 1000) {
-        fetchAllRecipes();
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [cursor, isLoadingAll]);
+  // 전체 레시피 목록 평탄화
+  const allRecipes = data?.pages.flatMap((page) => page.recipes) ?? [];
+  const hotRecipes = hotRecipesData ?? [];
 
   const handleRecipeClick = useCallback(
     (recipeId: string) => {
@@ -179,18 +168,11 @@ export default function MainPage() {
     [setSort],
   );
 
-  if (error) {
+  if (hotError || allError) {
     return (
       <ErrorContainer>
-        <p>{error}</p>
-        <RetryButton
-          onClick={() => {
-            fetchHotRecipes();
-            fetchAllRecipes(true);
-          }}
-        >
-          다시 시도하기
-        </RetryButton>
+        <p>{(hotError || (allError as Error))?.message || '오류가 발생했습니다.'}</p>
+        <RetryButton onClick={() => window.location.reload()}>다시 시도하기</RetryButton>
       </ErrorContainer>
     );
   }
@@ -228,10 +210,17 @@ export default function MainPage() {
         ) : (
           <>
             <RamenList recipes={allRecipes} onRecipeClick={handleRecipeClick} />
-            {isLoadingAll && (
+
+            <div ref={ref} style={{ height: '20px' }} />
+
+            {isFetchingNextPage && (
               <LoadingContainer>
                 <LoadingSpinner />
               </LoadingContainer>
+            )}
+
+            {!hasNextPage && allRecipes.length > 0 && (
+              <EndMessage>더 이상 불러올 레시피가 없습니다.</EndMessage>
             )}
           </>
         )}
