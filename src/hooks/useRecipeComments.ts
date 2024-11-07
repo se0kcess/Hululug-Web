@@ -1,11 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import apiTest from '@/api/authAPITEST';
+// import apiTest from '@/api/authAPITEST';
+import axiosInstance from '@/api/authAPITEST';
 import { Comment, CommentsResponse } from '@/types/comment';
 
 const fetchComments = async (recipeId: string): Promise<Comment[]> => {
   console.log('recipeId-useRecipe', recipeId);
   try {
-    const response = await apiTest.get<CommentsResponse>(`/recipes/${recipeId}/comments`);
+    const response = await axiosInstance.get<CommentsResponse>(`/recipes/${recipeId}/comments`);
     console.log('댓글 응답 데이터:', response.data.data);
     return response.data.data;
   } catch (error) {
@@ -15,8 +16,18 @@ const fetchComments = async (recipeId: string): Promise<Comment[]> => {
 };
 
 const postComment = async ({ recipeId, content }: { recipeId: string; content: string }) => {
-  const response = await apiTest.post(`/recipes/${recipeId}/comments`, { content });
-  return response.data.data;
+  try {
+    // 보낼 데이터 및 헤더 로그 확인
+    console.log('요청 데이터:', { content });
+    console.log('Axios 인스턴스 헤더:', axiosInstance.defaults.headers);
+
+    const response = await axiosInstance.post(`/recipes/${recipeId}/comments`, { content });
+    return response.data.data;
+  } catch (error) {
+    console.error('댓글 등록 실패. 요청 데이터:', { recipeId, content });
+    console.error('오류 세부 정보:', error);
+    throw error;
+  }
 };
 
 const updateComment = async ({
@@ -28,12 +39,18 @@ const updateComment = async ({
   commentId: string;
   content: string;
 }) => {
-  const response = await apiTest.patch(`/recipes/${recipeId}/comments/${commentId}`, { content });
+  const response = await axiosInstance.patch(`/recipes/${recipeId}/comments/${commentId}`, {
+    content,
+  });
   return response.data.data;
 };
 
 const deleteComment = async ({ recipeId, commentId }: { recipeId: string; commentId: string }) => {
-  const response = await apiTest.delete(`/recipes/${recipeId}/comments/${commentId}`);
+  console.log('삭제링크' + `/recipes/${recipeId}/comments/${commentId}`);
+
+  const response = await axiosInstance.delete(`/recipes/${recipeId}/comments/${commentId}`);
+  console.log('삭제', response);
+
   return response.data;
 };
 
