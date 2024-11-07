@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import { Tab } from '@/types/tab';
 import sampleImage from '@/assets/ramyun-images/sample-3.png';
 import theme from '@/styles/theme';
-import RamenList, { RamenRecipe } from '@/components/common/RamenList/RamenList';
 import MyRecipeCard from '@/components/MyPage/MyRecipeCard/MyRecipeCard';
 import MyCommentList from '@/components/MyPage/MyCommentList/MyCommentList';
 import BackButton from '@/components/common/BackButton/BackButton';
@@ -142,32 +141,6 @@ const MyPage = () => {
     },
   ];
 
-  // 샘플 북마크 데이터
-  const sampleBookmarks: RamenRecipe[] = [
-    {
-      id: '1',
-      title: '매콤한 진라면 레시피',
-      author: '백종원',
-      authorImage: sampleImage,
-      likes: 156,
-      date: '2024-01-01',
-      image: sampleImage,
-      ramenType: { id: 1, name: '진라면' },
-      bookmarkId: 'bookmark1',
-    },
-    {
-      id: '2',
-      title: '초간단 불닭볶음면',
-      author: '고든램지',
-      authorImage: sampleImage,
-      likes: 234,
-      date: '2024-01-02',
-      image: sampleImage,
-      ramenType: { id: 2, name: '불닭볶음면' },
-      bookmarkId: 'bookmark2',
-    },
-  ];
-
   const handleRecipeClick = (id: string) => {
     console.log('Recipe clicked:', id);
   };
@@ -200,8 +173,8 @@ const MyPage = () => {
         );
       case 'comments':
         return <MyCommentList comments={sampleComments} />;
-      case 'bookmarks':
-        return <RamenList recipes={sampleBookmarks} onRecipeClick={handleRecipeClick} />;
+      // case 'bookmarks':
+      //   return <RamenList recipes={sampleBookmarks} onRecipeClick={handleRecipeClick} />;
       default:
         return null;
     }
