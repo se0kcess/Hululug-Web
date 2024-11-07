@@ -210,7 +210,7 @@ export default function MainPage() {
             </LoadingContainer>
           ) : (
             hotRecipes.map((recipe) => (
-              <RecipeCard key={recipe._id}>
+              <RecipeCard key={recipe.recipe_id}>
                 <HotRecipeCard {...recipe} onClick={() => handleRecipeClick(recipe.recipe_id)} />
               </RecipeCard>
             ))
