@@ -88,6 +88,15 @@ const HeartWrapper = styled.div`
   bottom: 0.25rem;
 `;
 
+const ImageLink = styled.button`
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+`;
+
 export const HotRecipeCard = ({
   recipe_id,
   title,
@@ -97,9 +106,11 @@ export const HotRecipeCard = ({
   onClick,
 }: HotRecipeCardProps) => {
   return (
-    <Container onClick={onClick}>
+    <Container>
       <ImageWrapper>
-        <RecipeImage src={thumbnail || '/default-recipe-image.jpg'} alt={title} />
+        <ImageLink onClick={onClick} aria-label={`${title} 상세보기`}>
+          <RecipeImage src={thumbnail || '/default-recipe-image.jpg'} alt={title} />
+        </ImageLink>
         <ContentOverlay>
           <StyledTitle>{title}</StyledTitle>
           <ProfileContainer>

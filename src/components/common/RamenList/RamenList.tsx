@@ -105,13 +105,34 @@ const AuthorName = styled.span`
   color: ${theme.colors.gray[700]};
 `;
 
+const ImageLink = styled.button`
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+`;
+
 export const RamenList = ({ recipes, onRecipeClick }: RamenListProps) => {
+  const handleImageClick = (recipeId: string) => {
+    onRecipeClick?.(recipeId);
+  };
+
   return (
     <Container>
       {recipes.map((recipe) => (
-        <RecipeCard key={recipe._id} onClick={() => onRecipeClick?.(recipe.recipe_id)}>
+        <RecipeCard key={recipe._id}>
           <ImageContainer>
-            <RecipeImage src={recipe.thumbnail || '/default-recipe-image.jpg'} alt={recipe.title} />
+            <ImageLink
+              onClick={() => handleImageClick(recipe.recipe_id)}
+              aria-label={`${recipe.title} 상세보기`}
+            >
+              <RecipeImage
+                src={recipe.thumbnail || '/default-recipe-image.jpg'}
+                alt={recipe.title}
+              />
+            </ImageLink>
             <HeartPosition>
               <HeartIconContainer initialLikes={recipe.likes} recipeId={recipe.recipe_id} />
             </HeartPosition>
