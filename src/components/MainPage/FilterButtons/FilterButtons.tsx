@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import styled from '@emotion/styled';
-import { useRamenFilterStore } from '@/store/ramenFilterStore';
-import { useSortStore } from '@/store/sortStore';
-import { SORT_OPTIONS } from '@/types/sort';
+import { SORT_OPTIONS, SortOption } from '@/types/sort';
 import theme from '@/styles/theme';
 import { ArrowDown } from '@/assets/icons/ArrowDown';
-import { RamenFilterModal } from '@/components/common/RamenFilterModal/RamenFilterModal';
+import tagMapping from '@/constants/ramenTagMapping';
 import { SortModal } from '@/components/MainPage/SortModal/SortModal';
+import { RamenFilterModal } from '@/components/common/RamenFilterModal/RamenFilterModal';
+import { useFilterStore } from '@/store/filterStore';
 
 const ButtonsContainer = styled.div`
   display: flex;
@@ -27,6 +27,11 @@ const FilterButton = styled.button<{ isActive?: boolean }>`
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   white-space: nowrap;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.primaryMain};
+    color: ${({ theme }) => theme.colors.primaryMain};
+  }
 `;
 
 const StyledArrowDown = styled(ArrowDown)<{ isActive?: boolean }>`
@@ -38,45 +43,42 @@ const StyledArrowDown = styled(ArrowDown)<{ isActive?: boolean }>`
   color: currentColor;
 `;
 
-export const RamenFilterButton = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const selectedRamen = useRamenFilterStore((state) => state.selectedRamen);
+interface FilterButtonsProps {
+  onTagSelect: (tagId: string | undefined) => void;
+  onSortChange: (sort: SortOption) => void;
+}
 
-  return (
-    <>
-      <FilterButton isActive={!!selectedRamen} onClick={() => setIsModalOpen(true)}>
-        {selectedRamen ? selectedRamen.name : '라면 종류'}
-        <StyledArrowDown isActive={isModalOpen} />
-      </FilterButton>
+export const FilterButtons = ({ onTagSelect }: FilterButtonsProps) => {
+  const [isTagModalOpen, setIsTagModalOpen] = useState(false);
+  const [isSortModalOpen, setIsSortModalOpen] = useState(false);
+  const { tagId, sort } = useFilterStore();
 
-      <RamenFilterModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-    </>
-  );
-};
+  const handleSortModalClose = useCallback(() => {
+    setIsSortModalOpen(false);
+  }, []);
 
-export const SortButton = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const currentSort = useSortStore((state) => state.currentSort);
+  const currentSortLabel = SORT_OPTIONS.find((option) => option.value === sort)?.label;
 
-  const currentSortLabel = SORT_OPTIONS.find((option) => option.value === currentSort)?.label;
-
-  return (
-    <>
-      <FilterButton isActive={currentSort !== 'latest'} onClick={() => setIsModalOpen(true)}>
-        {currentSortLabel}
-        <StyledArrowDown isActive={isModalOpen} />
-      </FilterButton>
-
-      <SortModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-    </>
-  );
-};
-
-export const FilterButtons = () => {
   return (
     <ButtonsContainer>
-      <RamenFilterButton />
-      <SortButton />
+      <FilterButton isActive={!!tagId} onClick={() => setIsTagModalOpen(true)}>
+        {tagId ? tagMapping[tagId] : '라면 종류'}
+        <StyledArrowDown isActive={isTagModalOpen} />
+      </FilterButton>
+
+      <FilterButton isActive={sort !== 'newest'} onClick={() => setIsSortModalOpen(true)}>
+        {currentSortLabel}
+        <StyledArrowDown isActive={isSortModalOpen} />
+      </FilterButton>
+
+      <RamenFilterModal
+        isOpen={isTagModalOpen}
+        onClose={() => setIsTagModalOpen(false)}
+        selectedTagId={tagId}
+        onSelect={onTagSelect}
+      />
+
+      <SortModal isOpen={isSortModalOpen} onClose={handleSortModalClose} />
     </ButtonsContainer>
   );
 };

@@ -2,6 +2,15 @@ import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useLogin } from '@/hooks/useAuth';
 import axios from 'axios';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner/LoadingSpinner';
+import styled from '@emotion/styled';
+
+const LoadingSpinnerContainer = styled.div`
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 export default function KakaoCallback() {
   const [searchParams] = useSearchParams();
@@ -40,7 +49,11 @@ export default function KakaoCallback() {
   }, [searchParams, login, navigate]);
 
   if (isPending) {
-    return <div>로그인 처리중...</div>;
+    return (
+      <LoadingSpinnerContainer>
+        <LoadingSpinner />
+      </LoadingSpinnerContainer>
+    );
   }
 
   return null;

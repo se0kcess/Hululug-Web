@@ -34,7 +34,7 @@ type Story = StoryObj<typeof RamenTag>;
 export const Default: Story = {
   args: {
     ramen: {
-      id: 1,
+      id: '1',
       name: '신라면',
     },
   },
@@ -44,7 +44,7 @@ export const Default: Story = {
 export const WithRemoveButton: Story = {
   args: {
     ramen: {
-      id: 1,
+      id: '1',
       name: '신라면',
     },
     onRemove: () => console.log('Remove clicked'),
@@ -55,9 +55,9 @@ export const WithRemoveButton: Story = {
 export const MultipleTagsRow = {
   render: () => (
     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-      <RamenTag ramen={{ id: 1, name: '신라면' }} onRemove={() => console.log('Remove 신라면')} />
-      <RamenTag ramen={{ id: 2, name: '진라면' }} onRemove={() => console.log('Remove 진라면')} />
-      <RamenTag ramen={{ id: 3, name: '너구리' }} onRemove={() => console.log('Remove 너구리')} />
+      <RamenTag ramen={{ id: '1', name: '신라면' }} onRemove={() => console.log('Remove 신라면')} />
+      <RamenTag ramen={{ id: '2', name: '진라면' }} onRemove={() => console.log('Remove 진라면')} />
+      <RamenTag ramen={{ id: '3', name: '너구리' }} onRemove={() => console.log('Remove 너구리')} />
     </div>
   ),
 };

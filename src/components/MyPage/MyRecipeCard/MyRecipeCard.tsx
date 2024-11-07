@@ -10,7 +10,7 @@ interface MyRecipeCardProps {
   id: string;
   title: string;
   ramen: {
-    id: number;
+    id: string;
     name: string;
   };
   date: string;
