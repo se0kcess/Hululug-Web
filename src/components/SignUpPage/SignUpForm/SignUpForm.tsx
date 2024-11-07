@@ -175,7 +175,6 @@ export const SignupForm = () => {
       submitData.append('email', formData.email);
       submitData.append('nickname', formData.nickname);
       submitData.append('introduce', formData.introduce || '');
-      submitData.append('code', code);
 
       if (formData.profile_image) {
         submitData.append('profile_image', formData.profile_image);

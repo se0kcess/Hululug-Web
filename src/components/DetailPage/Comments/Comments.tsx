@@ -2,21 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import { BodyText, ButtonText, CaptionText } from '@/styles/Typography';
-import axios from 'axios';
+import { Comment } from '@/types/comment';
+import { useRecipeComments } from '@/hooks/useRecipeComments';
+import { useUserTestStore } from '@/store/useUserTestStore';
 
-interface Comment {
-  id: number;
-  avatar: string;
-  name: string;
-  content: string;
-  date: string;
-  edited?: boolean;
-  isOwnComment?: boolean; // 로그인 사용자의 댓글인지 여부
-}
-
-interface CommentsProps {
-  comments: Comment[];
-  recipeId: number;
+export interface CommentsProps {
+  recipeId: string;
   onCommentsUpdate?: (updatedComments: Comment[]) => void;
 }
 
@@ -115,68 +106,66 @@ const ConfirmButton = styled(ButtonText)`
   }
 `;
 
-const Comments = ({ comments, recipeId, onCommentsUpdate }: CommentsProps) => {
-  const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+const Comments = ({ recipeId, onCommentsUpdate }: CommentsProps) => {
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editedContent, setEditedContent] = useState<string>('');
   const editInputRef = useRef<HTMLInputElement | null>(null);
-  const [commentList, setCommentList] = useState<Comment[]>(comments);
 
+  const { commentsQuery, updateCommentMutation, deleteCommentMutation } =
+    useRecipeComments(recipeId);
+  const { user } = useUserTestStore(); // user 정보 가져오기
+
+  const commentList = commentsQuery.data || [];
   useEffect(() => {
     if (editingCommentId !== null) {
       editInputRef.current?.focus();
     }
+    console.log('user?.my_comments', user?.my_comments);
+    console.log('commentList', commentList);
   }, [editingCommentId]);
 
   const handleEditClick = (comment: Comment) => {
-    setEditingCommentId(comment.id);
+    setEditingCommentId(comment._id);
     setEditedContent(comment.content);
+    console.log('댓글 수정 클릭');
   };
 
-  const handleConfirmClick = async (id: number) => {
-    if (editedContent.trim() === '') {
-      return;
-    }
+  const handleConfirmClick = async (id: string) => {
+    if (editedContent.trim() === '') return;
 
-    if (editedContent !== commentList.find((comment) => comment.id === id)?.content) {
-      try {
-        await axios.put('/recipes/comments', {
-          commentId: id,
-          content: editedContent,
-        });
-        const newDate = new Date().toISOString().split('T')[0];
-        const updatedComments = commentList.map((comment) =>
-          comment.id === id
-            ? { ...comment, content: editedContent, date: newDate, edited: true }
-            : comment,
-        );
-        setCommentList(updatedComments);
-        onCommentsUpdate?.(updatedComments);
-      } catch (error) {
-        console.error('Failed to update comment', error);
-      }
-    }
+    updateCommentMutation.mutate(
+      { recipeId, commentId: id, content: editedContent },
+      {
+        onSuccess: (updatedComments) => {
+          onCommentsUpdate?.(updatedComments);
+        },
+      },
+    );
     setEditingCommentId(null);
   };
 
-  const handleDeleteClick = async (id: number) => {
-    try {
-      await axios.delete(`/recipes/${recipeId}/comments`);
-      const updatedComments = commentList.filter((comment) => comment.id !== id);
-      setCommentList(updatedComments);
-      onCommentsUpdate?.(updatedComments);
-    } catch (error) {
-      console.error('Failed to delete comment', error);
-    }
+  const handleDeleteClick = async (id: string) => {
+    deleteCommentMutation.mutate(
+      { recipeId, commentId: id },
+      {
+        onSuccess: (updatedComments) => {
+          onCommentsUpdate?.(updatedComments);
+        },
+      },
+    );
   };
 
   return (
     <Container>
       {commentList.map((comment) => (
-        <CommentItem key={comment.id}>
-          <Avatar src={comment.avatar} alt={`${comment.name} 프로필 이미지`} />
+        <CommentItem key={comment._id}>
+          <Avatar
+            src={comment.writer.profile_image}
+            alt={`${comment.writer.nickname} 프로필 이미지`}
+          />
           <ContentWrapper>
-            <Name>{comment.name}</Name>
-            {editingCommentId === comment.id ? (
+            <Name>{comment.writer.nickname}</Name>
+            {editingCommentId === comment._id ? (
               <>
                 <EditInput
                   ref={editInputRef}
@@ -185,24 +174,24 @@ const Comments = ({ comments, recipeId, onCommentsUpdate }: CommentsProps) => {
                   onChange={(e) => setEditedContent(e.target.value)}
                 />
                 <ConfirmButtonWrapper>
-                  <ConfirmButton onClick={() => handleConfirmClick(comment.id)}>확인</ConfirmButton>
+                  <ConfirmButton onClick={() => handleConfirmClick(comment._id)}>
+                    확인
+                  </ConfirmButton>
                 </ConfirmButtonWrapper>
               </>
             ) : (
               <Content>{comment.content}</Content>
             )}
             <DateActionCon>
-              <CommentDate>
-                {comment.date} {comment.edited && '· 수정됨'}
-              </CommentDate>
-              {comment.isOwnComment && (
-                <Actions>
-                  {editingCommentId !== comment.id && (
+              <CommentDate>{new Date(comment.created_at).toLocaleDateString()}</CommentDate>
+              <Actions>
+                {user?.my_comments.includes(comment._id) && editingCommentId !== comment._id && (
+                  <>
                     <ActionButton onClick={() => handleEditClick(comment)}>수정</ActionButton>
-                  )}
-                  <ActionButton onClick={() => handleDeleteClick(comment.id)}>삭제</ActionButton>
-                </Actions>
-              )}
+                    <ActionButton onClick={() => handleDeleteClick(comment._id)}>삭제</ActionButton>
+                  </>
+                )}
+              </Actions>
             </DateActionCon>
           </ContentWrapper>
         </CommentItem>
