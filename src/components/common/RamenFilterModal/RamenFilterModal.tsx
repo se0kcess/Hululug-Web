@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { BodyText } from '@/styles/Typography';
 import { RAMEN_LIST } from '@/constants/ramenList';
-import { useRamenFilterStore } from '@/store/ramenFilterStore';
+import { useRamenFilterStore } from '@/store/filterStore';
 import theme from '@/styles/theme';
 import { RamenTag } from '@/components/common/RamenTag/RamenTag';
 import { RamenType } from '@/types/ramen';

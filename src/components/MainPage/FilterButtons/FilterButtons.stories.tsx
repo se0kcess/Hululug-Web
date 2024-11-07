@@ -3,7 +3,7 @@ import { FilterButtons, RamenFilterButton, SortButton } from './FilterButtons';
 import { ThemeProvider } from '@emotion/react';
 import { useEffect } from 'react';
 import theme from '@/styles/theme';
-import { useRamenFilterStore } from '@/store/ramenFilterStore';
+import { useRamenFilterStore } from '@/store/filterStore';
 import { useSortStore } from '@/store/sortStore';
 
 const meta: Meta<typeof FilterButtons> = {

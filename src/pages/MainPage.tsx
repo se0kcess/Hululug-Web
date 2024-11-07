@@ -1,18 +1,18 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getRecipes } from '@/api/recipes';
 import Footer from '@/components/common/Footer/Footer';
 import BannerSlider from '@/components/MainPage/Banner/BannerSlider';
 import { FilterButtons } from '@/components/MainPage/FilterButtons/FilterButtons';
 import Header from '@/components/MainPage/Header/Header';
-import HotRecipeCard from '@/components/MainPage/HotRecipeCard/HotRecipeCard';
-import RamenList from '@/components/common/RamenList/RamenList';
 import { Title1 } from '@/styles/Typography';
 import styled from '@emotion/styled';
-
-import profileImg1 from '@assets/images/profile-img-1.png';
-import profileImg2 from '@assets/images/profile-img-2.png';
-import profileImg3 from '@assets/images/profile-img-3.png';
-import ramenImg1 from '@assets/ramyun-images/sample-1.png';
-import ramenImg2 from '@assets/ramyun-images/sample-2.png';
-import ramenImg3 from '@assets/ramyun-images/sample-3.png';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner/LoadingSpinner';
+import { Recipe } from '@/types/ramenRecipe';
+import { RamenList } from '@/components/common/RamenList/RamenList';
+import { useRamenFilterStore, useSortStore } from '@/store/filterStore';
+import { HotRecipeCard } from '@/components/MainPage/HotRecipeCard/HotRecipeCard';
+import { SortOption } from '@/types/sort';
 
 const Container = styled.div`
   display: flex;
@@ -23,7 +23,7 @@ const Container = styled.div`
   min-height: calc(100vh - 60px);
 `;
 
-const Recipe = styled(Title1)`
+const RecipeTitle = styled(Title1)`
   padding: 1rem 0;
 `;
 
@@ -45,66 +45,57 @@ const RecipeCard = styled.div`
   width: calc(70% - 1.2rem);
 `;
 
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+`;
+
 export default function MainPage() {
-  const hotRecipes = [
-    {
-      id: '1',
-      title: '초간단 1분 라볶이',
-      author: '백종원',
-      likes: 1100,
-    },
-    {
-      id: '2',
-      title: '피시방 짜계치',
-      author: '라면왕',
-      likes: 950,
-    },
-    {
-      id: '3',
-      title: '해물 라면',
-      author: '라면킹',
-      likes: 850,
-    },
-  ];
+  const navigate = useNavigate();
+  const [hotRecipes, setHotRecipes] = useState<Recipe[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const allRecipes = [
-    {
-      id: '4',
-      title: '초간단 1분 라볶이',
-      author: '백종원',
-      authorImage: profileImg1,
-      likes: 1100,
-      date: '24.10.23',
-      image: ramenImg1,
-      ramenType: { id: 20, name: '짜파게티' },
-      bookmarkId: '1',
-    },
-    {
-      id: '5',
-      title: '피시방 짜계치',
-      author: '라면왕',
-      authorImage: profileImg2,
-      likes: 1100,
-      date: '24.10.22',
-      image: ramenImg2,
-      ramenType: { id: 10, name: '삼양라면' },
-      bookmarkId: '2',
-    },
-    {
-      id: '6',
-      title: '해물 듬뿍 라면',
-      author: '안성재',
-      authorImage: profileImg3,
-      likes: 98,
-      date: '24.10.22',
-      image: ramenImg3,
-      ramenType: { id: 12, name: '신라면' },
-      bookmarkId: '3',
-    },
-  ];
+  // Zustand store에서 필터 상태 가져오기
+  const { tagId, setTagId } = useRamenFilterStore();
+  const { sort, setSort } = useSortStore();
 
-  const handleRecipeClick = (id: string) => {
-    console.log(`Recipe clicked: ${id}`);
+  // 인기 레시피 불러오기
+  const fetchHotRecipes = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await getRecipes({
+        sort: 'popular',
+        limit: 3,
+      });
+      setHotRecipes(response.data.recipes);
+    } catch (err) {
+      setError('인기 레시피를 불러오는데 실패했습니다.');
+      console.error('Failed to fetch hot recipes:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 초기 로딩
+  useEffect(() => {
+    fetchHotRecipes();
+  }, []);
+
+  // 레시피 클릭 핸들러
+  const handleRecipeClick = (recipeId: string) => {
+    navigate(`/details/${recipeId}`);
+  };
+
+  // 필터 변경 핸들러
+  const handleTagSelect = (newTagId: string | undefined) => {
+    setTagId(newTagId);
+  };
+
+  const handleSortChange = (newSort: SortOption) => {
+    setSort(newSort);
   };
 
   return (
@@ -112,22 +103,23 @@ export default function MainPage() {
       <Header />
       <Container>
         <BannerSlider />
-        <Recipe>인기있는 레시피</Recipe>
+        <RecipeTitle>인기있는 레시피</RecipeTitle>
         <RecipeRow>
-          {hotRecipes.map((recipe) => (
-            <RecipeCard key={recipe.id}>
-              <HotRecipeCard
-                id={recipe.id}
-                title={recipe.title}
-                author={recipe.author}
-                likes={recipe.likes}
-              />
-            </RecipeCard>
-          ))}
+          {isLoading ? (
+            <LoadingContainer>
+              <LoadingSpinner />
+            </LoadingContainer>
+          ) : (
+            hotRecipes.map((recipe) => (
+              <RecipeCard key={recipe._id}>
+                <HotRecipeCard {...recipe} onClick={() => handleRecipeClick(recipe.recipe_id)} />
+              </RecipeCard>
+            ))
+          )}
         </RecipeRow>
-        <Recipe>모든 레시피</Recipe>
-        <FilterButtons />
-        <RamenList recipes={allRecipes} onRecipeClick={handleRecipeClick} />
+        <RecipeTitle>모든 레시피</RecipeTitle>
+        <FilterButtons onTagSelect={handleTagSelect} onSortChange={handleSortChange} />
+        <RamenList selectedTag={tagId} sort={sort} onRecipeClick={handleRecipeClick} />
       </Container>
       <Footer />
     </>

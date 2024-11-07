@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { RamenFilterModal } from './RamenFilterModal';
-import { useRamenFilterStore } from '@/store/ramenFilterStore';
+import { useRamenFilterStore } from '@/store/filterStore';
 import { ThemeProvider } from '@emotion/react';
 import { useState, useEffect } from 'react';
 import theme from '@/styles/theme';

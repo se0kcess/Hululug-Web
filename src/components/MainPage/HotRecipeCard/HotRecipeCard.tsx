@@ -1,14 +1,17 @@
 import styled from '@emotion/styled';
 import { BodyText, Title2 } from '@/styles/Typography';
 import theme from '@/styles/theme';
-import sampleRecipeImage from '@assets/ramyun-images/sample-1.png';
-import sampleProfileImage from '@assets/images/profile-img-1.png';
 import { HeartIconContainer } from '@/components/common/HeartIconContainer/HeartIconContainer';
 
-interface HotRecipeCardProps {
-  id: string;
+interface HotRecipeProps {
+  _id: string;
+  recipe_id: string;
   title: string;
-  author: string;
+  thumbnail: string;
+  writer: {
+    nickname: string;
+    profile_image: string;
+  };
   likes: number;
   onClick?: () => void;
 }
@@ -44,7 +47,9 @@ const ContentOverlay = styled.div`
   flex-direction: column;
   justify-content: flex-end;
   gap: 1rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
 `;
+
 const StyledTitle = styled(Title2)`
   color: ${theme.colors.white};
   position: absolute;
@@ -82,18 +87,28 @@ const HeartWrapper = styled.div`
   right: 0.25rem;
 `;
 
-const HotRecipeCard = ({ id, title, author, likes, onClick }: HotRecipeCardProps) => {
+export const HotRecipeCard = ({
+  recipe_id,
+  title,
+  thumbnail,
+  writer,
+  likes,
+  onClick,
+}: HotRecipeProps) => {
   return (
     <Container onClick={onClick}>
       <ImageWrapper>
-        <RecipeImage src={sampleRecipeImage} alt={title} />
+        <RecipeImage src={thumbnail || '/default-recipe-image.jpg'} alt={title} />
         <ContentOverlay>
           <StyledTitle>{title}</StyledTitle>
           <ProfileContainer>
-            <ProfileImage src={sampleProfileImage} alt={`${author}의 프로필`} />
-            <AuthorName>{author}</AuthorName>
+            <ProfileImage
+              src={writer.profile_image || '/default-profile-image.jpg'}
+              alt={`${writer.nickname}의 프로필`}
+            />
+            <AuthorName>{writer.nickname}</AuthorName>
             <HeartWrapper>
-              <HeartIconContainer initialLikes={likes} recipeId={id} />
+              <HeartIconContainer initialLikes={likes} recipeId={recipe_id} />
             </HeartWrapper>
           </ProfileContainer>
         </ContentOverlay>
@@ -101,5 +116,3 @@ const HotRecipeCard = ({ id, title, author, likes, onClick }: HotRecipeCardProps
     </Container>
   );
 };
-
-export default HotRecipeCard;

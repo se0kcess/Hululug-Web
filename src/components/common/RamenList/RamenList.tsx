@@ -1,26 +1,31 @@
+import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
-import { RamenType } from '@/types/ramen';
+import { axiosInstance } from '@/utils/axios';
 import theme from '@/styles/theme';
 import { HeartIconContainer } from '@/components/common/HeartIconContainer/HeartIconContainer';
 import { RamenTag } from '@/components/common/RamenTag/RamenTag';
 import { BookmarkButton } from '@/components/common/BookmarkButton/BookmarkButton';
 import { RenderPostDate } from '@/components/common/RenderPostDate/RenderPostDate';
 import { BodyText } from '@/styles/Typography';
+import tagMapping from '@/constants/ramenTagMapping';
 
-export interface RamenRecipe {
-  id: string;
+interface Recipe {
+  _id: string;
+  recipe_id: string;
   title: string;
-  author: string;
-  authorImage: string;
+  thumbnail: string;
+  tags: string[];
+  writer: {
+    nickname: string;
+    profile_image: string;
+  };
   likes: number;
-  date: string;
-  image: string;
-  ramenType: RamenType;
-  bookmarkId: string;
+  created_at: string;
 }
 
 interface RamenListProps {
-  recipes: RamenRecipe[];
+  selectedTag?: string;
+  sort: 'newest' | 'popular' | 'oldest';
   onRecipeClick?: (id: string) => void;
 }
 
@@ -109,29 +114,75 @@ const AuthorName = styled.span`
   color: ${theme.colors.gray[700]};
 `;
 
-const RamenList = ({ recipes, onRecipeClick }: RamenListProps) => {
+export const RamenList = ({ selectedTag, sort = 'newest', onRecipeClick }: RamenListProps) => {
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const fetchRecipes = async () => {
+    try {
+      setLoading(true);
+      const params: Record<string, string | number> = {
+        sort,
+        limit: 8,
+      };
+
+      if (selectedTag) {
+        params.tag = selectedTag;
+      }
+
+      if (cursor) {
+        params.cursor = cursor;
+      }
+
+      const response = await axiosInstance.get('/recipes', { params });
+      const newRecipes = response.data.data.recipes;
+
+      setRecipes((prev) => (cursor ? [...prev, ...newRecipes] : newRecipes));
+      setCursor(response.data.data.next_cursor);
+    } catch (error) {
+      console.error('Failed to fetch recipes:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setRecipes([]);
+    setCursor(null);
+    fetchRecipes();
+  }, [selectedTag, sort]);
+
   return (
     <Container>
       {recipes.map((recipe) => (
-        <RecipeCard key={recipe.id} onClick={() => onRecipeClick?.(recipe.id)}>
+        <RecipeCard key={recipe._id} onClick={() => onRecipeClick?.(recipe.recipe_id)}>
           <ImageContainer>
-            <RecipeImage src={recipe.image} alt={recipe.title} />
+            <RecipeImage src={recipe.thumbnail} alt={recipe.title} />
             <HeartPosition>
-              <HeartIconContainer initialLikes={recipe.likes} recipeId={recipe.id} />
+              <HeartIconContainer initialLikes={recipe.likes} recipeId={recipe.recipe_id} />
             </HeartPosition>
           </ImageContainer>
           <ContentContainer>
             <TopRow>
-              <RamenTag ramen={recipe.ramenType} />
-              <BookmarkButton recipeId={recipe.bookmarkId} size={20} />
+              <RamenTag
+                ramen={{
+                  id: recipe.tags[0],
+                  name: tagMapping[recipe.tags[0]] || '기타',
+                }}
+              />
+              <BookmarkButton recipeId={recipe._id} size={20} />
             </TopRow>
             <Title>{recipe.title}</Title>
             <BottomRow>
               <ProfileContainer>
-                <ProfileImage src={recipe.authorImage} alt={recipe.author} />
-                <AuthorName>{recipe.author}</AuthorName>
+                <ProfileImage
+                  src={recipe.writer.profile_image || '/default-profile.jpg'}
+                  alt={recipe.writer.nickname}
+                />
+                <AuthorName>{recipe.writer.nickname}</AuthorName>
               </ProfileContainer>
-              <RenderPostDate date={recipe.date} />
+              <RenderPostDate date={recipe.created_at} />
             </BottomRow>
           </ContentContainer>
         </RecipeCard>
@@ -139,5 +190,3 @@ const RamenList = ({ recipes, onRecipeClick }: RamenListProps) => {
     </Container>
   );
 };
-
-export default RamenList;
