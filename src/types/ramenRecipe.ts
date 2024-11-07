@@ -1,4 +1,4 @@
-export type RamenType = {
+export type RamenRecipeType = {
   id: number;
   name: string;
 };
