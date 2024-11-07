@@ -1,5 +1,5 @@
 export type RamenType = {
-  id: string;
+  id: number;
   name: string;
 };
 
