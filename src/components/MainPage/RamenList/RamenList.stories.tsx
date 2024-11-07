@@ -14,7 +14,7 @@ const sampleRecipes: RamenRecipe[] = [
     date: '2024.10.23',
     image: '/src/assets/ramyun-images/sample-1.png',
     ramenType: { id: 1, name: '신라면' },
-    bookmarkId: 1,
+    bookmarkId: '1',
   },
   {
     id: '2',
@@ -25,7 +25,7 @@ const sampleRecipes: RamenRecipe[] = [
     date: '2024.10.22',
     image: '/src/assets/ramyun-images/sample-2.png',
     ramenType: { id: 2, name: '진라면' },
-    bookmarkId: 2,
+    bookmarkId: '2',
   },
 ];
 
@@ -66,30 +66,5 @@ type Story = StoryObj<typeof meta>;
 export const SingleItem: Story = {
   args: {
     recipes: [sampleRecipes[0]],
-  },
-};
-
-export const LongTitle: Story = {
-  args: {
-    recipes: [
-      {
-        ...sampleRecipes[0],
-        title: '매우 맛있는 초간단 1분 라볶이 레시피 따라하기 정말 쉽고 간단한 레시피',
-      },
-      ...sampleRecipes.slice(1),
-    ],
-  },
-};
-
-export const ManyItems: Story = {
-  args: {
-    recipes: Array(5)
-      .fill(null)
-      .map((_, index) => ({
-        ...sampleRecipes[0],
-        id: `${index + 1}`,
-        title: `라면 레시피 ${index + 1}`,
-        bookmarkId: index + 1,
-      })),
   },
 };
