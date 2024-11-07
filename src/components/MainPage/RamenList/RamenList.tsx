@@ -16,7 +16,7 @@ export interface RamenRecipe {
   date: string;
   image: string;
   ramenType: RamenType;
-  bookmarkId: number;
+  bookmarkId: string;
 }
 
 interface RamenListProps {
