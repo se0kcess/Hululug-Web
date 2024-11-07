@@ -10,9 +10,9 @@ import { Title1 } from '@/styles/Typography';
 import { SortOption } from '@/types/sort';
 import { Recipe } from '@/types/ramenRecipe';
 import { RamenList } from '@/components/common/RamenList/RamenList';
-import { HotRecipeCard } from '@/components/MainPage/HotRecipeCard/HotRecipeCard';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner/LoadingSpinner';
-import { Header } from '@/components/MainPage/Header/Header';
+import Header from '@/components/MainPage/Header/Header';
+import { HotRecipeCard } from '@/components/MainPage/HotRecipeCard/HotRecipeCard';
 
 const Container = styled.div`
   display: flex;
