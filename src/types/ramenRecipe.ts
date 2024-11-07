@@ -1,5 +1,5 @@
 export type RamenRecipeType = {
-  id: number;
+  id: string;
   name: string;
 };
 export interface RamenRecipe {
