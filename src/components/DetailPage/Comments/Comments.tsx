@@ -4,6 +4,7 @@ import theme from '@/styles/theme';
 import { BodyText, ButtonText, CaptionText } from '@/styles/Typography';
 import { Comment } from '@/types/comment';
 import { useRecipeComments } from '@/hooks/useRecipeComments';
+import { useUserTestStore } from '@/store/useUserTestStore';
 
 export interface CommentsProps {
   recipeId: string;
@@ -112,18 +113,21 @@ const Comments = ({ recipeId, onCommentsUpdate }: CommentsProps) => {
 
   const { commentsQuery, updateCommentMutation, deleteCommentMutation } =
     useRecipeComments(recipeId);
+  const { user } = useUserTestStore(); // user 정보 가져오기
 
   const commentList = commentsQuery.data || [];
-
   useEffect(() => {
     if (editingCommentId !== null) {
       editInputRef.current?.focus();
     }
+    console.log('user?.my_comments', user?.my_comments);
+    console.log('commentList', commentList);
   }, [editingCommentId]);
 
   const handleEditClick = (comment: Comment) => {
     setEditingCommentId(comment._id);
     setEditedContent(comment.content);
+    console.log('댓글 수정 클릭');
   };
 
   const handleConfirmClick = async (id: string) => {
@@ -181,10 +185,12 @@ const Comments = ({ recipeId, onCommentsUpdate }: CommentsProps) => {
             <DateActionCon>
               <CommentDate>{new Date(comment.created_at).toLocaleDateString()}</CommentDate>
               <Actions>
-                {editingCommentId !== comment._id && (
-                  <ActionButton onClick={() => handleEditClick(comment)}>수정</ActionButton>
+                {user?.my_comments.includes(comment._id) && editingCommentId !== comment._id && (
+                  <>
+                    <ActionButton onClick={() => handleEditClick(comment)}>수정</ActionButton>
+                    <ActionButton onClick={() => handleDeleteClick(comment._id)}>삭제</ActionButton>
+                  </>
                 )}
-                <ActionButton onClick={() => handleDeleteClick(comment._id)}>삭제</ActionButton>
               </Actions>
             </DateActionCon>
           </ContentWrapper>
