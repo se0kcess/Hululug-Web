@@ -6,10 +6,10 @@ import { BookmarkButton } from '@/components/common/BookmarkButton/BookmarkButto
 import { RenderPostDate } from '@/components/common/RenderPostDate/RenderPostDate';
 import { BodyText } from '@/styles/Typography';
 import tagMapping from '@/constants/ramenTagMapping';
-import { Recipe } from '@/types/ramenRecipe';
+import { RamenRecipe } from '@/types/ramenRecipe';
 
 interface RamenListProps {
-  recipes: Recipe[];
+  recipes: RamenRecipe[];
   onRecipeClick?: (id: string) => void;
 }
 

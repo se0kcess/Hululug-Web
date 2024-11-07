@@ -1,9 +1,8 @@
-// RamenList.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react';
-import { RamenList } from './RamenList';
 import { ThemeProvider } from '@emotion/react';
 import theme from '@/styles/theme';
-import { Recipe } from '@/types/ramenRecipe';
+import { RamenRecipe } from '@/types/ramenRecipe';
+import { RamenList } from '@/components/common/RamenList/RamenList';
 
 const meta: Meta<typeof RamenList> = {
   title: 'Components/Common/RamenList',
@@ -33,7 +32,7 @@ export default meta;
 type Story = StoryObj<typeof RamenList>;
 
 // 샘플 데이터
-const sampleRecipes: Recipe[] = [
+const sampleRecipes: RamenRecipe[] = [
   {
     _id: '1',
     recipe_id: 'recipe1',

@@ -1,3 +1,4 @@
+import { RecipeResponse } from '@/types/ramenRecipe';
 import { axiosInstance } from '@/utils/axios';
 
 export const getRecipes = async (params: {
