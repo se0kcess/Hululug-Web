@@ -1,62 +1,29 @@
+// CommentInput.stories.tsx
 import { Meta, StoryFn } from '@storybook/react';
-import CommentInput, {
-  CommentFormProps,
-  CommentTitle,
-  CommentCount,
-  CommentInputField,
-  SubmitButton,
-  ButtonWrapper,
-} from './CommentInput';
+import CommentInput, { CommentFormProps } from './CommentInput';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+// Initialize a QueryClient for React Query
+const queryClient = new QueryClient();
 
 export default {
-  title: 'Components/DetailPage/CommentInput',
+  title: 'Components/CommentInput',
   component: CommentInput,
   argTypes: {
-    recipeId: { control: 'number' },
-    isLoggedIn: { control: 'boolean' },
     onCommentAdded: { action: 'comment added' },
   },
-} as Meta<typeof CommentInput>;
+} as Meta;
 
-const Template: StoryFn<CommentFormProps> = (args) => <CommentInput {...args} />;
+// Story template with QueryClientProvider
+const Template: StoryFn<CommentFormProps> = (args) => (
+  <QueryClientProvider client={queryClient}>
+    <CommentInput {...args} />
+  </QueryClientProvider>
+);
 
 export const Default = Template.bind({});
 Default.args = {
-  recipeId: 1,
+  recipeId: 'sampleRecipeId',
   isLoggedIn: true,
+  onCommentAdded: (newComment: string) => console.log('New comment:', newComment),
 };
-
-export const CommentTitleStory: StoryFn = () => (
-  <>
-    <CommentTitle>
-      댓글 <CommentCount>10</CommentCount>
-    </CommentTitle>
-
-    <CommentTitle>
-      댓글 <CommentCount>0</CommentCount>
-    </CommentTitle>
-  </>
-);
-
-export const CommentInputFieldStory: StoryFn = () => (
-  <>
-    <CommentInputField disabled={false} placeholder="레시피 작성자에게 댓글을 남겨주세요." />
-    <CommentInputField disabled={false} value="너무 맛있어요" />
-  </>
-);
-
-export const DisabledCommentInputFieldStory: StoryFn = () => (
-  <CommentInputField disabled={true} value="로그인 후 댓글을 작성할 수 있습니다." />
-);
-
-export const SubmitButtonStory: StoryFn = () => (
-  <ButtonWrapper>
-    <SubmitButton disabled={false}>댓글 등록</SubmitButton>
-  </ButtonWrapper>
-);
-
-export const DisabledSubmitButtonStory: StoryFn = () => (
-  <ButtonWrapper>
-    <SubmitButton disabled={true}>댓글 등록</SubmitButton>
-  </ButtonWrapper>
-);

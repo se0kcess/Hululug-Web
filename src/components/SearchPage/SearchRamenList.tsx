@@ -137,7 +137,10 @@ const SearchRamenList = ({ recipes }: SearchRamenListProps) => {
           </ImageContainer>
           <ContentContainer>
             <TopRow>
-              {recipe.tags.length > 0 && <Tag>{tagMapping[recipe.tags[0]] || 'Unknown Tag'}</Tag>}
+              {recipe.tags.slice(0, 2).map((tag, index) => (
+                <Tag key={index}>{tagMapping[tag] || 'Unknown Tag'}</Tag>
+              ))}
+
               <BookmarkButton recipeId={recipe.recipe_id} size={24} />
             </TopRow>
             <Title>{recipe.title}</Title>

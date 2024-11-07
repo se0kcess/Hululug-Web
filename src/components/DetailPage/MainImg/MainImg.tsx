@@ -8,14 +8,18 @@ interface MainImgProps {
 
 const ImgContainer = styled.div<{ width?: string; height?: string }>`
   width: ${(props) => props.width || '100%'};
-  overflow: hidden;
   height: ${(props) => props.height || '282px'};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 `;
 
 const Img = styled.img`
-  width: 100%;
-  height: auto;
+  max-width: 100%;
+  object-fit: cover;
 `;
+
 const MainImg = ({ imgSrc, width, height }: MainImgProps) => {
   return (
     <ImgContainer width={width} height={height}>
