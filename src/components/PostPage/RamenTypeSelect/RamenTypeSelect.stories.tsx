@@ -1,43 +1,63 @@
-import React from 'react';
 import { Meta, StoryFn } from '@storybook/react';
-import RamenTypeSelect from '@/components/PostPage/RamenTypeSelect/RamenTypeSelect';
+import RamenTypeSelect from './RamenTypeSelect';
+import { ThemeProvider } from '@emotion/react';
+import theme from '@/styles/theme';
+import { RAMEN_LIST } from '@/constants/ramenList';
 import useRecipeStore from '@/store/recipeStore';
 
-// Zustand 상태를 초기화하는 Provider
-const StoreProvider = ({ children }: { children: React.ReactNode }) => {
-  const { setSelectedRamen, setRamenSelected } = useRecipeStore();
-
-  React.useEffect(() => {
-    setSelectedRamen([]); // 선택된 라면 초기화
-    setRamenSelected(false); // 초기 상태 false 설정
-  }, [setSelectedRamen, setRamenSelected]);
-
-  return <>{children}</>;
-};
-
+// 스토리의 기본 내보내기 설정
 export default {
-  title: 'Components/PostPage/RamenTypeSelect',
+  title: 'Components/RamenTypeSelect',
   component: RamenTypeSelect,
-  decorators: [(storyFn) => <StoreProvider>{storyFn()}</StoreProvider>],
+  decorators: [
+    (Story) => (
+      <ThemeProvider theme={theme}>
+        <Story />
+      </ThemeProvider>
+    ),
+  ],
 } as Meta;
 
-const Template: StoryFn = () => <RamenTypeSelect />;
+const Template: StoryFn = () => {
+  const { setSelectedRamen } = useRecipeStore();
+
+  // 초기값을 설정해주는 작업을 수행합니다.
+  setSelectedRamen([RAMEN_LIST[0]]); // 예시로 첫 번째 라면을 선택된 상태로 설정
+
+  return <RamenTypeSelect />;
+};
 
 export const Default = Template.bind({});
-Default.storyName = 'Default View';
+Default.args = {};
 
-export const WithSelectedRamen = Template.bind({});
-WithSelectedRamen.storyName = 'With Selected Ramen';
-WithSelectedRamen.decorators = [
-  (storyFn) => {
-    const { setSelectedRamen, setRamenSelected } = useRecipeStore();
-    React.useEffect(() => {
-      setSelectedRamen([
-        { id: 1, name: 'Shoyu Ramen' },
-        { id: 2, name: 'Miso Ramen' },
-      ]); // 예시 라면 설정
-      setRamenSelected(true);
-    }, [setSelectedRamen, setRamenSelected]);
-    return storyFn();
+// 다양한 스토리를 추가하여 컴포넌트의 상태를 테스트합니다.
+
+export const WithOneSelected = Template.bind({});
+WithOneSelected.args = {};
+WithOneSelected.decorators = [
+  (Story) => {
+    const { setSelectedRamen } = useRecipeStore();
+    setSelectedRamen([RAMEN_LIST[0]]); // 예시로 하나의 라면 선택
+    return <Story />;
+  },
+];
+
+export const WithTwoSelected = Template.bind({});
+WithTwoSelected.args = {};
+WithTwoSelected.decorators = [
+  (Story) => {
+    const { setSelectedRamen } = useRecipeStore();
+    setSelectedRamen([RAMEN_LIST[0], RAMEN_LIST[1]]); // 예시로 두 개의 라면 선택
+    return <Story />;
+  },
+];
+
+export const EmptySelection = Template.bind({});
+EmptySelection.args = {};
+EmptySelection.decorators = [
+  (Story) => {
+    const { setSelectedRamen } = useRecipeStore();
+    setSelectedRamen([]); // 선택된 라면이 없는 상태
+    return <Story />;
   },
 ];
