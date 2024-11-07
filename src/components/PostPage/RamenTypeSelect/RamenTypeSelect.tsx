@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import { RAMEN_LIST } from '@/constants/ramenList';
-import { RamenType } from '@/types/ramen';
+import { RamenRecipeType } from '@/types/ramenRecipe';
 import ClearIcon from '@/assets/icons/Clear';
 import { BodyText, ButtonText, ChipText, Title2 } from '@/styles/Typography';
 import { ArrowDown } from '@/assets/icons/ArrowDown';
@@ -164,7 +164,7 @@ const RamenTypeSelect = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { selectedRamen, setSelectedRamen, setRamenSelected } = useRecipeStore();
 
-  const handleTagClick = (ramen: RamenType) => {
+  const handleTagClick = (ramen: RamenRecipeType) => {
     if (selectedRamen.some((item) => item.id === ramen.id)) {
       setSelectedRamen(selectedRamen.filter((item) => item.id !== ramen.id));
     } else if (selectedRamen.length < 2) {
@@ -181,7 +181,7 @@ const RamenTypeSelect = () => {
     }
   };
 
-  const handleRemoveTag = (ramen: RamenType) => {
+  const handleRemoveTag = (ramen: RamenRecipeType) => {
     const updatedRamen = selectedRamen.filter((item) => item.id !== ramen.id);
     setSelectedRamen(updatedRamen);
     if (updatedRamen.length === 0) {
