@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useLogin } from '@/hooks/useAuth';
-import { LoginResponse } from '@/types/auth';
 import axios from 'axios';
 
 export default function KakaoCallback() {
@@ -18,20 +17,18 @@ export default function KakaoCallback() {
     }
 
     login(code, {
-      onSuccess: (response: LoginResponse) => {
-        if (!response.data) {
-          navigate(`/signup?code=${code}`);
-        } else {
-          navigate('/main');
+      onSuccess: (response) => {
+        if (response.data) {
+          navigate('/');
         }
       },
       onError: (error) => {
-        console.error('Login error:', error);
-
         if (axios.isAxiosError(error) && error.response?.status === 404) {
+          const email = error.response.data.message.split(' : ')[1]?.trim();
           navigate(`/signup?code=${code}`, {
             state: {
               code,
+              email,
               message: '회원가입이 필요합니다.',
             },
           });

@@ -1,11 +1,10 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { BodyText, CaptionText, Title1 } from '@/styles/Typography';
 import { SignupFormData } from '@/types/signup';
 import { ProfileImageUpload } from '@/components/SignUpPage/ProfileImageUpload/ProfileImageUpload';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 import { authApi } from '@/api/authAPI';
-import { useAuthStore } from '@/store/authStore';
 import axios from 'axios';
 import defaultProfileImage from '@assets/images/profile-img-1.png';
 
@@ -38,6 +37,11 @@ const Input = styled.input<{ hasError?: boolean }>`
     outline: none;
     border-color: ${(props) =>
       props.hasError ? props.theme.colors.red : props.theme.colors.primaryMain};
+  }
+
+  &:disabled {
+    background-color: ${(props) => props.theme.colors.gray[100]};
+    color: ${(props) => props.theme.colors.gray[700]};
   }
 `;
 
@@ -72,14 +76,18 @@ interface ValidationErrors {
 }
 
 export const SignupForm = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const code = searchParams.get('code');
-  console.log('Authorization code:', code);
+  const email = location.state?.email;
+
   const [formData, setFormData] = useState<SignupFormData>({
+    email: email || '',
     nickname: '',
     introduce: '',
   });
+
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [touched, setTouched] = useState({
@@ -112,32 +120,12 @@ export const SignupForm = () => {
     const { value } = e.target;
     setFormData((prev) => ({ ...prev, nickname: value }));
 
-    // 이미 touched 상태라면 실시간으로 유효성 검사
     if (touched.nickname) {
       const error = validateNickname(value);
       setErrors((prev) => ({
         ...prev,
         nickname: error,
       }));
-    }
-  };
-
-  const getDefaultProfileImageFile = async () => {
-    try {
-      const response = await fetch(defaultProfileImage);
-      const blob = await response.blob();
-
-      // 이미지 blob을 File 객체로 변환
-      const file = new File([blob], 'default-profile.png', {
-        type: 'image/png',
-        lastModified: new Date().getTime(),
-      });
-
-      console.log('Default profile image created:', file); // 디버깅용
-      return file;
-    } catch (error) {
-      console.error('기본 이미지 변환 중 오류:', error);
-      return null;
     }
   };
 
@@ -150,10 +138,19 @@ export const SignupForm = () => {
     }));
   };
 
-  useEffect(() => {
-    console.log('Current URL:', window.location.href);
-    console.log('Search Params:', Object.fromEntries(searchParams.entries()));
-  }, [searchParams]);
+  const getDefaultProfileImageFile = async () => {
+    try {
+      const response = await fetch(defaultProfileImage);
+      const blob = await response.blob();
+      return new File([blob], 'default-profile.png', {
+        type: 'image/png',
+        lastModified: Date.now(),
+      });
+    } catch (error) {
+      console.error('기본 이미지 변환 중 오류:', error);
+      return null;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -175,17 +172,11 @@ export const SignupForm = () => {
 
     try {
       const submitData = new FormData();
-
-      // 필수 데이터 추가
+      submitData.append('email', formData.email);
       submitData.append('nickname', formData.nickname);
+      submitData.append('introduce', formData.introduce || '');
       submitData.append('code', code);
 
-      // 소개 텍스트가 있는 경우에만 추가
-      if (formData.introduce.trim()) {
-        submitData.append('introduce', formData.introduce);
-      }
-
-      // 프로필 이미지 처리
       if (formData.profile_image) {
         submitData.append('profile_image', formData.profile_image);
       } else {
@@ -209,17 +200,18 @@ export const SignupForm = () => {
         }
       }
 
-      const response = await authApi.signup(submitData);
-      console.log('Signup Response:', response);
+      await authApi.signup(submitData);
+      alert('회원가입이 완료되었습니다. 다시 로그인해주세요.');
+      // 로그인 페이지로 리다이렉트
+      const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
+      const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
 
-      useAuthStore.getState().setUser(response.data);
-      navigate('/main');
+      const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+      window.location.href = kakaoURL;
     } catch (error) {
       console.error('회원가입 중 오류 발생:', error);
       if (axios.isAxiosError(error)) {
         console.error('Error Response:', error.response?.data);
-        console.error('Error Config:', error.config);
-
         if (error.response?.status === 401 || error.response?.status === 403) {
           alert('인증이 만료되었습니다. 다시 로그인해주세요.');
           navigate('/login');
@@ -245,6 +237,11 @@ export const SignupForm = () => {
         onImageUpload={(file) => setFormData((prev) => ({ ...prev, profile_image: file }))}
         isLoading={isLoading}
       />
+
+      <InputContainer>
+        <BodyText>이메일</BodyText>
+        <Input value={formData.email} disabled />
+      </InputContainer>
 
       <InputContainer>
         <BodyText>닉네임</BodyText>
