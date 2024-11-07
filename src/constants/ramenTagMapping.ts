@@ -1,5 +1,4 @@
 const tagMapping: { [key: string]: string } = {
-  '6721a88b42a7d479b161b384': '전체',
   '6721a89a42a7d479b161b385': '간짬뽕',
   '6721a9a07e7f8b4e11d49d3c': '김치라면',
   '6721a9e57e7f8b4e11d49d3d': '꼬꼬면',

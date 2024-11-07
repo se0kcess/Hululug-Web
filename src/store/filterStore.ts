@@ -1,22 +1,16 @@
 import { create } from 'zustand';
 import { SortOption } from '@/types/sort';
 
-interface RamenFilterState {
-  tagId: string | undefined; // null 대신 undefined 사용
-  setTagId: (id: string | undefined) => void;
-}
-
-interface SortState {
+interface FilterState {
+  tagId: string | undefined;
   sort: SortOption;
+  setTagId: (id: string | undefined) => void;
   setSort: (sort: SortOption) => void;
 }
 
-export const useRamenFilterStore = create<RamenFilterState>((set) => ({
+export const useFilterStore = create<FilterState>((set) => ({
   tagId: undefined,
-  setTagId: (id) => set({ tagId: id }),
-}));
-
-export const useSortStore = create<SortState>((set) => ({
   sort: 'newest',
+  setTagId: (tagId) => set({ tagId }),
   setSort: (sort) => set({ sort }),
 }));

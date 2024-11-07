@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
-import { axiosInstance } from '@/utils/axios';
 import theme from '@/styles/theme';
 import { HeartIconContainer } from '@/components/common/HeartIconContainer/HeartIconContainer';
 import { RamenTag } from '@/components/common/RamenTag/RamenTag';
@@ -8,24 +6,10 @@ import { BookmarkButton } from '@/components/common/BookmarkButton/BookmarkButto
 import { RenderPostDate } from '@/components/common/RenderPostDate/RenderPostDate';
 import { BodyText } from '@/styles/Typography';
 import tagMapping from '@/constants/ramenTagMapping';
-
-interface Recipe {
-  _id: string;
-  recipe_id: string;
-  title: string;
-  thumbnail: string;
-  tags: string[];
-  writer: {
-    nickname: string;
-    profile_image: string;
-  };
-  likes: number;
-  created_at: string;
-}
+import { Recipe } from '@/types/ramenRecipe';
 
 interface RamenListProps {
-  selectedTag?: string;
-  sort: 'newest' | 'popular' | 'oldest';
+  recipes: Recipe[];
   onRecipeClick?: (id: string) => void;
 }
 
@@ -42,6 +26,10 @@ const RecipeCard = styled.div`
   background: ${theme.colors.white};
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
 `;
 
 const ImageContainer = styled.div`
@@ -72,6 +60,7 @@ const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  padding: 0.5rem 0;
 `;
 
 const TopRow = styled.div`
@@ -82,6 +71,7 @@ const TopRow = styled.div`
 
 const Title = styled(BodyText)`
   color: ${theme.colors.black};
+  font-weight: ${theme.typography.weights.medium};
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -107,6 +97,7 @@ const ProfileImage = styled.img`
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;
+  object-fit: cover;
 `;
 
 const AuthorName = styled.span`
@@ -114,51 +105,13 @@ const AuthorName = styled.span`
   color: ${theme.colors.gray[700]};
 `;
 
-export const RamenList = ({ selectedTag, sort = 'newest', onRecipeClick }: RamenListProps) => {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [cursor, setCursor] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const fetchRecipes = async () => {
-    try {
-      setLoading(true);
-      const params: Record<string, string | number> = {
-        sort,
-        limit: 8,
-      };
-
-      if (selectedTag) {
-        params.tag = selectedTag;
-      }
-
-      if (cursor) {
-        params.cursor = cursor;
-      }
-
-      const response = await axiosInstance.get('/recipes', { params });
-      const newRecipes = response.data.data.recipes;
-
-      setRecipes((prev) => (cursor ? [...prev, ...newRecipes] : newRecipes));
-      setCursor(response.data.data.next_cursor);
-    } catch (error) {
-      console.error('Failed to fetch recipes:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    setRecipes([]);
-    setCursor(null);
-    fetchRecipes();
-  }, [selectedTag, sort]);
-
+export const RamenList = ({ recipes, onRecipeClick }: RamenListProps) => {
   return (
     <Container>
       {recipes.map((recipe) => (
         <RecipeCard key={recipe._id} onClick={() => onRecipeClick?.(recipe.recipe_id)}>
           <ImageContainer>
-            <RecipeImage src={recipe.thumbnail} alt={recipe.title} />
+            <RecipeImage src={recipe.thumbnail || '/default-recipe-image.jpg'} alt={recipe.title} />
             <HeartPosition>
               <HeartIconContainer initialLikes={recipe.likes} recipeId={recipe.recipe_id} />
             </HeartPosition>
@@ -177,7 +130,7 @@ export const RamenList = ({ selectedTag, sort = 'newest', onRecipeClick }: Ramen
             <BottomRow>
               <ProfileContainer>
                 <ProfileImage
-                  src={recipe.writer.profile_image || '/default-profile.jpg'}
+                  src={recipe.writer.profile_image || '/default-profile-image.jpg'}
                   alt={recipe.writer.nickname}
                 />
                 <AuthorName>{recipe.writer.nickname}</AuthorName>

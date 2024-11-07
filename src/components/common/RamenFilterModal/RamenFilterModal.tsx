@@ -1,15 +1,14 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { BodyText } from '@/styles/Typography';
-import { RAMEN_LIST } from '@/constants/ramenList';
-import { useRamenFilterStore } from '@/store/filterStore';
 import theme from '@/styles/theme';
-import { RamenTag } from '@/components/common/RamenTag/RamenTag';
-import { RamenType } from '@/types/ramen';
+import tagMapping from '@/constants/ramenTagMapping';
 
 interface RamenFilterModalProps {
   isOpen: boolean;
   onClose: () => void;
+  selectedTagId?: string;
+  onSelect: (tagId: string | undefined) => void;
 }
 
 const ModalOverlay = styled.div<{ isOpen: boolean }>`
@@ -63,62 +62,50 @@ const Header = styled.div`
   text-align: center;
   position: relative;
   border-bottom: 1px solid ${theme.colors.gray[100]};
+  padding-bottom: 0.5rem;
 `;
 
 const TagContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
   padding: 0 0.5rem;
-  overscroll-behavior: contain;
+  overflow-y: auto;
 `;
 
-const TagRow = styled.div<{ justify?: string }>`
-  display: flex;
-  justify-content: flex-start;
-  gap: 0.5rem;
-  width: 100%;
-`;
-
-const TagWrapper = styled.div<{ isSelected: boolean; itemsInRow: number }>`
+const TagItem = styled.button<{ isSelected: boolean }>`
+  padding: 0.75rem;
+  border-radius: 2rem;
+  border: 1px solid
+    ${({ isSelected, theme }) => (isSelected ? theme.colors.primaryMain : theme.colors.gray[200])};
+  background: ${({ isSelected, theme }) =>
+    isSelected ? theme.colors.primaryPastel : theme.colors.white};
+  color: ${({ isSelected, theme }) =>
+    isSelected ? theme.colors.primaryMain : theme.colors.gray[500]};
+  font-size: ${theme.typography.body.size};
   cursor: pointer;
-  transition: transform 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 
-  > div {
-    width: 100%;
-    justify-content: center;
-    background: ${({ isSelected, theme }) =>
-      isSelected ? theme.colors.primaryPastel : theme.colors.white};
-    color: ${({ isSelected, theme }) =>
-      isSelected ? theme.colors.primaryMain : theme.colors.gray[500]};
-    border: 1px solid
-      ${({ isSelected, theme }) => (isSelected ? theme.colors.primaryMain : theme.colors.gray[200])};
+  &:hover {
+    border-color: ${theme.colors.primaryMain};
+    color: ${theme.colors.primaryMain};
   }
 `;
 
-const createTagGroups = (ramenList: RamenType[]) => {
-  const all = { id: 0, name: '전체' };
-  const group1 = ramenList.slice(0, 3);
-  const group2 = ramenList.slice(3, 6);
-  const group3 = ramenList.slice(6, 9);
-  const group4 = ramenList.slice(9, 13);
-  const group5 = ramenList.slice(13, 16);
-  const group6 = ramenList.slice(16, 20);
-  const group7 = ramenList.slice(20, 23);
-  const group8 = ramenList.slice(23);
-
-  return [[all, ...group1], group2, group3, group4, group5, group6, group7, group8];
-};
-
-export const RamenFilterModal = ({ isOpen, onClose }: RamenFilterModalProps) => {
-  const { setRamen, isSelected } = useRamenFilterStore();
+export const RamenFilterModal = ({
+  isOpen,
+  onClose,
+  selectedTagId,
+  onSelect,
+}: RamenFilterModalProps) => {
   const [translateY, setTranslateY] = useState(100);
   const [isDragging, setIsDragging] = useState(false);
   const dragStartY = useRef(0);
   const currentTranslateY = useRef(0);
   const modalRef = useRef<HTMLDivElement>(null);
-
-  const tagGroups = useMemo(() => createTagGroups(RAMEN_LIST), []);
 
   useEffect(() => {
     if (isOpen) {
@@ -155,16 +142,12 @@ export const RamenFilterModal = ({ isOpen, onClose }: RamenFilterModalProps) => 
     }
   };
 
-  const handleRamenClick = useCallback(
-    (ramen: (typeof RAMEN_LIST)[0]) => {
-      if (isSelected(ramen.id)) {
-        setRamen(null);
-      } else {
-        setRamen(ramen);
-        onClose();
-      }
+  const handleTagClick = useCallback(
+    (tagId: string | undefined) => {
+      onSelect(tagId);
+      onClose();
     },
-    [setRamen, isSelected, onClose],
+    [onSelect, onClose],
   );
 
   const handleOverlayClick = useCallback(
@@ -175,17 +158,6 @@ export const RamenFilterModal = ({ isOpen, onClose }: RamenFilterModalProps) => 
     },
     [onClose],
   );
-
-  useEffect(() => {
-    const handleEscKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-
-    window.addEventListener('keydown', handleEscKey);
-    return () => window.removeEventListener('keydown', handleEscKey);
-  }, [isOpen, onClose]);
 
   return (
     <ModalOverlay isOpen={isOpen} onClick={handleOverlayClick}>
@@ -200,19 +172,13 @@ export const RamenFilterModal = ({ isOpen, onClose }: RamenFilterModalProps) => 
           <BodyText>라면 종류</BodyText>
         </Header>
         <TagContainer>
-          {tagGroups.map((group, groupIndex) => (
-            <TagRow key={groupIndex}>
-              {group.map((ramen) => (
-                <TagWrapper
-                  key={ramen.id}
-                  isSelected={isSelected(ramen.id)}
-                  itemsInRow={group.length}
-                  onClick={() => handleRamenClick(ramen)}
-                >
-                  <RamenTag ramen={ramen} />
-                </TagWrapper>
-              ))}
-            </TagRow>
+          <TagItem isSelected={!selectedTagId} onClick={() => handleTagClick(undefined)}>
+            전체
+          </TagItem>
+          {Object.entries(tagMapping).map(([id, name]) => (
+            <TagItem key={id} isSelected={selectedTagId === id} onClick={() => handleTagClick(id)}>
+              {name}
+            </TagItem>
           ))}
         </TagContainer>
       </ModalContent>

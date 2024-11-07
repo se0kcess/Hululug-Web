@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import HotRecipeCard from './HotRecipeCard';
+import { HotRecipeCard } from './HotRecipeCard';
 import { ThemeProvider } from '@emotion/react';
 import theme from '@/styles/theme';
 
@@ -10,61 +10,66 @@ const meta: Meta<typeof HotRecipeCard> = {
     layout: 'centered',
     docs: {
       description: {
-        component:
-          '인기 레시피를 보여주는 카드 컴포넌트입니다. 레시피 이미지, 제목, 작성자 정보, 좋아요 기능을 포함합니다.',
+        component: '인기 레시피를 보여주는 카드 컴포넌트입니다.',
       },
     },
   },
   decorators: [
     (Story) => (
       <ThemeProvider theme={theme}>
-        <div style={{ width: '360px' }}>
+        <div style={{ width: '300px', padding: '1rem', background: '#f5f5f5' }}>
           <Story />
         </div>
       </ThemeProvider>
     ),
   ],
-  argTypes: {
-    id: {
-      control: 'text',
-      description: '레시피의 고유 ID',
-    },
-    title: {
-      control: 'text',
-      description: '레시피 제목',
-    },
-    author: {
-      control: 'text',
-      description: '작성자 이름',
-    },
-    likes: {
-      control: 'number',
-      description: '좋아요 수',
-    },
-    onClick: {
-      action: 'clicked',
-      description: '카드 클릭 핸들러',
-    },
-  },
-} satisfies Meta<typeof HotRecipeCard>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof HotRecipeCard>;
+
+const sampleRecipe = {
+  _id: '1',
+  recipe_id: 'recipe1',
+  title: '매콤한 신라면 끓이기',
+  thumbnail: 'https://via.placeholder.com/300x225',
+  tags: ['6721a9eb7e7f8b4e11d49d46'],
+  writer: {
+    nickname: '라면마스터',
+    profile_image: 'https://via.placeholder.com/40x40',
+  },
+  likes: 128,
+  created_at: '2024-01-15T09:00:00.000Z',
+};
 
 export const Default: Story = {
   args: {
-    id: 'recipe1',
-    title: '초간단 1분 라볶이',
-    author: '백종원',
-    likes: 1100,
+    ...sampleRecipe,
+    onClick: () => console.log('Card clicked'),
   },
 };
 
 export const LongTitle: Story = {
   args: {
-    id: 'recipe2',
-    title: '맛있는 초간단 1분 라볶이 만들기 레시피 따라하기 손쉽게 만드는 방법',
-    author: '백종원',
-    likes: 1100,
+    ...sampleRecipe,
+    title: '정말 맛있는 신라면 끓이는 방법 - 라면 요리의 모든 것을 알려드립니다 (신라면 레시피)',
+  },
+};
+
+export const NoImage: Story = {
+  args: {
+    ...sampleRecipe,
+    thumbnail: '',
+    writer: {
+      ...sampleRecipe.writer,
+      profile_image: '',
+    },
+  },
+};
+
+export const ManyLikes: Story = {
+  args: {
+    ...sampleRecipe,
+    likes: 9999,
   },
 };

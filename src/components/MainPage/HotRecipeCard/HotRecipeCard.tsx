@@ -2,17 +2,9 @@ import styled from '@emotion/styled';
 import { BodyText, Title2 } from '@/styles/Typography';
 import theme from '@/styles/theme';
 import { HeartIconContainer } from '@/components/common/HeartIconContainer/HeartIconContainer';
+import { Recipe } from '@/types/ramenRecipe';
 
-interface HotRecipeProps {
-  _id: string;
-  recipe_id: string;
-  title: string;
-  thumbnail: string;
-  writer: {
-    nickname: string;
-    profile_image: string;
-  };
-  likes: number;
+interface HotRecipeCardProps extends Recipe {
   onClick?: () => void;
 }
 
@@ -22,6 +14,11 @@ const Container = styled.div`
   overflow: hidden;
   position: relative;
   cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
 `;
 
 const ImageWrapper = styled.div`
@@ -47,7 +44,7 @@ const ContentOverlay = styled.div`
   flex-direction: column;
   justify-content: flex-end;
   gap: 1rem;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
 `;
 
 const StyledTitle = styled(Title2)`
@@ -61,6 +58,7 @@ const StyledTitle = styled(Title2)`
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   margin-top: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 `;
 
 const ProfileContainer = styled.div`
@@ -74,17 +72,20 @@ const ProfileImage = styled.img`
   height: 1.75rem;
   border-radius: 50%;
   object-fit: cover;
+  border: 2px solid ${theme.colors.white};
 `;
 
 const AuthorName = styled(BodyText)`
   color: ${theme.colors.white};
   font-size: 1rem;
   font-weight: ${theme.typography.weights.medium};
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 `;
 
 const HeartWrapper = styled.div`
   position: absolute;
   right: 0.25rem;
+  bottom: 0.25rem;
 `;
 
 export const HotRecipeCard = ({
@@ -94,7 +95,7 @@ export const HotRecipeCard = ({
   writer,
   likes,
   onClick,
-}: HotRecipeProps) => {
+}: HotRecipeCardProps) => {
   return (
     <Container onClick={onClick}>
       <ImageWrapper>
