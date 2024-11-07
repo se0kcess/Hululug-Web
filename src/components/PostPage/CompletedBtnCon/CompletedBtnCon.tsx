@@ -1,8 +1,9 @@
-// CompletedBtnCon.tsx
 import { useState } from 'react';
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import RegistrationModal from '@/components/PostPage/RegistrationModal/RegistrationModal';
+import useRecipeStore from '@/store/recipeStore';
+import { axiosLocal } from '@/api/authRecipeAPI';
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -69,6 +70,7 @@ interface CompletedBtnConProps {
 
 const CompletedBtnCon = ({ isActive, onPrev }: CompletedBtnConProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { title, intro, steps, ingredients, selectedRamen, thumbnail } = useRecipeStore();
 
   const handleCompletedClick = () => {
     if (isActive) {
@@ -77,9 +79,29 @@ const CompletedBtnCon = ({ isActive, onPrev }: CompletedBtnConProps) => {
   };
 
   const handleCancel = () => setIsModalOpen(false);
-  const handleRegister = () => {
+
+  const handleRegister = async () => {
     setIsModalOpen(false);
-    console.log('레시피 등록됨');
+
+    const requestData = {
+      title,
+      thumbnail,
+      tags: selectedRamen.map((ramen) => ramen.id),
+      introduce: intro,
+      ingredients: ingredients.map((ingredient) => ({
+        name: ingredient.name,
+        unit: ingredient.quantity,
+      })),
+      cooking_steps: steps,
+    };
+    console.log(requestData);
+
+    try {
+      const response = await axiosLocal.post('/recipes', requestData);
+      console.log('레시피 등록 성공:', response.data);
+    } catch (error) {
+      console.error('레시피 등록 실패:', error);
+    }
   };
 
   return (
