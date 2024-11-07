@@ -27,7 +27,7 @@ export interface RecipeResponse {
   status: number;
   message: string;
   data: {
-    recipes: Recipe[];
+    recipes: RamenRecipe[];
     next_cursor: string | null;
   };
 }

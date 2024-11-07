@@ -2,9 +2,9 @@ import styled from '@emotion/styled';
 import { BodyText, Title2 } from '@/styles/Typography';
 import theme from '@/styles/theme';
 import { HeartIconContainer } from '@/components/common/HeartIconContainer/HeartIconContainer';
-import { Recipe } from '@/types/ramenRecipe';
+import { RamenRecipe } from '@/types/ramenRecipe';
 
-interface HotRecipeCardProps extends Recipe {
+interface HotRecipeCardProps extends RamenRecipe {
   onClick?: () => void;
 }
 

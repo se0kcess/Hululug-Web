@@ -8,11 +8,11 @@ import BannerSlider from '@/components/MainPage/Banner/BannerSlider';
 import { FilterButtons } from '@/components/MainPage/FilterButtons/FilterButtons';
 import { Title1 } from '@/styles/Typography';
 import { SortOption } from '@/types/sort';
-import { Recipe } from '@/types/ramenRecipe';
 import { RamenList } from '@/components/common/RamenList/RamenList';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner/LoadingSpinner';
-import Header from '@/components/MainPage/Header/Header';
 import { HotRecipeCard } from '@/components/MainPage/HotRecipeCard/HotRecipeCard';
+import { Header } from '@/components/MainPage/Header/Header';
+import { RamenRecipe } from '@/types/ramenRecipe';
 
 const Container = styled.div`
   display: flex;
@@ -75,8 +75,8 @@ export default function MainPage() {
   const navigate = useNavigate();
   const { tagId, sort, setTagId, setSort } = useFilterStore();
 
-  const [hotRecipes, setHotRecipes] = useState<Recipe[]>([]);
-  const [allRecipes, setAllRecipes] = useState<Recipe[]>([]);
+  const [hotRecipes, setHotRecipes] = useState<RamenRecipe[]>([]);
+  const [allRecipes, setAllRecipes] = useState<RamenRecipe[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [isLoadingHot, setIsLoadingHot] = useState(false);
   const [isLoadingAll, setIsLoadingAll] = useState(false);
