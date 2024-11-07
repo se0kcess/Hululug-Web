@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import { RAMEN_LIST } from '@/constants/ramenList';
-import { RamenType } from '@/types/ramen';
+import { RamenRecipeType } from '@/types/ramenRecipe';
 import ClearIcon from '@/assets/icons/Clear';
 import { BodyText, ChipText } from '@/styles/Typography';
 
@@ -127,10 +127,10 @@ const RemoveButton = styled.button`
 
 interface RamenListModalProps {
   isOpen: boolean;
-  selectedRamen: RamenType[];
+  selectedRamen: RamenRecipeType[];
   onClose: () => void;
-  onApply: (selectedRamen: RamenType[]) => void;
-  onTagClick: (ramen: RamenType) => void;
+  onApply: (selectedRamen: RamenRecipeType[]) => void;
+  onTagClick: (ramen: RamenRecipeType) => void;
 }
 
 const RamenListModal = ({
@@ -163,9 +163,9 @@ const RamenListModal = ({
 
 const RamenSelect = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedRamen, setSelectedRamen] = useState<RamenType[]>([]);
+  const [selectedRamen, setSelectedRamen] = useState<RamenRecipeType[]>([]);
 
-  const handleTagClick = (ramen: RamenType) => {
+  const handleTagClick = (ramen: RamenRecipeType) => {
     if (selectedRamen.some((item) => item.id === ramen.id)) {
       setSelectedRamen(selectedRamen.filter((item) => item.id !== ramen.id));
     } else if (selectedRamen.length < 2) {
@@ -173,12 +173,12 @@ const RamenSelect = () => {
     }
   };
 
-  const handleApply = (selected: RamenType[]) => {
+  const handleApply = (selected: RamenRecipeType[]) => {
     setSelectedRamen(selected);
     setIsModalOpen(false);
   };
 
-  const handleRemoveTag = (ramen: RamenType) => {
+  const handleRemoveTag = (ramen: RamenRecipeType) => {
     setSelectedRamen(selectedRamen.filter((item) => item.id !== ramen.id));
   };
 
