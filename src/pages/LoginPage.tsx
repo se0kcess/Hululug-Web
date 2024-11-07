@@ -4,6 +4,7 @@ import kakaoLoginButton from '@/assets/images/kakao_login_large_wide.png';
 import LogoSmall from '@/assets/logos/LogoSmall';
 import { Title1 } from '@/styles/Typography';
 import { useKakaoLoginUrl } from '@/hooks/useAuth';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner/LoadingSpinner';
 
 const Container = styled.div`
   width: 90%;
@@ -42,6 +43,13 @@ const KakaoButton = styled.button`
   }
 `;
 
+const LoadingSpinnerContainer = styled.div`
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const KakaoButtonImage = styled.img`
   width: 100%;
   height: auto;
@@ -59,7 +67,11 @@ export default function LoginPage() {
   };
 
   if (isPending) {
-    return <div>로딩중...</div>;
+    return (
+      <LoadingSpinnerContainer>
+        <LoadingSpinner />
+      </LoadingSpinnerContainer>
+    );
   }
 
   // 에러 상태 표시

@@ -1,4 +1,3 @@
-// pages/MainPage.tsx
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
@@ -7,13 +6,13 @@ import { useFilterStore } from '@/store/filterStore';
 import Footer from '@/components/common/Footer/Footer';
 import BannerSlider from '@/components/MainPage/Banner/BannerSlider';
 import { FilterButtons } from '@/components/MainPage/FilterButtons/FilterButtons';
-import Header from '@/components/MainPage/Header/Header';
 import { Title1 } from '@/styles/Typography';
 import { SortOption } from '@/types/sort';
 import { Recipe } from '@/types/ramenRecipe';
 import { RamenList } from '@/components/common/RamenList/RamenList';
 import { HotRecipeCard } from '@/components/MainPage/HotRecipeCard/HotRecipeCard';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner/LoadingSpinner';
+import { Header } from '@/components/MainPage/Header/Header';
 
 const Container = styled.div`
   display: flex;
