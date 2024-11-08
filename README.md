@@ -65,6 +65,8 @@ https://hululug.vercel.app/
 
 ## 🛠 기술 스택
 
+### Frontend
+
 - **프레임워크:** React
 - **언어:** TypeScript
 - **상태 관리:**
@@ -77,6 +79,18 @@ https://hululug.vercel.app/
   - ESLint
   - Prettier
   - Vite
+ 
+### BackEnd
+
+<img src="https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white"> <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white"> <img src="https://img.shields.io/badge/Mongoose-880000?style=for-the-badge&logo=mongoose&logoColor=white"> <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
+
+**Authentication**
+
+JWT, OAuth
+
+**Deployment and Cloud**
+
+AWS S3, AWS CloudFront, Railway
 
 ## 📁 프로젝트 구조
 
