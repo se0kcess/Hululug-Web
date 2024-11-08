@@ -13,7 +13,7 @@ const sampleRecipes: RamenRecipe[] = [
     likes: 1100,
     date: '2024.10.23',
     image: '/src/assets/ramyun-images/sample-1.png',
-    ramenType: { id: 1, name: '신라면' },
+    ramenType: { id: '1', name: '신라면' },
     bookmarkId: '1',
   },
   {
@@ -24,7 +24,7 @@ const sampleRecipes: RamenRecipe[] = [
     likes: 850,
     date: '2024.10.22',
     image: '/src/assets/ramyun-images/sample-2.png',
-    ramenType: { id: 2, name: '진라면' },
+    ramenType: { id: '2', name: '진라면' },
     bookmarkId: '2',
   },
 ];
