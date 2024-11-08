@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import RegistrationModal from '@/components/PostPage/RegistrationModal/RegistrationModal';
 import useRecipeStore from '@/store/recipeStore';
-import { axiosLocal } from '@/api/authRecipeAPI';
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -95,13 +94,6 @@ const CompletedBtnCon = ({ isActive, onPrev }: CompletedBtnConProps) => {
       cooking_steps: steps,
     };
     console.log(requestData);
-
-    try {
-      const response = await axiosLocal.post('/recipes', requestData);
-      console.log('레시피 등록 성공:', response.data);
-    } catch (error) {
-      console.error('레시피 등록 실패:', error);
-    }
   };
 
   return (

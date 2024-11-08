@@ -130,7 +130,6 @@ export default function EditProfile() {
 
   const handleComplete = async () => {
     if (isFormValid) {
-      console.log(`이름 ${nickname} 소개 ${introduce} 이미지 ${profileImage}`);
       // 서버에 프로필 정보 전송
     }
   };

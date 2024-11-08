@@ -93,7 +93,6 @@ const WithdrawPage = () => {
 
   const handleWithdraw = () => {
     setIsModalOpen(false);
-    console.log('회원 탈퇴 완료');
   };
 
   return (

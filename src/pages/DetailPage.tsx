@@ -127,9 +127,6 @@ export default function DetailPage() {
   const commentSecRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log('현재 사용자 데이터:', user);
-    console.log('storedRecipe', storedRecipe);
-
     if (isSuccess && recipe) {
       setRecipe(recipe);
     }
@@ -139,7 +136,6 @@ export default function DetailPage() {
   if (error || !storedRecipe) return <div>Error: {error?.message || 'Recipe not found'}</div>;
 
   const handleDelete = async () => {
-    console.log('게시글 삭제버튼 클릭.');
     try {
       const response = await fetch(`/recipes/${recipeId}`, {
         method: 'DELETE',

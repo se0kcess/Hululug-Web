@@ -184,9 +184,6 @@ export const SignupForm = () => {
           submitData.append('profile_image', defaultImageFile);
         }
       }
-
-      // FormData 내용 확인
-      console.log('=== FormData Contents ===');
       for (const [key, value] of submitData.entries()) {
         if (value instanceof File) {
           console.log(key, ':', {

@@ -61,7 +61,6 @@ export default function LoginPage() {
 
   const handleKakaoLogin = () => {
     if (loginUrl) {
-      console.log('Login URL:', loginUrl);
       window.location.href = loginUrl;
     }
   };

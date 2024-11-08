@@ -120,14 +120,11 @@ const Comments = ({ recipeId, onCommentsUpdate }: CommentsProps) => {
     if (editingCommentId !== null) {
       editInputRef.current?.focus();
     }
-    console.log('user?.my_comments', user?.my_comments);
-    console.log('commentList', commentList);
   }, [editingCommentId]);
 
   const handleEditClick = (comment: Comment) => {
     setEditingCommentId(comment._id);
     setEditedContent(comment.content);
-    console.log('댓글 수정 클릭');
   };
 
   const handleConfirmClick = async (id: string) => {

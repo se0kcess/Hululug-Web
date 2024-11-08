@@ -62,14 +62,4 @@ export default defineConfig({
       '@types': path.resolve(__dirname, './src/types'),
     },
   },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'https://hululug-server-dev.up.railway.app',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-        secure: false,
-      },
-    },
-  },
 });

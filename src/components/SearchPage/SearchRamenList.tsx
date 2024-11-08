@@ -122,7 +122,6 @@ const AuthorName = styled(CaptionText)`
 `;
 
 const SearchRamenList = ({ recipes }: SearchRamenListProps) => {
-  console.log(recipes);
   const navigate = useNavigate();
 
   return (

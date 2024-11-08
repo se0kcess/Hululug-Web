@@ -4,10 +4,9 @@ import { axiosLocal } from '@/api/authRecipeAPI';
 import { Comment, CommentsResponse } from '@/types/comment';
 
 const fetchComments = async (recipeId: string): Promise<Comment[]> => {
-  console.log('recipeId-useRecipe', recipeId);
   try {
     const response = await axiosLocal.get<CommentsResponse>(`/recipes/${recipeId}/comments`);
-    console.log('댓글 응답 데이터:', response.data.data);
+
     return response.data.data;
   } catch (error) {
     console.error('댓글 불러오기 실패:', error);
@@ -17,10 +16,6 @@ const fetchComments = async (recipeId: string): Promise<Comment[]> => {
 
 const postComment = async ({ recipeId, content }: { recipeId: string; content: string }) => {
   try {
-    // 보낼 데이터 및 헤더 로그 확인
-    console.log('요청 데이터:', { content });
-    console.log('Axios 인스턴스 헤더:', axiosLocal.defaults.headers);
-
     const response = await axiosLocal.post(`/recipes/${recipeId}/comments`, { content });
     return response.data.data;
   } catch (error) {
@@ -46,10 +41,7 @@ const updateComment = async ({
 };
 
 const deleteComment = async ({ recipeId, commentId }: { recipeId: string; commentId: string }) => {
-  console.log('삭제링크' + `/recipes/${recipeId}/comments/${commentId}`);
-
   const response = await axiosLocal.delete(`/recipes/${recipeId}/comments/${commentId}`);
-  console.log('삭제', response);
 
   return response.data;
 };

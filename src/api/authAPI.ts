@@ -2,7 +2,7 @@ import { ApiResponse, LoginResponse, LoginUrlResponse, User } from '@/types/auth
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: '/api', // 프록시 사용
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -11,7 +11,6 @@ const axiosInstance = axios.create({
 export const authApi = {
   getKakaoLoginUrl: async () => {
     const { data } = await axiosInstance.get<ApiResponse<LoginUrlResponse>>('/users/kakao/url');
-    console.log(data);
 
     return data.data.login_url;
   },
