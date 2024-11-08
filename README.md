@@ -110,6 +110,9 @@ config
 └── vite.config.ts    # Vite 설정
 ```
 
+## 브랜치 전략
+![image](https://github.com/user-attachments/assets/64ad337c-8584-4c7c-b450-84566047b9bd)
+
 ## 🚀 시작하기
 
 1. 저장소 클론
