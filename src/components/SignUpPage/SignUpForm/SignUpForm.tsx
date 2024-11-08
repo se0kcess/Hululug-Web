@@ -197,7 +197,7 @@ export const SignupForm = () => {
       }
 
       await authApi.signup(submitData);
-      alert('회원가입이 완료되었습니다. 다시 로그인해주세요.');
+      alert('회원가입이 완료되었습니다.');
       // 로그인 페이지로 리다이렉트
       const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
       const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
