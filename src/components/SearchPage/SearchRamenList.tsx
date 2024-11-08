@@ -30,7 +30,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 16px 0;
-  border-bottom: 1px solid ${theme.colors.gray[50]};
   box-sizing: border-box;
 `;
 
@@ -39,6 +38,8 @@ const RecipeCard = styled.div`
   gap: 1rem;
   background: ${theme.colors.white};
   cursor: pointer;
+  padding: 16px 0;
+  border-bottom: 1px solid ${theme.colors.gray[50]};
   transition: transform 0.2s ease-in-out;
 `;
 
