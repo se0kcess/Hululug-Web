@@ -1,23 +1,12 @@
 import styled from '@emotion/styled';
-import { RamenType } from '@/types/ramen';
 import theme from '@/styles/theme';
 import { HeartIconContainer } from '@/components/common/HeartIconContainer/HeartIconContainer';
 import { RamenTag } from '@/components/common/RamenTag/RamenTag';
 import { BookmarkButton } from '@/components/common/BookmarkButton/BookmarkButton';
 import { RenderPostDate } from '@/components/common/RenderPostDate/RenderPostDate';
 import { BodyText } from '@/styles/Typography';
-
-export interface RamenRecipe {
-  id: string;
-  title: string;
-  author: string;
-  authorImage: string;
-  likes: number;
-  date: string;
-  image: string;
-  ramenType: RamenType;
-  bookmarkId: string;
-}
+import tagMapping from '@/constants/ramenTagMapping';
+import { RamenRecipe } from '@/types/ramenRecipe';
 
 interface RamenListProps {
   recipes: RamenRecipe[];
@@ -37,6 +26,10 @@ const RecipeCard = styled.div`
   background: ${theme.colors.white};
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
 `;
 
 const ImageContainer = styled.div`
@@ -67,6 +60,7 @@ const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  padding: 0.5rem 0;
 `;
 
 const TopRow = styled.div`
@@ -77,6 +71,7 @@ const TopRow = styled.div`
 
 const Title = styled(BodyText)`
   color: ${theme.colors.black};
+  font-weight: ${theme.typography.weights.medium};
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -102,6 +97,7 @@ const ProfileImage = styled.img`
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;
+  object-fit: cover;
 `;
 
 const AuthorName = styled.span`
@@ -109,29 +105,58 @@ const AuthorName = styled.span`
   color: ${theme.colors.gray[700]};
 `;
 
-const RamenList = ({ recipes, onRecipeClick }: RamenListProps) => {
+const ImageLink = styled.button`
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+`;
+
+export const RamenList = ({ recipes, onRecipeClick }: RamenListProps) => {
+  const handleImageClick = (recipeId: string) => {
+    onRecipeClick?.(recipeId);
+  };
+
   return (
     <Container>
       {recipes.map((recipe) => (
-        <RecipeCard key={recipe.id} onClick={() => onRecipeClick?.(recipe.id)}>
+        <RecipeCard key={recipe._id}>
           <ImageContainer>
-            <RecipeImage src={recipe.image} alt={recipe.title} />
+            <ImageLink
+              onClick={() => handleImageClick(recipe.recipe_id)}
+              aria-label={`${recipe.title} 상세보기`}
+            >
+              <RecipeImage
+                src={recipe.thumbnail || '/default-recipe-image.jpg'}
+                alt={recipe.title}
+              />
+            </ImageLink>
             <HeartPosition>
-              <HeartIconContainer initialLikes={recipe.likes} recipeId={recipe.id} />
+              <HeartIconContainer initialLikes={recipe.likes} recipeId={recipe.recipe_id} />
             </HeartPosition>
           </ImageContainer>
           <ContentContainer>
             <TopRow>
-              <RamenTag ramen={recipe.ramenType} />
-              <BookmarkButton recipeId={recipe.bookmarkId} size={20} />
+              <RamenTag
+                ramen={{
+                  id: recipe.tags[0],
+                  name: tagMapping[recipe.tags[0]] || '기타',
+                }}
+              />
+              <BookmarkButton recipeId={recipe._id} size={20} />
             </TopRow>
             <Title>{recipe.title}</Title>
             <BottomRow>
               <ProfileContainer>
-                <ProfileImage src={recipe.authorImage} alt={recipe.author} />
-                <AuthorName>{recipe.author}</AuthorName>
+                <ProfileImage
+                  src={recipe.writer.profile_image || '/default-profile-image.jpg'}
+                  alt={recipe.writer.nickname}
+                />
+                <AuthorName>{recipe.writer.nickname}</AuthorName>
               </ProfileContainer>
-              <RenderPostDate date={recipe.date} />
+              <RenderPostDate date={recipe.created_at} />
             </BottomRow>
           </ContentContainer>
         </RecipeCard>
@@ -139,5 +164,3 @@ const RamenList = ({ recipes, onRecipeClick }: RamenListProps) => {
     </Container>
   );
 };
-
-export default RamenList;

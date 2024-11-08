@@ -1,18 +1,25 @@
+import { useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { InfiniteData, useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import styled from '@emotion/styled';
+import { getRecipes } from '@/api/recipes';
+import { useFilterStore } from '@/store/filterStore';
 import Footer from '@/components/common/Footer/Footer';
 import BannerSlider from '@/components/MainPage/Banner/BannerSlider';
 import { FilterButtons } from '@/components/MainPage/FilterButtons/FilterButtons';
-import Header from '@/components/MainPage/Header/Header';
-import HotRecipeCard from '@/components/MainPage/HotRecipeCard/HotRecipeCard';
-import RamenList from '@/components/common/RamenList/RamenList';
 import { Title1 } from '@/styles/Typography';
-import styled from '@emotion/styled';
+import { SortOption } from '@/types/sort';
+import { RamenList } from '@/components/common/RamenList/RamenList';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner/LoadingSpinner';
+import { HotRecipeCard } from '@/components/MainPage/HotRecipeCard/HotRecipeCard';
+import { Header } from '@/components/MainPage/Header/Header';
+import { useInView } from 'react-intersection-observer';
+import { RamenRecipe } from '@/types/ramenRecipe';
 
-import profileImg1 from '@assets/images/profile-img-1.png';
-import profileImg2 from '@assets/images/profile-img-2.png';
-import profileImg3 from '@assets/images/profile-img-3.png';
-import ramenImg1 from '@assets/ramyun-images/sample-1.png';
-import ramenImg2 from '@assets/ramyun-images/sample-2.png';
-import ramenImg3 from '@assets/ramyun-images/sample-3.png';
+interface RecipeData {
+  recipes: RamenRecipe[];
+  next_cursor: string | null;
+}
 
 const Container = styled.div`
   display: flex;
@@ -23,7 +30,7 @@ const Container = styled.div`
   min-height: calc(100vh - 60px);
 `;
 
-const Recipe = styled(Title1)`
+const SectionTitle = styled(Title1)`
   padding: 1rem 0;
 `;
 
@@ -45,89 +52,178 @@ const RecipeCard = styled.div`
   width: calc(70% - 1.2rem);
 `;
 
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+`;
+
+const ErrorContainer = styled.div`
+  text-align: center;
+  padding: 2rem;
+  color: ${({ theme }) => theme.colors.red};
+`;
+
+const RetryButton = styled.button`
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background-color: ${({ theme }) => theme.colors.primaryMain};
+  color: white;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.primaryDark};
+  }
+`;
+
+const EndMessage = styled.div`
+  text-align: center;
+  padding: 2rem;
+  color: ${({ theme }) => theme.colors.gray[500]};
+`;
+
 export default function MainPage() {
-  const hotRecipes = [
-    {
-      id: '1',
-      title: '초간단 1분 라볶이',
-      author: '백종원',
-      likes: 1100,
-    },
-    {
-      id: '2',
-      title: '피시방 짜계치',
-      author: '라면왕',
-      likes: 950,
-    },
-    {
-      id: '3',
-      title: '해물 라면',
-      author: '라면킹',
-      likes: 850,
-    },
-  ];
+  const navigate = useNavigate();
+  const { tagId, sort, setTagId, setSort } = useFilterStore();
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+  });
 
-  const allRecipes = [
-    {
-      id: '4',
-      title: '초간단 1분 라볶이',
-      author: '백종원',
-      authorImage: profileImg1,
-      likes: 1100,
-      date: '24.10.23',
-      image: ramenImg1,
-      ramenType: { id: 20, name: '짜파게티' },
-      bookmarkId: '1',
+  // 인기 레시피 조회
+  const {
+    data: hotRecipesData,
+    isLoading: isLoadingHot,
+    error: hotError,
+  } = useQuery({
+    queryKey: ['hotRecipes'],
+    queryFn: async () => {
+      const response = await getRecipes({
+        sort: 'popular',
+        limit: 3,
+      });
+      return response.data.recipes;
     },
-    {
-      id: '5',
-      title: '피시방 짜계치',
-      author: '라면왕',
-      authorImage: profileImg2,
-      likes: 1100,
-      date: '24.10.22',
-      image: ramenImg2,
-      ramenType: { id: 10, name: '삼양라면' },
-      bookmarkId: '2',
-    },
-    {
-      id: '6',
-      title: '해물 듬뿍 라면',
-      author: '안성재',
-      authorImage: profileImg3,
-      likes: 98,
-      date: '24.10.22',
-      image: ramenImg3,
-      ramenType: { id: 12, name: '신라면' },
-      bookmarkId: '3',
-    },
-  ];
+  });
 
-  const handleRecipeClick = (id: string) => {
-    console.log(`Recipe clicked: ${id}`);
-  };
+  // 전체 레시피 무한 스크롤 조회
+  const {
+    data,
+    isLoading: isLoadingAll,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    error: allError,
+  } = useInfiniteQuery<
+    RecipeData,
+    Error,
+    InfiniteData<RecipeData>,
+    (string | undefined)[],
+    string | undefined
+  >({
+    queryKey: ['recipes', tagId, sort],
+    queryFn: async ({ pageParam }) => {
+      const response = await getRecipes({
+        sort: sort || 'newest',
+        limit: 4,
+        ...(tagId && { tag: tagId }),
+        cursor: pageParam, // string | undefined 타입
+      });
+      return response.data;
+    },
+    getNextPageParam: (lastPage) => lastPage.next_cursor || undefined,
+    initialPageParam: undefined,
+  });
+
+  // Intersection Observer로 무한 스크롤 감지
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
+
+  // 전체 레시피 목록 평탄화
+  const allRecipes = data?.pages.flatMap((page) => page.recipes) ?? [];
+  const hotRecipes = hotRecipesData ?? [];
+
+  const handleRecipeClick = useCallback(
+    (recipeId: string) => {
+      navigate(`/details/${recipeId}`);
+    },
+    [navigate],
+  );
+
+  const handleTagSelect = useCallback(
+    (newTagId: string | undefined) => {
+      setTagId(newTagId);
+    },
+    [setTagId],
+  );
+
+  const handleSortChange = useCallback(
+    (newSort: SortOption) => {
+      setSort(newSort);
+    },
+    [setSort],
+  );
+
+  if (hotError || allError) {
+    return (
+      <ErrorContainer>
+        <p>{(hotError || (allError as Error))?.message || '오류가 발생했습니다.'}</p>
+        <RetryButton onClick={() => window.location.reload()}>다시 시도하기</RetryButton>
+      </ErrorContainer>
+    );
+  }
 
   return (
     <>
       <Header />
       <Container>
         <BannerSlider />
-        <Recipe>인기있는 레시피</Recipe>
+
+        {/* 인기 레시피 섹션 */}
+        <SectionTitle>인기있는 레시피</SectionTitle>
         <RecipeRow>
-          {hotRecipes.map((recipe) => (
-            <RecipeCard key={recipe.id}>
-              <HotRecipeCard
-                id={recipe.id}
-                title={recipe.title}
-                author={recipe.author}
-                likes={recipe.likes}
-              />
-            </RecipeCard>
-          ))}
+          {isLoadingHot ? (
+            <LoadingContainer>
+              <LoadingSpinner />
+            </LoadingContainer>
+          ) : (
+            hotRecipes.map((recipe) => (
+              <RecipeCard key={recipe.recipe_id}>
+                <HotRecipeCard {...recipe} onClick={() => handleRecipeClick(recipe.recipe_id)} />
+              </RecipeCard>
+            ))
+          )}
         </RecipeRow>
-        <Recipe>모든 레시피</Recipe>
-        <FilterButtons />
-        <RamenList recipes={allRecipes} onRecipeClick={handleRecipeClick} />
+
+        {/* 전체 레시피 섹션 */}
+        <SectionTitle>모든 레시피</SectionTitle>
+        <FilterButtons onTagSelect={handleTagSelect} onSortChange={handleSortChange} />
+
+        {isLoadingAll && allRecipes.length === 0 ? (
+          <LoadingContainer>
+            <LoadingSpinner />
+          </LoadingContainer>
+        ) : (
+          <>
+            <RamenList recipes={allRecipes} onRecipeClick={handleRecipeClick} />
+
+            <div ref={ref} style={{ height: '20px' }} />
+
+            {isFetchingNextPage && (
+              <LoadingContainer>
+                <LoadingSpinner />
+              </LoadingContainer>
+            )}
+
+            {!hasNextPage && allRecipes.length > 0 && (
+              <EndMessage>더 이상 불러올 레시피가 없습니다.</EndMessage>
+            )}
+          </>
+        )}
       </Container>
       <Footer />
     </>

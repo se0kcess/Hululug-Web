@@ -1,15 +1,10 @@
 import styled from '@emotion/styled';
 import { BodyText, Title2 } from '@/styles/Typography';
 import theme from '@/styles/theme';
-import sampleRecipeImage from '@assets/ramyun-images/sample-1.png';
-import sampleProfileImage from '@assets/images/profile-img-1.png';
 import { HeartIconContainer } from '@/components/common/HeartIconContainer/HeartIconContainer';
+import { RamenRecipe } from '@/types/ramenRecipe';
 
-interface HotRecipeCardProps {
-  id: string;
-  title: string;
-  author: string;
-  likes: number;
+interface HotRecipeCardProps extends RamenRecipe {
   onClick?: () => void;
 }
 
@@ -19,6 +14,11 @@ const Container = styled.div`
   overflow: hidden;
   position: relative;
   cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
 `;
 
 const ImageWrapper = styled.div`
@@ -44,7 +44,9 @@ const ContentOverlay = styled.div`
   flex-direction: column;
   justify-content: flex-end;
   gap: 1rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
 `;
+
 const StyledTitle = styled(Title2)`
   color: ${theme.colors.white};
   position: absolute;
@@ -56,6 +58,7 @@ const StyledTitle = styled(Title2)`
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   margin-top: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 `;
 
 const ProfileContainer = styled.div`
@@ -69,31 +72,55 @@ const ProfileImage = styled.img`
   height: 1.75rem;
   border-radius: 50%;
   object-fit: cover;
+  border: 2px solid ${theme.colors.white};
 `;
 
 const AuthorName = styled(BodyText)`
   color: ${theme.colors.white};
   font-size: 1rem;
   font-weight: ${theme.typography.weights.medium};
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 `;
 
 const HeartWrapper = styled.div`
   position: absolute;
   right: 0.25rem;
+  bottom: 0.25rem;
 `;
 
-const HotRecipeCard = ({ id, title, author, likes, onClick }: HotRecipeCardProps) => {
+const ImageLink = styled.button`
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+`;
+
+export const HotRecipeCard = ({
+  recipe_id,
+  title,
+  thumbnail,
+  writer,
+  likes,
+  onClick,
+}: HotRecipeCardProps) => {
   return (
-    <Container onClick={onClick}>
+    <Container>
       <ImageWrapper>
-        <RecipeImage src={sampleRecipeImage} alt={title} />
+        <ImageLink onClick={onClick} aria-label={`${title} 상세보기`}>
+          <RecipeImage src={thumbnail || '/default-recipe-image.jpg'} alt={title} />
+        </ImageLink>
         <ContentOverlay>
           <StyledTitle>{title}</StyledTitle>
           <ProfileContainer>
-            <ProfileImage src={sampleProfileImage} alt={`${author}의 프로필`} />
-            <AuthorName>{author}</AuthorName>
+            <ProfileImage
+              src={writer.profile_image || '/default-profile-image.jpg'}
+              alt={`${writer.nickname}의 프로필`}
+            />
+            <AuthorName>{writer.nickname}</AuthorName>
             <HeartWrapper>
-              <HeartIconContainer initialLikes={likes} recipeId={id} />
+              <HeartIconContainer initialLikes={likes} recipeId={recipe_id} />
             </HeartWrapper>
           </ProfileContainer>
         </ContentOverlay>
@@ -101,5 +128,3 @@ const HotRecipeCard = ({ id, title, author, likes, onClick }: HotRecipeCardProps
     </Container>
   );
 };
-
-export default HotRecipeCard;

@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { SortModal } from './SortModal';
-import { useSortStore } from '@/store/sortStore';
 import { ThemeProvider } from '@emotion/react';
 import { useEffect, useState } from 'react';
 import theme from '@/styles/theme';
 import { SORT_OPTIONS } from '@/types/sort';
+import { useFilterStore } from '@/store/filterStore';
 
 const meta: Meta<typeof SortModal> = {
   title: 'Components/MainPage/SortModal',
@@ -41,7 +41,7 @@ const meta: Meta<typeof SortModal> = {
       // 스토리 변경 시 정렬 상태 초기화
       useEffect(() => {
         return () => {
-          useSortStore.getState().setSort('latest');
+          useFilterStore.getState().setSort('newest');
         };
       }, []);
 
@@ -62,20 +62,20 @@ type Story = StoryObj<typeof SortModal>;
 // 모달 제어를 위한 컨테이너 컴포넌트
 const ModalContainer = ({
   defaultOpen = false,
-  initialSort = 'latest',
+  initialSort = 'newest',
 }: {
   defaultOpen?: boolean;
-  initialSort?: 'latest' | 'popular' | 'oldest';
+  initialSort?: 'newest' | 'popular' | 'oldest';
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
-  const currentSort = useSortStore((state) => state.currentSort);
-  const setSort = useSortStore((state) => state.setSort);
+  const sort = useFilterStore((state) => state.sort);
+  const setSort = useFilterStore((state) => state.setSort);
 
   useEffect(() => {
     setSort(initialSort);
   }, [initialSort, setSort]);
 
-  const currentSortLabel = SORT_OPTIONS.find((option) => option.value === currentSort)?.label;
+  const currentSortLabel = SORT_OPTIONS.find((option) => option.value === sort)?.label;
 
   return (
     <div style={{ padding: '20px' }}>

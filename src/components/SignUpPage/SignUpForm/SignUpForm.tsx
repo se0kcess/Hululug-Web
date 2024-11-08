@@ -1,8 +1,12 @@
 import { useState, useCallback } from 'react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { BodyText, CaptionText, Title1 } from '@/styles/Typography';
 import { SignupFormData } from '@/types/signup';
 import { ProfileImageUpload } from '@/components/SignUpPage/ProfileImageUpload/ProfileImageUpload';
+import { authApi } from '@/api/authAPI';
+import axios from 'axios';
+import defaultProfileImage from '@assets/images/profile-img-1.png';
 
 const Form = styled.form`
   display: flex;
@@ -33,6 +37,11 @@ const Input = styled.input<{ hasError?: boolean }>`
     outline: none;
     border-color: ${(props) =>
       props.hasError ? props.theme.colors.red : props.theme.colors.primaryMain};
+  }
+
+  &:disabled {
+    background-color: ${(props) => props.theme.colors.gray[100]};
+    color: ${(props) => props.theme.colors.gray[700]};
   }
 `;
 
@@ -67,15 +76,25 @@ interface ValidationErrors {
 }
 
 export const SignupForm = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const code = searchParams.get('code');
+  const email = location.state?.email;
+
   const [formData, setFormData] = useState<SignupFormData>({
+    email: email || '',
     nickname: '',
-    description: '',
+    introduce: '',
   });
 
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [touched, setTouched] = useState({
     nickname: false,
   });
+
+  const isSubmitDisabled = !!errors.nickname || !touched.nickname || !formData.nickname;
 
   const validateNickname = useCallback((value: string) => {
     if (!value) {
@@ -101,7 +120,6 @@ export const SignupForm = () => {
     const { value } = e.target;
     setFormData((prev) => ({ ...prev, nickname: value }));
 
-    // 이미 touched 상태라면 실시간으로 유효성 검사
     if (touched.nickname) {
       const error = validateNickname(value);
       setErrors((prev) => ({
@@ -120,31 +138,109 @@ export const SignupForm = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const getDefaultProfileImageFile = async () => {
+    try {
+      const response = await fetch(defaultProfileImage);
+      const blob = await response.blob();
+      return new File([blob], 'default-profile.png', {
+        type: 'image/png',
+        lastModified: Date.now(),
+      });
+    } catch (error) {
+      console.error('기본 이미지 변환 중 오류:', error);
+      return null;
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 제출 시 최종 유효성 검사
     const nicknameError = validateNickname(formData.nickname);
-
     if (nicknameError) {
       setErrors({ nickname: nicknameError });
       setTouched({ nickname: true });
       return;
     }
 
-    // TODO: 회원가입 처리 로직
-    console.log('Form submitted:', formData);
+    if (!code) {
+      alert('인가코드가 필요합니다. 다시 로그인해주세요.');
+      navigate('/login');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const submitData = new FormData();
+      submitData.append('email', formData.email);
+      submitData.append('nickname', formData.nickname);
+      submitData.append('introduce', formData.introduce || '');
+
+      if (formData.profile_image) {
+        submitData.append('profile_image', formData.profile_image);
+      } else {
+        const defaultImageFile = await getDefaultProfileImageFile();
+        if (defaultImageFile) {
+          submitData.append('profile_image', defaultImageFile);
+        }
+      }
+
+      // FormData 내용 확인
+      console.log('=== FormData Contents ===');
+      for (const [key, value] of submitData.entries()) {
+        if (value instanceof File) {
+          console.log(key, ':', {
+            name: value.name,
+            type: value.type,
+            size: value.size,
+          });
+        } else {
+          console.log(key, ':', value);
+        }
+      }
+
+      await authApi.signup(submitData);
+      alert('회원가입이 완료되었습니다. 다시 로그인해주세요.');
+      // 로그인 페이지로 리다이렉트
+      const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
+      const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
+
+      const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+      window.location.href = kakaoURL;
+    } catch (error) {
+      console.error('회원가입 중 오류 발생:', error);
+      if (axios.isAxiosError(error)) {
+        console.error('Error Response:', error.response?.data);
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          alert('인증이 만료되었습니다. 다시 로그인해주세요.');
+          navigate('/login');
+          return;
+        }
+        const errorMessage = error.response?.data?.message || '회원가입 중 오류가 발생했습니다.';
+        alert(errorMessage);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const isSubmitDisabled = !!errors.nickname || !touched.nickname;
+  if (!code) {
+    return <div>인가코드가 없습니다. 다시 로그인해주세요.</div>;
+  }
 
   return (
     <Form onSubmit={handleSubmit}>
       <Title>사용할 닉네임과 프로필을 설정해주세요</Title>
 
       <ProfileImageUpload
-        onImageUpload={(file) => setFormData((prev) => ({ ...prev, profileImage: file }))}
+        onImageUpload={(file) => setFormData((prev) => ({ ...prev, profile_image: file }))}
+        isLoading={isLoading}
       />
+
+      <InputContainer>
+        <BodyText>이메일</BodyText>
+        <Input value={formData.email} disabled />
+      </InputContainer>
 
       <InputContainer>
         <BodyText>닉네임</BodyText>
@@ -155,6 +251,7 @@ export const SignupForm = () => {
           maxLength={10}
           placeholder="닉네임을 입력해주세요."
           hasError={!!errors.nickname && touched.nickname}
+          disabled={isLoading}
         />
         <CharCount hasError={!!errors.nickname && touched.nickname}>
           {touched.nickname && errors.nickname && <ErrorText>{errors.nickname}</ErrorText>}
@@ -165,16 +262,17 @@ export const SignupForm = () => {
       <InputContainer>
         <BodyText>한 줄 소개(선택)</BodyText>
         <Input
-          value={formData.description}
-          onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+          value={formData.introduce}
+          onChange={(e) => setFormData((prev) => ({ ...prev, introduce: e.target.value }))}
           maxLength={20}
           placeholder="간단한 자기소개를 작성해주세요."
+          disabled={isLoading}
         />
-        <CharCount>{formData.description.length} / 20자</CharCount>
+        <CharCount>{formData.introduce.length} / 20자</CharCount>
       </InputContainer>
 
-      <SubmitButton type="submit" disabled={isSubmitDisabled}>
-        확인
+      <SubmitButton type="submit" disabled={isSubmitDisabled || isLoading}>
+        {isLoading ? '처리중...' : '확인'}
       </SubmitButton>
     </Form>
   );

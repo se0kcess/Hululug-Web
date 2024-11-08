@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import { BodyText, Title2 } from '@/styles/Typography';
@@ -89,25 +89,26 @@ const AddButton = styled.button`
   color: ${theme.colors.gray[500]};
 `;
 
-interface RecipeIngredientsConProps {
-  onIngredientsFilled: (filled: boolean) => void;
+interface Ingredient {
+  name: string;
+  quantity: string;
 }
 
-const RecipeIngredientsCon = ({ onIngredientsFilled }: RecipeIngredientsConProps) => {
-  const [ingredients, setIngredients] = useState([{ name: '', quantity: '' }]);
+export interface RecipeIngredientsConProps {
+  ingredients: Ingredient[];
+  onIngredientsFilled: (filled: boolean) => void;
+  onIngredientChange: (index: number, name: string, quantity: string) => void;
+}
 
-  const handleAddIngredient = () => {
-    setIngredients([...ingredients, { name: '', quantity: '' }]);
-  };
-
-  const handleInputChange = (index: number, field: 'name' | 'quantity', value: string) => {
-    const newIngredients = [...ingredients];
-    newIngredients[index][field] = value;
-    setIngredients(newIngredients);
-  };
-
+const RecipeIngredientsCon = ({
+  ingredients,
+  onIngredientsFilled,
+  onIngredientChange,
+}: RecipeIngredientsConProps) => {
   useEffect(() => {
-    const allFilled = ingredients.every((ingredient) => ingredient.name && ingredient.quantity);
+    const allFilled = ingredients.every(
+      (ingredient) => ingredient.name.trim() !== '' && ingredient.quantity.trim() !== '',
+    );
     onIngredientsFilled(allFilled);
   }, [ingredients, onIngredientsFilled]);
 
@@ -123,16 +124,16 @@ const RecipeIngredientsCon = ({ onIngredientsFilled }: RecipeIngredientsConProps
           <NameInput
             placeholder="재료명"
             value={ingredient.name}
-            onChange={(e) => handleInputChange(index, 'name', e.target.value)}
+            onChange={(e) => onIngredientChange(index, e.target.value, ingredient.quantity)}
           />
           <QuantityInput
             placeholder="1T, 1큰술"
             value={ingredient.quantity}
-            onChange={(e) => handleInputChange(index, 'quantity', e.target.value)}
+            onChange={(e) => onIngredientChange(index, ingredient.name, e.target.value)}
           />
         </InputRow>
       ))}
-      <AddButton onClick={handleAddIngredient}>
+      <AddButton onClick={() => onIngredientChange(ingredients.length, '', '')}>
         <Plus width={16} height={16} fill={theme.colors.gray[500]} />
       </AddButton>
     </Container>

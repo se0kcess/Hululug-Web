@@ -1,8 +1,9 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { BodyText } from '@/styles/Typography';
 import theme from '@/styles/theme';
 import { SORT_OPTIONS, SortOption } from '@/types/sort';
-import { useSortStore } from '@/store/sortStore';
+import { useFilterStore } from '@/store/filterStore';
 
 interface SortModalProps {
   isOpen: boolean;
@@ -16,23 +17,35 @@ const ModalOverlay = styled.div<{ isOpen: boolean }>`
   right: 0;
   bottom: 0;
   background-color: ${theme.backdrop.default};
-  display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
+  display: flex;
   justify-content: center;
   align-items: flex-end;
   z-index: 1000;
+  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
+  visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+  transition:
+    opacity 0.2s ease-in-out,
+    visibility 0.2s ease-in-out;
+  -webkit-tap-highlight-color: transparent;
 `;
 
-const ModalContent = styled.div`
+const ModalContent = styled.div<{ translateY: number }>`
   background: ${theme.colors.white};
   width: 100%;
   max-width: 430px;
+  max-height: 80vh;
   border-radius: 20px 20px 0 0;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  touch-action: none;
+  position: relative;
+  transform: translateY(${(props) => props.translateY}%);
+  transition: transform 0.3s ease-in-out;
 
   &::before {
     content: '';
     position: absolute;
-    margin-top: 0.5rem;
+    top: 0.5rem;
     left: 50%;
     transform: translateX(-50%);
     width: 2.25rem;
@@ -44,7 +57,8 @@ const ModalContent = styled.div`
 
 const Header = styled.div`
   text-align: center;
-  padding: 0.5rem 0 0 0;
+  padding: 1.5rem 0 0.5rem;
+  position: relative;
   border-bottom: 1px solid ${theme.colors.gray[100]};
 `;
 
@@ -53,7 +67,7 @@ const OptionList = styled.div`
   flex-direction: column;
 `;
 
-const OptionItem = styled.button<{ isSelected: boolean }>`
+const Option = styled.button<{ isSelected: boolean }>`
   padding: 1rem 1.25rem;
   background: none;
   border: none;
@@ -65,6 +79,7 @@ const OptionItem = styled.button<{ isSelected: boolean }>`
   color: ${({ isSelected, theme }) =>
     isSelected ? theme.colors.primaryMain : theme.colors.gray[700]};
   cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 
   &:active {
     background-color: ${theme.colors.gray[50]};
@@ -76,34 +91,78 @@ const CheckIcon = styled.span`
 `;
 
 export const SortModal = ({ isOpen, onClose }: SortModalProps) => {
-  const { currentSort, setSort } = useSortStore();
+  const { sort, setSort } = useFilterStore();
+  const [translateY, setTranslateY] = useState(100);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartY = useRef(0);
+  const currentTranslateY = useRef(0);
+  const modalRef = useRef<HTMLDivElement>(null);
 
-  const handleOptionClick = (sort: SortOption) => {
-    setSort(sort);
-    onClose();
+  useEffect(() => {
+    if (isOpen) {
+      setTranslateY(0);
+      document.body.style.overflow = 'hidden';
+    } else {
+      setTranslateY(100);
+      document.body.style.overflow = '';
+    }
+  }, [isOpen]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    dragStartY.current = touch.clientY;
+    currentTranslateY.current = translateY;
+    setIsDragging(true);
   };
 
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging) return;
+
+    const touch = e.touches[0];
+    const diff = touch.clientY - dragStartY.current;
+    const newTranslateY = Math.max(0, (diff / window.innerHeight) * 100);
+    setTranslateY(newTranslateY);
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+    if (translateY > 25) {
+      onClose();
+    } else {
+      setTranslateY(0);
+    }
+  };
+
+  const handleOptionClick = useCallback(
+    (newSort: SortOption) => {
+      setSort(newSort);
+      onClose();
+    },
+    [setSort, onClose],
+  );
+
   return (
-    <ModalOverlay
-      isOpen={isOpen}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <ModalContent>
+    <ModalOverlay isOpen={isOpen} onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <ModalContent
+        ref={modalRef}
+        translateY={translateY}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         <Header>
           <BodyText>정렬</BodyText>
         </Header>
         <OptionList>
           {SORT_OPTIONS.map((option) => (
-            <OptionItem
+            <Option
               key={option.value}
-              isSelected={currentSort === option.value}
+              isSelected={sort === option.value}
               onClick={() => handleOptionClick(option.value)}
             >
               {option.label}
-              {currentSort === option.value && <CheckIcon>✓</CheckIcon>}
-            </OptionItem>
+              {sort === option.value && <CheckIcon>✓</CheckIcon>}
+            </Option>
           ))}
         </OptionList>
       </ModalContent>

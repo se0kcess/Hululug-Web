@@ -35,7 +35,7 @@ export const Default: Story = {
     id: '1',
     title: '초간단 1분 라볶이',
     ramen: {
-      id: 1,
+      id: '1',
       name: '신라면',
     },
     date: '2024.10.23',
@@ -48,7 +48,7 @@ export const LongTitle: Story = {
     id: '2',
     title: '너무너무너무너무너무너무너무 맛있는 초간단 1분 라볶이 레시피',
     ramen: {
-      id: 2,
+      id: '2',
       name: '신라면',
     },
     date: '2024.10.23',

@@ -2,10 +2,11 @@ import { useState } from 'react';
 import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import { RAMEN_LIST } from '@/constants/ramenList';
-import { RamenType } from '@/types/ramen';
+import { RamenRecipeType } from '@/types/ramenRecipe';
 import ClearIcon from '@/assets/icons/Clear';
 import { BodyText, ButtonText, ChipText, Title2 } from '@/styles/Typography';
 import { ArrowDown } from '@/assets/icons/ArrowDown';
+import useRecipeStore from '@/store/recipeStore';
 
 const Container = styled.div`
   width: 100%;
@@ -159,16 +160,11 @@ const RemoveButton = styled.button`
   margin-left: 4px;
 `;
 
-interface RamenTypeSelectProps {
-  onSelect: () => void; // 선택 완료 시 호출할 콜백 함수
-  onDisSelect: () => void;
-}
-
-const RamenTypeSelect = ({ onSelect, onDisSelect }: RamenTypeSelectProps) => {
+const RamenTypeSelect = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedRamen, setSelectedRamen] = useState<RamenType[]>([]);
+  const { selectedRamen, setSelectedRamen, setRamenSelected } = useRecipeStore();
 
-  const handleTagClick = (ramen: RamenType) => {
+  const handleTagClick = (ramen: RamenRecipeType) => {
     if (selectedRamen.some((item) => item.id === ramen.id)) {
       setSelectedRamen(selectedRamen.filter((item) => item.id !== ramen.id));
     } else if (selectedRamen.length < 2) {
@@ -179,21 +175,29 @@ const RamenTypeSelect = ({ onSelect, onDisSelect }: RamenTypeSelectProps) => {
   const handleApply = () => {
     setIsModalOpen(false);
     if (selectedRamen.length > 0) {
-      onSelect(); // 선택 완료 시 onSelect 콜백 호출
+      setRamenSelected(true); // 라면이 선택되면 true로 설정
     } else {
-      onDisSelect();
+      setRamenSelected(false); // 선택된 라면이 없으면 false로 설정
     }
   };
 
-  const handleRemoveTag = (ramen: RamenType) => {
-    setSelectedRamen(selectedRamen.filter((item) => item.id !== ramen.id));
+  const handleRemoveTag = (ramen: RamenRecipeType) => {
+    const updatedRamen = selectedRamen.filter((item) => item.id !== ramen.id);
+    setSelectedRamen(updatedRamen);
+    if (updatedRamen.length === 0) {
+      setRamenSelected(false); // 모든 라면이 제거되었을 때 false로 설정
+    }
   };
 
   return (
     <Container>
       <Label>라면 종류(최대 2개)</Label>
       <SelectBox onClick={() => setIsModalOpen(true)}>
-        <Placeholder>라면 종류를 선택해주세요.</Placeholder>
+        {selectedRamen.length > 0 ? (
+          <span>{selectedRamen.map((ramen) => ramen.name).join(', ')}</span>
+        ) : (
+          <Placeholder>라면 종류를 선택해주세요.</Placeholder>
+        )}
         <IconWrapper>
           <ArrowDown />
         </IconWrapper>
@@ -203,12 +207,7 @@ const RamenTypeSelect = ({ onSelect, onDisSelect }: RamenTypeSelectProps) => {
         {selectedRamen.map((ramen) => (
           <SelectedTag key={ramen.id}>
             {ramen.name}
-            <RemoveButton
-              onClick={() => {
-                handleApply();
-                handleRemoveTag(ramen);
-              }}
-            >
+            <RemoveButton onClick={() => handleRemoveTag(ramen)}>
               <ClearIcon width={15} height={15} fill={theme.colors.primaryLight} />
             </RemoveButton>
           </SelectedTag>

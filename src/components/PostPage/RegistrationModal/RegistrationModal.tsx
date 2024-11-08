@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import theme from '@/styles/theme';
 import grinningImg from '@/assets/images/grinning-face.png';
 import { Title2 } from '@/styles/Typography';
+import { useNavigate } from 'react-router-dom';
 
 const ModalContainer = styled.div`
   width: 100%;
@@ -82,6 +83,17 @@ interface RegistrationModalProps {
 }
 
 const RegistrationModal = ({ onCancel, onRegister }: RegistrationModalProps) => {
+  const navigate = useNavigate();
+
+  const handleRegister = async () => {
+    try {
+      await onRegister();
+      navigate('/'); // 메인 페이지로 이동
+    } catch (error) {
+      console.error('Registration failed:', error);
+    }
+  };
+
   return (
     <ModalContainer>
       <Emoji>
@@ -90,7 +102,7 @@ const RegistrationModal = ({ onCancel, onRegister }: RegistrationModalProps) => 
       <Message>레시피를 등록하시겠습니까?</Message>
       <ButtonContainer>
         <CancelButton onClick={onCancel}>취소</CancelButton>
-        <RegisterButton onClick={onRegister}>등록</RegisterButton>
+        <RegisterButton onClick={handleRegister}>등록</RegisterButton>
       </ButtonContainer>
     </ModalContainer>
   );
