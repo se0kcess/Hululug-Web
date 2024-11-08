@@ -27,3 +27,14 @@ dist-ssr
 vite.config.*.ts
 vite.config.*.js
 .env
+
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+.yarn-integrity
+yarn-debug.log*
+yarn-error.log*
