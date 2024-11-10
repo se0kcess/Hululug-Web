@@ -1,4 +1,4 @@
-import { authApi } from '@/api/authAPI';
+import { authApi } from '@/api/auth';
 import { useAuthStore } from '@/store/authStore';
 import { LoginResponse } from '@/types/auth';
 import { useMutation, useQuery } from '@tanstack/react-query';
