@@ -11,13 +11,22 @@ export interface RecipeIngredient {
 }
 
 export interface RecipeData {
-  _id: string;
+  _id: string; // 데이터 고유 ID
+  recipe_id: string; // 실제 레시피 ID
   title: string;
   thumbnail: string;
   tags: string[];
   introduce: string;
-  writer: RecipeWriter;
-  ingredients: RecipeIngredient[];
+  writer: {
+    nickname: string;
+    profile_image: string;
+    introduce: string;
+  };
+  ingredients: {
+    name: string;
+    unit: string;
+    _id: string;
+  }[];
   cooking_steps: string[];
   likes: number;
   created_at: string;

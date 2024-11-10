@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { BodyText, CaptionText, Title1 } from '@/styles/Typography';
 import { SignupFormData } from '@/types/signup';
 import { ProfileImageUpload } from '@/components/SignUpPage/ProfileImageUpload/ProfileImageUpload';
-import { authApi } from '@/api/authAPI';
+import { authApi } from '@/api/auth';
 import axios from 'axios';
 import defaultProfileImage from '@assets/images/profile-img-1.png';
 

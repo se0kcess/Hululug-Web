@@ -117,8 +117,8 @@ const Tag = styled.div`
 `;
 
 export default function DetailPage() {
-  const { recipeId } = useParams<{ recipeId: string }>();
-  const { data: recipe, isLoading, error, isSuccess } = useRecipeDetail(recipeId!);
+  const { recipe_id } = useParams<{ recipe_id: string }>();
+  const { data: recipe, isLoading, error, isSuccess } = useRecipeDetail(recipe_id!);
   const storedRecipe = useRecipeDetailStore((state) => state.recipe);
   const setRecipe = useRecipeDetailStore((state) => state.setRecipe);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -137,7 +137,7 @@ export default function DetailPage() {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`/recipes/${recipeId}`, {
+      const response = await fetch(`/recipes/${recipe_id}`, {
         method: 'DELETE',
       });
       const data = await response.json();
@@ -171,7 +171,7 @@ export default function DetailPage() {
                 inactiveColor={theme.colors.gray[500]}
                 likeCountColor={theme.colors.gray[500]}
                 initialLikes={storedRecipe.likes}
-                recipeId={storedRecipe._id}
+                recipeId={storedRecipe.recipe_id} // _id 대신 recipe_id 사용
               />
             </div>
           </TagDateLike>
@@ -244,9 +244,10 @@ export default function DetailPage() {
           <ActionBar
             likes={storedRecipe.likes}
             comments={0}
-            recipeId={storedRecipe._id}
-            onLike={() => console.log('Liked!')}
-            onComment={() => console.log('Commented!')}
+            recipeId={storedRecipe.recipe_id} // _id 대신 recipe_id 사용
+            onComment={() => {
+              commentSecRef.current?.scrollIntoView({ behavior: 'smooth' });
+            }}
             onBookmark={() => console.log('Bookmarked!')}
             onShare={() => console.log('Shared!')}
           />

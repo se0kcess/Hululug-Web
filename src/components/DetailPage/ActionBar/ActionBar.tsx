@@ -9,7 +9,6 @@ interface ActionBarProps {
   likes: number;
   comments: number;
   recipeId: string;
-  onLike: () => void;
   onComment: () => void;
   onBookmark: () => void;
   onShare: () => void;
@@ -39,7 +38,6 @@ export const ActionBar = ({
   likes,
   comments,
   recipeId,
-  onLike,
   onComment,
   onBookmark,
   onShare,
@@ -48,7 +46,7 @@ export const ActionBar = ({
 }: ActionBarProps) => {
   return (
     <Container>
-      <ActionItem onClick={onLike}>
+      <ActionItem>
         <HeartIconContainer
           initialLikes={likes}
           recipeId={recipeId}

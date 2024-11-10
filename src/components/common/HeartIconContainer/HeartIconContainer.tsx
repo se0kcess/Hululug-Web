@@ -2,8 +2,8 @@ import styled from '@emotion/styled';
 import { CaptionText } from '@/styles/Typography';
 import { HeartFill } from '@/assets/icons/HeartFill';
 import { HeartOutline } from '@/assets/icons/HeartOutline';
-import useLikeStore from '@/store/likeStore';
 import theme from '@/styles/theme';
+import { useLike } from '@/hooks/useLike';
 
 interface HeartIconContainerProps {
   initialLikes: number;
@@ -13,7 +13,6 @@ interface HeartIconContainerProps {
   inactiveColor?: string;
   likeCountColor?: string;
 }
-
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -56,26 +55,26 @@ export const HeartIconContainer = ({
   inactiveColor = theme.colors.gray[200],
   likeCountColor = theme.colors.gray[200],
 }: HeartIconContainerProps) => {
-  const { toggleLike, activeLikes, getLikeCount } = useLikeStore();
+  const { likeCount, isLiked, toggleLike, isLoading } = useLike(recipeId, initialLikes);
 
-  const isActive = activeLikes.has(recipeId);
-  const currentLikes = getLikeCount(recipeId, initialLikes);
-
-  const handleLikeClick = () => {
-    toggleLike(recipeId, initialLikes);
+  const handleLikeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isLoading) {
+      toggleLike();
+    }
   };
 
   return (
     <Container onClick={handleLikeClick}>
       <IconWrapper
-        isActive={isActive.toString()}
+        isActive={isLiked.toString()}
         size={size}
         activeColor={activeColor}
         inactiveColor={inactiveColor}
       >
-        {isActive ? <HeartFill /> : <HeartOutline />}
+        {isLiked ? <HeartFill /> : <HeartOutline />}
       </IconWrapper>
-      <StyledLikeCount textColor={likeCountColor}>{currentLikes.toLocaleString()}</StyledLikeCount>
+      <StyledLikeCount textColor={likeCountColor}>{likeCount.toLocaleString()}</StyledLikeCount>
     </Container>
   );
 };
