@@ -18,7 +18,7 @@ declare module '*.svg' {
 interface ImportMetaEnv {
   VITE_KAKAO_CLIENT_ID: string;
   VITE_KAKAO_REDIRECT_URI: string;
-  VITE_API_URL: string;
+  VITE_BASE_URL: string;
 }
 
 interface ImportMeta {
