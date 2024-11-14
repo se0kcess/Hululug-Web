@@ -1,21 +1,16 @@
 import styled from '@emotion/styled';
 import { Title2 } from '@/styles/Typography';
-import sampleImage from '@/assets/ramyun-images/sample-3.png';
 import { RenderPostDate } from '@/components/common/RenderPostDate/RenderPostDate';
 import { HeartIconContainer } from '@/components/common/HeartIconContainer/HeartIconContainer';
 import { RamenTag } from '@/components/common/RamenTag/RamenTag';
 import theme from '@/styles/theme';
-
 interface MyRecipeCardProps {
   id: string;
   title: string;
-  ramen: {
-    id: string;
-    name: string;
-  };
   date: string;
   likes: number;
-  imageUrl?: string;
+  imageUrl: string;
+  tags: string[];
 }
 
 const CardContainer = styled.div`
@@ -68,14 +63,9 @@ const BottomRow = styled.div`
   align-items: center;
 `;
 
-const MyRecipeCard = ({
-  id,
-  title,
-  ramen,
-  date,
-  likes,
-  imageUrl = sampleImage,
-}: MyRecipeCardProps) => {
+const MyRecipeCard = ({ id, title, date, likes, imageUrl, tags }: MyRecipeCardProps) => {
+  const ramenTag = tags[0];
+
   return (
     <CardContainer>
       <ImageContainer>
@@ -85,12 +75,14 @@ const MyRecipeCard = ({
       <ContentContainer>
         <TitleRow>
           <StyledTitle>{title}</StyledTitle>
-          <RamenTag
-            ramen={{
-              id: ramen.id,
-              name: ramen.name,
-            }}
-          />
+          {ramenTag && (
+            <RamenTag
+              ramen={{
+                id: 'ramen-id', // 또는 적절한 id 생성 로직
+                name: ramenTag,
+              }}
+            />
+          )}
         </TitleRow>
 
         <BottomRow>

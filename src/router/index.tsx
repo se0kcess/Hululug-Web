@@ -2,7 +2,7 @@ import DetailPage from '@/pages/DetailPage';
 import KakaoCallback from '@/pages/KakaoCallback';
 import LoginPage from '@/pages/LoginPage';
 import MainPage from '@/pages/MainPage';
-// import MyPage from '@/pages/MyPage';
+import MyPage from '@/pages/MyPage';
 import PostPage from '@/pages/PostPage';
 import SearchPage from '@/pages/SearchPage';
 import EditProfile from '@/pages/EditProfile';
@@ -20,7 +20,7 @@ export default function Router() {
       <Route>
         <Route path="/" element={<MainPage />} />
         <Route path="/details/:recipe_id" element={<DetailPage />} />
-        {/* <Route path="/mypage" element={<MyPage />} /> */}
+        <Route path="/mypage" element={<MyPage />} />
         <Route path="/post" element={<PostPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/login" element={<LoginPage />} />

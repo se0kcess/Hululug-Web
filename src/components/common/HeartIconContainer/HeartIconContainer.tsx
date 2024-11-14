@@ -51,9 +51,9 @@ export const HeartIconContainer = ({
   initialLikes,
   recipeId,
   size = 20,
-  activeColor = theme.colors.gray[200],
-  inactiveColor = theme.colors.gray[200],
-  likeCountColor = theme.colors.gray[200],
+  activeColor = theme.colors.white,
+  inactiveColor = theme.colors.white,
+  likeCountColor = theme.colors.white,
 }: HeartIconContainerProps) => {
   const { likeCount, isLiked, toggleLike, isLoading } = useLike(recipeId, initialLikes);
 

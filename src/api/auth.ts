@@ -36,4 +36,8 @@ export const authApi = {
       throw error;
     }
   },
+  checkAuth: async (): Promise<LoginResponse> => {
+    const { data } = await axiosInstance.get<LoginResponse>('/auth/check');
+    return data;
+  },
 };
