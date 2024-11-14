@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import sampleImage from '@/assets/ramyun-images/sample-3.png';
 import theme from '@/styles/theme';
 import MyRecipeCard from '@/components/MyPage/MyRecipeCard/MyRecipeCard';
 import MyCommentList from '@/components/MyPage/MyCommentList/MyCommentList';
@@ -115,27 +114,14 @@ const MyPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('recipes');
-  const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userProfile, setUserProfile] = useState<User | null>(null);
+  const navigate = useNavigate();
 
   const tabs = [
     { id: 'recipes', label: '내 레시피' },
     { id: 'bookmarks', label: '북마크' },
     { id: 'comments', label: '내 댓글' },
   ];
-
-  const fetchUserProfile = async () => {
-    try {
-      const response = await authApi.checkAuth();
-      if (response.data) {
-        setUserProfile(response.data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch user profile:', error);
-      setError('프로필 정보를 불러오는데 실패했습니다.');
-    }
-  };
 
   // 내 레시피 조회
   const fetchMyRecipes = async () => {
@@ -187,27 +173,15 @@ const MyPage = () => {
     }
   };
 
-  useEffect(() => {
-    switch (activeTab) {
-      case 'recipes':
-        fetchMyRecipes();
-        break;
-      case 'bookmarks':
-        fetchBookmarks();
-        break;
-      case 'comments':
-        fetchComments();
-        break;
-    }
-  }, [activeTab]);
-
+  // 초기 인증 체크 및 프로필 로드
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const response = await authApi.checkAuth();
         if (response.data) {
-          setIsAuthenticated(true);
-          setUserProfile(response.data); // 인증 확인과 동시에 프로필 정보 설정
+          setUserProfile(response.data);
+          // 프로필 로드 후 첫 탭의 데이터 로드
+          fetchMyRecipes();
         }
       } catch (error) {
         navigate('/login', {
@@ -220,70 +194,29 @@ const MyPage = () => {
     checkAuth();
   }, [navigate]);
 
+  // 탭 변경시 데이터 로드
+  useEffect(() => {
+    if (!userProfile) return; // 프로필이 로드되지 않았다면 데이터를 가져오지 않음
+
+    switch (activeTab) {
+      case 'recipes':
+        fetchMyRecipes();
+        break;
+      case 'bookmarks':
+        fetchBookmarks();
+        break;
+      case 'comments':
+        fetchComments();
+        break;
+    }
+  }, [activeTab, userProfile]);
+
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId);
   };
 
-  const renderContent = () => {
-    if (isLoading) {
-      return <div>로딩 중...</div>;
-    }
-
-    if (error) {
-      return <div>{error}</div>;
-    }
-
-    switch (activeTab) {
-      case 'recipes':
-        return (
-          <ContentGrid>
-            {recipes.map((recipe) => (
-              <MyRecipeCard
-                key={recipe._id}
-                id={recipe.recipe_id}
-                title={recipe.title}
-                imageUrl={recipe.thumbnail}
-                date={recipe.created_at}
-                likes={recipe.likes}
-                tags={recipe.tags}
-              />
-            ))}
-          </ContentGrid>
-        );
-      case 'bookmarks':
-        return (
-          <ContentGrid>
-            {bookmarks.map((recipe) => (
-              <MyRecipeCard
-                key={recipe._id}
-                id={recipe.recipe_id}
-                title={recipe.title}
-                imageUrl={recipe.thumbnail}
-                date={recipe.created_at}
-                likes={recipe.likes}
-                tags={recipe.tags}
-              />
-            ))}
-          </ContentGrid>
-        );
-      case 'comments':
-        return (
-          <MyCommentList
-            comments={comments.map((comment) => ({
-              id: comment._id,
-              recipeId: comment.recipe_id,
-              content: comment.content,
-              createdAt: comment.created_at,
-              recipeName: comment.recipe_title,
-            }))}
-          />
-        );
-      default:
-        return null;
-    }
-  };
-
   const handleLogout = () => {
+    // TODO: 실제 로그아웃 처리 구현
     console.log('로그아웃 되었습니다');
   };
 
@@ -292,25 +225,89 @@ const MyPage = () => {
       <Header>
         <BackButton />
         <Title>마이페이지</Title>
+        <div />
       </Header>
 
-      <ProfileContainer>
-        <ProfileInfo>
-          <ProfileImage
-            src={userProfile?.profile_image || '/default-profile.png'}
-            alt="프로필 이미지"
-          />
-          <UserInfo>
-            <UserName>{userProfile?.nickname || '사용자'}</UserName>
-            <UserBio>{userProfile?.introduce || '자기소개가 없습니다.'}</UserBio>
-          </UserInfo>
-        </ProfileInfo>
-        <ProfileSettingsButton onLogout={handleLogout} />
-      </ProfileContainer>
+      {isLoading && !userProfile ? (
+        <div>로딩 중...</div>
+      ) : error ? (
+        <div>{error}</div>
+      ) : (
+        <>
+          <ProfileContainer>
+            <ProfileInfo>
+              <ProfileImage
+                src={userProfile?.profile_image}
+                alt={`${userProfile?.nickname}의 프로필 이미지`}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = '/default-profile.png';
+                }}
+              />
+              <UserInfo>
+                <UserName>{userProfile?.nickname}</UserName>
+                <UserBio>{userProfile?.introduce || '소개글이 없습니다.'}</UserBio>
+              </UserInfo>
+            </ProfileInfo>
+            <ProfileSettingsButton onLogout={handleLogout} />
+          </ProfileContainer>
 
-      <TabNavigation tabs={tabs} defaultActiveTab={activeTab} onTabChange={handleTabChange} />
+          <TabNavigation tabs={tabs} defaultActiveTab={activeTab} onTabChange={handleTabChange} />
 
-      <ContentContainer>{renderContent()}</ContentContainer>
+          <ContentContainer>
+            {isLoading ? (
+              <div>데이터를 불러오는 중...</div>
+            ) : (
+              <>
+                {activeTab === 'recipes' && (
+                  <ContentGrid>
+                    {recipes.map((recipe) => (
+                      <MyRecipeCard
+                        key={recipe._id}
+                        id={recipe.recipe_id}
+                        title={recipe.title}
+                        imageUrl={recipe.thumbnail}
+                        date={recipe.created_at}
+                        likes={recipe.likes}
+                        tags={recipe.tags}
+                      />
+                    ))}
+                  </ContentGrid>
+                )}
+
+                {activeTab === 'bookmarks' && (
+                  <ContentGrid>
+                    {bookmarks.map((recipe) => (
+                      <MyRecipeCard
+                        key={recipe._id}
+                        id={recipe.recipe_id}
+                        title={recipe.title}
+                        imageUrl={recipe.thumbnail}
+                        date={recipe.created_at}
+                        likes={recipe.likes}
+                        tags={recipe.tags}
+                      />
+                    ))}
+                  </ContentGrid>
+                )}
+
+                {activeTab === 'comments' && (
+                  <MyCommentList
+                    comments={comments.map((comment) => ({
+                      id: comment._id,
+                      recipeId: comment.recipe_id,
+                      content: comment.content,
+                      createdAt: comment.created_at,
+                      recipeName: comment.recipe_title,
+                    }))}
+                  />
+                )}
+              </>
+            )}
+          </ContentContainer>
+        </>
+      )}
+
       <Footer />
     </Container>
   );
